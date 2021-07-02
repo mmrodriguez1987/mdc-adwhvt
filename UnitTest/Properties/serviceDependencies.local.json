@@ -1,17 +1,3 @@
 {
-  "dependencies": {
-    "secrets1": {
-      "type": "secrets.user"
-    },
-    "mssql1": {
-      "type": "mssql.onprem",
-      "connectionId": "ConnectionStrings:dataWarehouse",
-      "secretStore": "LocalSecretsFile"
-    },
-    "mssql2": {
-      "type": "mssql.onprem",
-      "connectionId": "ConnectionStrings:DTWttdpConnection",
-      "secretStore": "LocalSecretsFile"
-    }
-  }
+  "dependencies": {}
 }

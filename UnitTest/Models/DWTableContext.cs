@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace UnitTest.Models
+﻿namespace UnitTest.Models
 {
     public class DWTableContext
     {
@@ -11,12 +6,12 @@ namespace UnitTest.Models
 
         //public DWTableContext(string tableName, DbContextOptions<DWTableContext> options) : base(options)
         //{
-            //_entityType = Assembly.GetExecutingAssembly().GetTypes().FirstOrDefault(t => t.Name == tableName);
-           // Database.EnsureCreated();
+        //_entityType = Assembly.GetExecutingAssembly().GetTypes().FirstOrDefault(t => t.Name == tableName);
+        // Database.EnsureCreated();
         //}
 
         //public DbSet<DWTable> dWTables { get; set; }
 
-       
+
     }
 }

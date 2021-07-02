@@ -17,7 +17,7 @@ namespace UnitTest.Controllers
             _conf = configuration;
         }
 
-        
+
         [HttpPost]
         public IActionResult PostUnitTest(string dtwTable, string ccbTable)
         {
@@ -25,21 +25,21 @@ namespace UnitTest.Controllers
                 return NotFound("Datawarehouse or CCB Tables are messing");
 
             DataSet dsResult = new DataSet("dsResults");
-            DataTable dtResult = new DataTable("dtResult");           
+            DataTable dtResult = new DataTable("dtResult");
             dtResult.Columns.Add(dtwTable);
-            dtResult.Columns.Add(ccbTable);            
+            dtResult.Columns.Add(ccbTable);
             dtResult.Columns.Add("OK");
             dtResult.Columns.Add("Any Error?");
-            dtResult.Rows.Add(0,0,0,"Clean");            
+            dtResult.Rows.Add(0, 0, 0, "Clean");
             dsResult.Tables.Add(dtResult);
-       
+
 
             SqlConnection myConnection = null;
             SqlCommand command = null;
             SqlDataAdapter dataAdapter = null;
             DataSet results = new DataSet();
             string query = "SELECT COUNT(*) as count FROM " + dtwTable;
-            
+
 
 
             OracleConnection myOracleConnection = null;
@@ -47,11 +47,11 @@ namespace UnitTest.Controllers
             OracleDataAdapter dataAdapterOracle = null;
             DataSet resultsOracle = new DataSet();
             string queryOracle = "SELECT COUNT(*) as count FROM " + ccbTable;
-            
 
 
-            
-            
+
+
+
             try
             {
                 //Conexion to Datawarehouse
@@ -67,8 +67,9 @@ namespace UnitTest.Controllers
                         }
                     }
                 }
-                
-            } catch(SqlException conexSQLException)
+
+            }
+            catch (SqlException conexSQLException)
             {   // Return -1 in Colum "OK" and the Error description in "Any Error" column
                 Console.Write("Datawarehouse - SQL  Connection Exception: " + conexSQLException);
                 dsResult.Tables[0].Rows[0][2] = -1;
@@ -106,7 +107,7 @@ namespace UnitTest.Controllers
                 dsResult.Tables[0].Rows[0][2] = -1;
                 dsResult.Tables[0].Rows[0][3] = ("CCB - Oracle Connection Exception: " + conexOracleException.ToString());
                 return Ok(Util.DataTableToJSONWithStringBuilder(dsResult.Tables[0]));
-            } 
+            }
             finally
             {
                 myOracleConnection.Close();
@@ -117,11 +118,11 @@ namespace UnitTest.Controllers
             if (Convert.ToInt64(dsResult.Tables[0].Rows[0][0]) == Convert.ToInt64(dsResult.Tables[0].Rows[0][1]))
             {
                 dsResult.Tables[0].Rows[0][2] = 1;
-            } 
-            
-                   
+            }
+
+
             return Ok(Util.DataTableToJSONWithStringBuilder(dsResult.Tables[0]));
-            
+
         }
     }
 }

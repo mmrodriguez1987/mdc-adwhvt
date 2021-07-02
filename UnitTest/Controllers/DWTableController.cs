@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System;
-using System.Data.SqlClient;
 using System.Data;
+using System.Data.SqlClient;
 
 namespace UnitTest.Controllers
 {
@@ -9,7 +9,7 @@ namespace UnitTest.Controllers
     [ApiController]
     public class DWTableController : ControllerBase
     {
-        
+
         [HttpGet]
         public IActionResult Get(string tableName)
         {
@@ -20,10 +20,10 @@ namespace UnitTest.Controllers
             DataSet results = new DataSet();
             string query = "SELECT COUNT(*) as count FROM " + tableName;
             string ccn = "Data Source=sql-prod-mdcttdp.database.windows.net;Initial Catalog=dw-ttdp;Persist Security Info=True;User ID=CCBUser;Password=CCBDadeUser2020!";
-            
-            if (String.IsNullOrEmpty(tableName))            
+
+            if (String.IsNullOrEmpty(tableName))
                 return Content("No Table selected");
-            
+
 
             try
             {
@@ -51,7 +51,7 @@ namespace UnitTest.Controllers
             }
 
 
-           
+
         }
     }
 }

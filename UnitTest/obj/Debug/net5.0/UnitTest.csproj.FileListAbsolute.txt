@@ -79,9 +79,16 @@ C:\BIProjectUT\UnitTest\bin\Debug\net5.0\UnitTest.runtimeconfig.dev.json
 C:\BIProjectUT\UnitTest\bin\Debug\net5.0\UnitTest.dll
 C:\BIProjectUT\UnitTest\bin\Debug\net5.0\ref\UnitTest.dll
 C:\BIProjectUT\UnitTest\bin\Debug\net5.0\UnitTest.pdb
+C:\BIProjectUT\UnitTest\bin\Debug\net5.0\Humanizer.dll
+C:\BIProjectUT\UnitTest\bin\Debug\net5.0\Microsoft.EntityFrameworkCore.dll
+C:\BIProjectUT\UnitTest\bin\Debug\net5.0\Microsoft.EntityFrameworkCore.Abstractions.dll
+C:\BIProjectUT\UnitTest\bin\Debug\net5.0\Microsoft.EntityFrameworkCore.Design.dll
+C:\BIProjectUT\UnitTest\bin\Debug\net5.0\Microsoft.EntityFrameworkCore.Relational.dll
+C:\BIProjectUT\UnitTest\bin\Debug\net5.0\Microsoft.Extensions.DependencyInjection.dll
 C:\BIProjectUT\UnitTest\bin\Debug\net5.0\Oracle.ManagedDataAccess.dll
 C:\BIProjectUT\UnitTest\bin\Debug\net5.0\System.Configuration.ConfigurationManager.dll
 C:\BIProjectUT\UnitTest\bin\Debug\net5.0\System.Data.SqlClient.dll
+C:\BIProjectUT\UnitTest\bin\Debug\net5.0\System.Diagnostics.DiagnosticSource.dll
 C:\BIProjectUT\UnitTest\bin\Debug\net5.0\System.Diagnostics.PerformanceCounter.dll
 C:\BIProjectUT\UnitTest\bin\Debug\net5.0\System.DirectoryServices.dll
 C:\BIProjectUT\UnitTest\bin\Debug\net5.0\System.DirectoryServices.Protocols.dll
@@ -109,3 +116,4 @@ C:\BIProjectUT\UnitTest\obj\Debug\net5.0\UnitTest.dll
 C:\BIProjectUT\UnitTest\obj\Debug\net5.0\ref\UnitTest.dll
 C:\BIProjectUT\UnitTest\obj\Debug\net5.0\UnitTest.pdb
 C:\BIProjectUT\UnitTest\obj\Debug\net5.0\UnitTest.genruntimeconfig.cache
+C:\BIProjectUT\UnitTest\obj\Debug\net5.0\UnitTest.csproj.AssemblyReference.cache

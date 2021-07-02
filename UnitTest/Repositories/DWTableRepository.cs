@@ -1,14 +1,4 @@
-﻿using UnitTest.Models;
-
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using UnitTest.Dictionary;
-using System.Reflection;
-
-
-namespace UnitTest.Repositories
+﻿namespace UnitTest.Repositories
 {
     public class DWTableRepository
     {
