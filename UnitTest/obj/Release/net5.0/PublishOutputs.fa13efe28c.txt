@@ -1,6 +1,12 @@
 C:\BIProjectUT\UnitTest\obj\Release\net5.0\PubTmp\Out\UnitTest.exe
+C:\BIProjectUT\UnitTest\obj\Release\net5.0\PubTmp\Out\toPublish\web.config
 C:\BIProjectUT\UnitTest\obj\Release\net5.0\PubTmp\Out\appsettings.Development.json
 C:\BIProjectUT\UnitTest\obj\Release\net5.0\PubTmp\Out\appsettings.json
+C:\BIProjectUT\UnitTest\obj\Release\net5.0\PubTmp\Out\toPublish\appsettings.Development.json
+C:\BIProjectUT\UnitTest\obj\Release\net5.0\PubTmp\Out\toPublish\appsettings.json
+C:\BIProjectUT\UnitTest\obj\Release\net5.0\PubTmp\Out\toPublish\appsettings.production.json
+C:\BIProjectUT\UnitTest\obj\Release\net5.0\PubTmp\Out\toPublish\UnitTest.deps.json
+C:\BIProjectUT\UnitTest\obj\Release\net5.0\PubTmp\Out\toPublish\UnitTest.runtimeconfig.json
 C:\BIProjectUT\UnitTest\obj\Release\net5.0\PubTmp\Out\UnitTest.dll
 C:\BIProjectUT\UnitTest\obj\Release\net5.0\PubTmp\Out\UnitTest.runtimeconfig.json
 C:\BIProjectUT\UnitTest\obj\Release\net5.0\PubTmp\Out\UnitTest.pdb

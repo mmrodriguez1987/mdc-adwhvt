@@ -19,7 +19,7 @@ namespace UnitTest.Controllers
             SqlDataAdapter dataAdapter = null;
             DataSet results = new DataSet();
             string query = "SELECT COUNT(*) as count FROM " + tableName;
-            string ccn = "Data Source=sql-prod-mdcttdp.database.windows.net;Initial Catalog=dw-ttdp;Persist Security Info=True;User ID=CCBUser;Password=CCBDadeUser2020!";
+            string ccn = "*";
 
             if (String.IsNullOrEmpty(tableName))
                 return Content("No Table selected");

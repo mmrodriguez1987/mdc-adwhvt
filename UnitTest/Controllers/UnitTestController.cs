@@ -18,9 +18,70 @@ namespace UnitTest.Controllers
         }
 
 
-        [HttpPost]
-        public IActionResult PostUnitTest(string dtwTable, string ccbTable)
+        /// <summary>
+        /// Datawarehouse Controller 
+        /// </summary>
+        /// <param name="tableIdentifier"></param> 
+        /// <returns></returns>       
+        [HttpGet]
+        public IActionResult Get(string tableIdentifier)
         {
+            string dtwTable, ccbTable;
+
+
+            switch (tableIdentifier.Trim())
+            {
+                case "UOM":
+                    dtwTable = "dwadm2.CD_UOM";
+                    ccbTable = "CISADM.CI_UOM";
+                    break;
+                case "FISCAL_CAL": case "CAL_PERIOD":
+                    dtwTable = "dwadm2.CD_FISCAL_CAL";
+                    ccbTable = "CISADM.CI_CAL_PERIOD";
+                    break;
+
+                case "ACCT":
+                    dtwTable = "dwadm2.CD_ACCT";
+                    ccbTable = "CISADM.CI_ACCT";
+                    break;
+
+                case "ADDR":
+                    dtwTable = "dwadm2.CD_PREM";
+                    ccbTable = "CISADM.CI_ADDR";
+                    break;
+
+                case "PREM":
+                    dtwTable = "dwadm2.CD_PREM";
+                    ccbTable = "CISADM.CI_PREM";
+                    break;
+
+                case "RATE":
+                    dtwTable = "dwadm2.CD_RATE";
+                    ccbTable = "CISADM.CI_RS";
+                    break;
+
+                case "SA":
+                    dtwTable = "dwadm2.CD_SA";
+                    ccbTable = "CISADM.CI_SA";
+                    break;
+
+                case "PER":
+                    dtwTable = "dwadm2.CD_PER";
+                    ccbTable = "CISADM.CI_PER";
+                    break;
+
+                case "SQI":
+                    dtwTable = "dwadm2.CD_SQI";
+                    ccbTable = "CISADM.CI_SQI";
+                    break;
+
+                default:
+                    dtwTable = "";
+                    ccbTable = "";
+                    break;
+            }
+
+
             if (String.IsNullOrEmpty(dtwTable) || String.IsNullOrEmpty(ccbTable))
                 return NotFound("Datawarehouse or CCB Tables are messing");
 
@@ -28,11 +89,10 @@ namespace UnitTest.Controllers
             DataTable dtResult = new DataTable("dtResult");
             dtResult.Columns.Add(dtwTable);
             dtResult.Columns.Add(ccbTable);
-            dtResult.Columns.Add("OK");
-            dtResult.Columns.Add("Any Error?");
-            dtResult.Rows.Add(0, 0, 0, "Clean");
+            dtResult.Columns.Add("result");
+            dtResult.Columns.Add("Error");
+            dtResult.Rows.Add(0, 0, 0, "");
             dsResult.Tables.Add(dtResult);
-
 
             SqlConnection myConnection = null;
             SqlCommand command = null;
@@ -40,17 +100,11 @@ namespace UnitTest.Controllers
             DataSet results = new DataSet();
             string query = "SELECT COUNT(*) as count FROM " + dtwTable;
 
-
-
             OracleConnection myOracleConnection = null;
             OracleCommand commandOracle = null;
             OracleDataAdapter dataAdapterOracle = null;
             DataSet resultsOracle = new DataSet();
             string queryOracle = "SELECT COUNT(*) as count FROM " + ccbTable;
-
-
-
-
 
             try
             {
@@ -69,19 +123,18 @@ namespace UnitTest.Controllers
                 }
 
             }
-            catch (SqlException conexSQLException)
+            catch (Exception dte )
             {   // Return -1 in Colum "OK" and the Error description in "Any Error" column
-                Console.Write("Datawarehouse - SQL  Connection Exception: " + conexSQLException);
+                Console.Write("Conexion DTW: " + _conf.GetConnectionString("DTWttdpConnection") + "\n");
+                Console.Write("Exception: " + dte + "\n");
                 dsResult.Tables[0].Rows[0][2] = -1;
-                dsResult.Tables[0].Rows[0][3] = ("Datawarehouse - SQL  Connection Exception: " + conexSQLException.ToString());
+                dsResult.Tables[0].Rows[0][3] = ("Exception: " + dte.ToString());
                 return Ok(Util.DataTableToJSONWithStringBuilder(dsResult.Tables[0]));
             }
             finally
             {
                 myConnection.Close();
             }
-
-
 
             try
             {
@@ -97,15 +150,16 @@ namespace UnitTest.Controllers
                             dsResult.Tables[0].Rows[0][1] = resultsOracle.Tables[0].Rows[0].ItemArray[0];
                         }
                     }
-                }
-                myOracleConnection.Close();
+                }               
             }
-            catch (OracleException conexOracleException)
+            catch (Exception ccbe)
             {
                 // Return -1 in Colum "OK" and the Error description in "Any Error" column
-                Console.Write("CCB - Oracle Connection Exception: " + conexOracleException);
+                
+                Console.Write("Conexion CCB: " + _conf.GetConnectionString("CCBProdConnection") + "\n");
+                Console.Write("Exception: " + ccbe);
                 dsResult.Tables[0].Rows[0][2] = -1;
-                dsResult.Tables[0].Rows[0][3] = ("CCB - Oracle Connection Exception: " + conexOracleException.ToString());
+                dsResult.Tables[0].Rows[0][3] = ("Exception: " + ccbe.ToString());
                 return Ok(Util.DataTableToJSONWithStringBuilder(dsResult.Tables[0]));
             }
             finally

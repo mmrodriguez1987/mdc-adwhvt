@@ -10,7 +10,7 @@ namespace UnitTest
             var JSONString = new StringBuilder();
             if (table.Rows.Count > 0)
             {
-                JSONString.Append("[");
+                //JSONString.Append("[");
                 for (int i = 0; i < table.Rows.Count; i++)
                 {
                     JSONString.Append("{");
@@ -34,7 +34,7 @@ namespace UnitTest
                         JSONString.Append("},");
                     }
                 }
-                JSONString.Append("]");
+                //JSONString.Append("]");
             }
             return JSONString.ToString();
         }
