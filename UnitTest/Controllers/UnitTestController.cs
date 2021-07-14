@@ -1,9 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
-using Oracle.ManagedDataAccess.Client;
 using System;
 using System.Data;
-using System.Data.SqlClient;
+using System.Threading.Tasks;
 
 namespace UnitTest.Controllers
 {
@@ -12,6 +11,7 @@ namespace UnitTest.Controllers
     public class UnitTestController : ControllerBase
     {
         public IConfiguration _conf { get; }
+        public Util objUtil;
         public UnitTestController(IConfiguration configuration)
         {
             _conf = configuration;
@@ -24,10 +24,9 @@ namespace UnitTest.Controllers
         /// <param name="tableIdentifier"></param> 
         /// <returns></returns>       
         [HttpGet]
-        public IActionResult Get(string tableIdentifier)
+        public async Task<IActionResult> Get(string tableIdentifier)
         {
             string dtwTable, ccbTable;
-
 
             switch (tableIdentifier.Trim())
             {
@@ -55,7 +54,7 @@ namespace UnitTest.Controllers
                     ccbTable = "CISADM.CI_PREM";
                     break;
 
-                case "RATE":
+                case "RATE": case "RS":
                     dtwTable = "dwadm2.CD_RATE";
                     ccbTable = "CISADM.CI_RS";
                     break;
@@ -65,7 +64,7 @@ namespace UnitTest.Controllers
                     ccbTable = "CISADM.CI_SA";
                     break;
 
-                case "PER":
+                case "PER": case "PERSON":
                     dtwTable = "dwadm2.CD_PER";
                     ccbTable = "CISADM.CI_PER";
                     break;
@@ -83,100 +82,38 @@ namespace UnitTest.Controllers
 
 
             if (String.IsNullOrEmpty(dtwTable) || String.IsNullOrEmpty(ccbTable))
-                return NotFound("Datawarehouse or CCB Tables are messing");
+                return NotFound("Datawarehouse or CCB Tables are messing");           
+
+            new Util(_conf.GetConnectionString("CCBProdConnection"), 
+                _conf.GetConnectionString("DTWttdpConnection"),
+                dtwTable,ccbTable);
 
             DataSet dsResult = new DataSet("dsResults");
-            DataTable dtResult = new DataTable("dtResult");
-            dtResult.Columns.Add(dtwTable);
-            dtResult.Columns.Add(ccbTable);
-            dtResult.Columns.Add("result");
-            dtResult.Columns.Add("Error");
-            dtResult.Rows.Add(0, 0, 0, "");
-            dsResult.Tables.Add(dtResult);
 
-            SqlConnection myConnection = null;
-            SqlCommand command = null;
-            SqlDataAdapter dataAdapter = null;
-            DataSet results = new DataSet();
-            string query = "SELECT COUNT(*) as count FROM " + dtwTable;
+            dsResult = Util.setDSDefaultStructure(ccbTable, dtwTable);          
 
-            OracleConnection myOracleConnection = null;
-            OracleCommand commandOracle = null;
-            OracleDataAdapter dataAdapterOracle = null;
-            DataSet resultsOracle = new DataSet();
-            string queryOracle = "SELECT COUNT(*) as count FROM " + ccbTable;
+            //Executing count by Thread
+            DataSet resultCCB = await Util.GetRowsCountFromCCB();
+            DataSet resultDTWH = await Util.GetRowsCountFromDTWH();
 
-            try
+            //if the response from Datawarehouse contain an Error
+            if (resultDTWH.Tables[0].Rows[0].ItemArray[0].ToString().StartsWith("-"))
+                return Ok(Util.DataTableToJSONWithStringBuilder(resultDTWH.Tables[0]));
+            
+            //if the response from CCB  contain an Error
+            if (resultCCB.Tables[0].Rows[0].ItemArray[0].ToString().StartsWith("-"))
+                return Ok(Util.DataTableToJSONWithStringBuilder(resultCCB.Tables[0]));
+            else
             {
-                //Conexion to Datawarehouse
-                using (myConnection = new SqlConnection(_conf.GetConnectionString("DTWttdpConnection")))
-                {
-                    myConnection.Open();
-                    using (command = new SqlCommand(query, myConnection))
-                    {
-                        using (dataAdapter = new SqlDataAdapter(command))
-                        {
-                            dataAdapter.Fill(results);
-                            dsResult.Tables[0].Rows[0][0] = results.Tables[0].Rows[0].ItemArray[0];
-                        }
-                    }
-                }
+                dsResult.Tables[0].Rows[0][0] = resultDTWH.Tables[0].Rows[0].ItemArray[0];
+                dsResult.Tables[0].Rows[0][1] = resultCCB.Tables[0].Rows[0].ItemArray[0];
 
-            }
-            catch (Exception dte )
-            {   // Return -1 in Colum "OK" and the Error description in "Any Error" column
-                Console.Write("Conexion DTW: " + _conf.GetConnectionString("DTWttdpConnection") + "\n");
-                Console.Write("Exception: " + dte + "\n");
-                dsResult.Tables[0].Rows[0][2] = -1;
-                dsResult.Tables[0].Rows[0][3] = ("Exception: " + dte.ToString());
+                if (Convert.ToInt64(dsResult.Tables[0].Rows[0][0]) == Convert.ToInt64(dsResult.Tables[0].Rows[0][1]))
+                    dsResult.Tables[0].Rows[0][2] = 1;
+
                 return Ok(Util.DataTableToJSONWithStringBuilder(dsResult.Tables[0]));
             }
-            finally
-            {
-                myConnection.Close();
-            }
-
-            try
-            {
-                //Conexion to CCB 
-                using (myOracleConnection = new OracleConnection(_conf.GetConnectionString("CCBProdConnection")))
-                {
-                    myOracleConnection.Open();
-                    using (commandOracle = new OracleCommand(queryOracle, myOracleConnection))
-                    {
-                        using (dataAdapterOracle = new OracleDataAdapter(commandOracle))
-                        {
-                            dataAdapterOracle.Fill(resultsOracle);
-                            dsResult.Tables[0].Rows[0][1] = resultsOracle.Tables[0].Rows[0].ItemArray[0];
-                        }
-                    }
-                }               
-            }
-            catch (Exception ccbe)
-            {
-                // Return -1 in Colum "OK" and the Error description in "Any Error" column
-                
-                Console.Write("Conexion CCB: " + _conf.GetConnectionString("CCBProdConnection") + "\n");
-                Console.Write("Exception: " + ccbe);
-                dsResult.Tables[0].Rows[0][2] = -1;
-                dsResult.Tables[0].Rows[0][3] = ("Exception: " + ccbe.ToString());
-                return Ok(Util.DataTableToJSONWithStringBuilder(dsResult.Tables[0]));
-            }
-            finally
-            {
-                myOracleConnection.Close();
-            }
-
-
-            //if count(ccb.table.count == datawarehouse.table.count) then return 1 in columnt "0"   
-            if (Convert.ToInt64(dsResult.Tables[0].Rows[0][0]) == Convert.ToInt64(dsResult.Tables[0].Rows[0][1]))
-            {
-                dsResult.Tables[0].Rows[0][2] = 1;
-            }
-
-
-            return Ok(Util.DataTableToJSONWithStringBuilder(dsResult.Tables[0]));
-
+                     
         }
     }
 }
