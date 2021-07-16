@@ -1,0 +1,15 @@
+C:\BIProjectUT\UnitTest\obj\Release\net5.0\win-x64\PubTmp\Out\UnitTest.exe
+C:\BIProjectUT\UnitTest\obj\Release\net5.0\win-x64\PubTmp\Out\appsettings.Development.json
+C:\BIProjectUT\UnitTest\obj\Release\net5.0\win-x64\PubTmp\Out\appsettings.json
+C:\BIProjectUT\UnitTest\obj\Release\net5.0\win-x64\PubTmp\Out\UnitTest.dll
+C:\BIProjectUT\UnitTest\obj\Release\net5.0\win-x64\PubTmp\Out\UnitTest.runtimeconfig.json
+C:\BIProjectUT\UnitTest\obj\Release\net5.0\win-x64\PubTmp\Out\UnitTest.pdb
+C:\BIProjectUT\UnitTest\obj\Release\net5.0\win-x64\PubTmp\Out\Oracle.ManagedDataAccess.dll
+C:\BIProjectUT\UnitTest\obj\Release\net5.0\win-x64\PubTmp\Out\System.Configuration.ConfigurationManager.dll
+C:\BIProjectUT\UnitTest\obj\Release\net5.0\win-x64\PubTmp\Out\System.Data.SqlClient.dll
+C:\BIProjectUT\UnitTest\obj\Release\net5.0\win-x64\PubTmp\Out\System.Diagnostics.PerformanceCounter.dll
+C:\BIProjectUT\UnitTest\obj\Release\net5.0\win-x64\PubTmp\Out\System.DirectoryServices.dll
+C:\BIProjectUT\UnitTest\obj\Release\net5.0\win-x64\PubTmp\Out\System.DirectoryServices.Protocols.dll
+C:\BIProjectUT\UnitTest\obj\Release\net5.0\win-x64\PubTmp\Out\System.Security.Cryptography.ProtectedData.dll
+C:\BIProjectUT\UnitTest\obj\Release\net5.0\win-x64\PubTmp\Out\sni.dll
+C:\BIProjectUT\UnitTest\obj\Release\net5.0\win-x64\PubTmp\Out\UnitTest.deps.json
