@@ -1,0 +1,9 @@
+C:\BIProjectUT\Tools\bin\Debug\netcoreapp3.1\Tools.deps.json
+C:\BIProjectUT\Tools\bin\Debug\netcoreapp3.1\Tools.dll
+C:\BIProjectUT\Tools\bin\Debug\netcoreapp3.1\Tools.pdb
+C:\BIProjectUT\Tools\obj\Debug\netcoreapp3.1\Tools.csproj.AssemblyReference.cache
+C:\BIProjectUT\Tools\obj\Debug\netcoreapp3.1\Tools.AssemblyInfoInputs.cache
+C:\BIProjectUT\Tools\obj\Debug\netcoreapp3.1\Tools.AssemblyInfo.cs
+C:\BIProjectUT\Tools\obj\Debug\netcoreapp3.1\Tools.csproj.CoreCompileInputs.cache
+C:\BIProjectUT\Tools\obj\Debug\netcoreapp3.1\Tools.dll
+C:\BIProjectUT\Tools\obj\Debug\netcoreapp3.1\Tools.pdb
