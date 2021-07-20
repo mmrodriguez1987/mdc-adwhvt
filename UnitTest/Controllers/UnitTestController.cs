@@ -1,8 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Data;
 using System.Threading.Tasks;
+using Tools.DataConversion;
+
 
 namespace UnitTest.Controllers
 {
@@ -11,109 +14,111 @@ namespace UnitTest.Controllers
     public class UnitTestController : ControllerBase
     {
         public IConfiguration _conf { get; }
-        public Util objUtil;
-        public UnitTestController(IConfiguration configuration)
+        public Models.UnitTest unitTest;
+        readonly ILogger<UnitTestController> _log;
+        public UnitTestController(IConfiguration configuration, ILogger<UnitTestController> log)
         {
             _conf = configuration;
+            _log = log;
         }
-
-
-        /// <summary>
-        /// Datawarehouse Controller 
-        /// </summary>
-        /// <param name="tableIdentifier"></param> 
-        /// <returns></returns>       
+ 
+       
         [HttpGet]
-        public async Task<IActionResult> Get(string tableIdentifier)
+        public async Task<IActionResult> Get(string tableIdentifier, string enviroment)
         {
-            string dtwTable, ccbTable;
-
-            switch (tableIdentifier.Trim())
+            Int64 diffCount;
+            DataSet dsResult = new DataSet("dsResults");
+            _log.LogInformation("************* UNIT TEST BEGIN ************");
+            if (String.IsNullOrEmpty(tableIdentifier) || String.IsNullOrEmpty(enviroment))
             {
-                case "UOM":
-                    dtwTable = "dwadm2.CD_UOM";
-                    ccbTable = "CISADM.CI_UOM";
-                    break;
-                case "FISCAL_CAL": case "CAL_PERIOD":
-                    dtwTable = "dwadm2.CD_FISCAL_CAL";
-                    ccbTable = "CISADM.CI_CAL_PERIOD";
+                _log.LogWarning("Enviroment or table Identifier are missing");
+                return NotFound("Enviroment or table Identifier are missing");
+            } 
+            
+
+            _log.LogInformation("Table Identifier: " + tableIdentifier);
+            _log.LogInformation("Enviroment: "+ enviroment);
+
+
+            // Initialize the Model for identify conexion's string and tables to use
+            switch (enviroment.Trim().ToUpper())
+            {
+                case "CCBPROD":
+                case "PROD":
+                case "PRODUCTION":
+                    _log.LogInformation("CCB CONEXION STRING ==>> " + _conf.GetConnectionString("CCBProdConnection"));                  
+                    new Models.UnitTest(_conf.GetConnectionString("CCBProdConnection"), _conf.GetConnectionString("DTWttdpConnection"), tableIdentifier);
                     break;
 
-                case "ACCT":
-                    dtwTable = "dwadm2.CD_ACCT";
-                    ccbTable = "CISADM.CI_ACCT";
+                case "CCBSTGE":
+                case "STGE":
+                case "STAGE":
+                    _log.LogInformation("CCB CONEXION STRING ==>> " + _conf.GetConnectionString("CCBStgeConnection"));
+                    new Models.UnitTest(_conf.GetConnectionString("CCBStgeConnection"), _conf.GetConnectionString("DTWttdpConnection"), tableIdentifier);
                     break;
 
-                case "ADDR":
-                    dtwTable = "dwadm2.CD_PREM";
-                    ccbTable = "CISADM.CI_ADDR";
-                    break;
-
-                case "PREM":
-                    dtwTable = "dwadm2.CD_PREM";
-                    ccbTable = "CISADM.CI_PREM";
-                    break;
-
-                case "RATE": case "RS":
-                    dtwTable = "dwadm2.CD_RATE";
-                    ccbTable = "CISADM.CI_RS";
-                    break;
-
-                case "SA":
-                    dtwTable = "dwadm2.CD_SA";
-                    ccbTable = "CISADM.CI_SA";
-                    break;
-
-                case "PER": case "PERSON":
-                    dtwTable = "dwadm2.CD_PER";
-                    ccbTable = "CISADM.CI_PER";
-                    break;
-
-                case "SQI":
-                    dtwTable = "dwadm2.CD_SQI";
-                    ccbTable = "CISADM.CI_SQI";
+                case "CCBRPTS":
+                case "RPTS":
+                case "REPORTS":
+                    _log.LogInformation("CCB CONEXION STRING ==>> " + _conf.GetConnectionString("CCBRptsConnection"));
+                    new Models.UnitTest(_conf.GetConnectionString("CCBRptsConnection"), _conf.GetConnectionString("DTWttdpConnection"), tableIdentifier);
                     break;
 
                 default:
-                    dtwTable = "";
-                    ccbTable = "";
+                    _log.LogInformation("CCB CONEXION STRING ==>> " + _conf.GetConnectionString("CCBProdConnection"));
+                    new Models.UnitTest(_conf.GetConnectionString("CCBProdConnection"), _conf.GetConnectionString("DTWttdpConnection"), tableIdentifier);
                     break;
             }
+            _log.LogInformation("DTWH CONEXION STRING ==>> " + _conf.GetConnectionString("DTWttdpConnection"));
 
-
-            if (String.IsNullOrEmpty(dtwTable) || String.IsNullOrEmpty(ccbTable))
-                return NotFound("Datawarehouse or CCB Tables are messing");           
-
-            new Util(_conf.GetConnectionString("CCBProdConnection"), 
-                _conf.GetConnectionString("DTWttdpConnection"),
-                dtwTable,ccbTable);
-
-            DataSet dsResult = new DataSet("dsResults");
-
-            dsResult = Util.setDSDefaultStructure(ccbTable, dtwTable);          
+            // Prepare the DataSet for return in the response
+            dsResult = Models.UnitTest.setResponseStructure();
 
             //Executing count by Thread
-            DataSet resultCCB = await Util.GetRowsCountFromCCB();
-            DataSet resultDTWH = await Util.GetRowsCountFromDTWH();
+            DataSet resultCCB = await Models.UnitTest.GetRowsCountFromCCB();
+            DataSet resultDTWH = await Models.UnitTest.GetRowsCountFromDTWH();
 
             //if the response from Datawarehouse contain an Error
             if (resultDTWH.Tables[0].Rows[0].ItemArray[0].ToString().StartsWith("-"))
-                return Ok(Util.DataTableToJSONWithStringBuilder(resultDTWH.Tables[0]));
-            
+            {
+                _log.LogError("Error on Datawarehpouse conexion: "+ resultDTWH.Tables[0].Rows[0].ItemArray[0].ToString());
+                return base.Ok(Extensions.DataTableToJSONWithStringBuilder(resultDTWH.Tables[0]));
+            }
+                
+
             //if the response from CCB  contain an Error
             if (resultCCB.Tables[0].Rows[0].ItemArray[0].ToString().StartsWith("-"))
-                return Ok(Util.DataTableToJSONWithStringBuilder(resultCCB.Tables[0]));
+            {
+                _log.LogError("Error on CCB conexion: " + resultCCB.Tables[0].Rows[0].ItemArray[0].ToString());
+                return base.Ok(Extensions.DataTableToJSONWithStringBuilder(resultCCB.Tables[0]));
+            }
+                
             else
             {
                 dsResult.Tables[0].Rows[0][0] = resultDTWH.Tables[0].Rows[0].ItemArray[0];
                 dsResult.Tables[0].Rows[0][1] = resultCCB.Tables[0].Rows[0].ItemArray[0];
 
+                // if the CCB and DTW have the same value count tables
                 if (Convert.ToInt64(dsResult.Tables[0].Rows[0][0]) == Convert.ToInt64(dsResult.Tables[0].Rows[0][1]))
+                {
+                    _log.LogInformation("Unit Test Successfully ==>> DTWH Count : " + dsResult.Tables[0].Rows[0][0].ToString() + ", CCB Count : " + dsResult.Tables[0].Rows[0][1].ToString());
                     dsResult.Tables[0].Rows[0][2] = 1;
-
-                return Ok(Util.DataTableToJSONWithStringBuilder(dsResult.Tables[0]));
+                }                    
+                else
+                {
+                    diffCount = Math.Abs(Convert.ToInt64(dsResult.Tables[0].Rows[0][0]) - Convert.ToInt64(dsResult.Tables[0].Rows[0][1]));
+                    dsResult.Tables[0].Rows[0][4] = diffCount;
+                    string response = "Unit Test fail for " + tableIdentifier + ", there is a difference of " + diffCount.ToString()
+                        + ". CCB Count: " + resultCCB.Tables[0].Rows[0].ItemArray[0].ToString()
+                        + ". DTW Count: " + resultDTWH.Tables[0].Rows[0].ItemArray[0].ToString();
+                    _log.LogInformation(response);
+                    dsResult.Tables[0].Rows[0][3] = response;
+                }
+                _log.LogInformation("************* UNIT TEST END ************");
+                return base.Ok(Extensions.DataTableToJSONWithStringBuilder(dsResult.Tables[0]));
             }
-                     
-        }
+       }
+
+
     }
 }

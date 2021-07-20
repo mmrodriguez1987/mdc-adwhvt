@@ -6,91 +6,57 @@ using System.Data.SqlClient;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace UnitTest
+namespace UnitTest.Models
 {
-    public class Util
-    {
+    public class UnitTest
+    {       
 
-        public static SqlConnection myConnection;
-        public static SqlCommand command;
-        public static SqlDataAdapter dataAdapter;
-        public static DataSet resultDTWH = new DataSet();
-        public static string sql_query;
+        private static SqlConnection myConnection;
+        private static SqlCommand command;
+        private static SqlDataAdapter dataAdapter;
+        private static DataSet resultDTWH = new DataSet();
+        private static string sql_query;
 
+        private static OracleConnection myOracleConnection = null;
+        private static OracleCommand commandOracle = null;
+        private static OracleDataAdapter dataAdapterOracle = null;
+        private static DataSet resultsOracle = new DataSet();
+        private static string oracle_query;
 
-        public static OracleConnection myOracleConnection = null;
-        public static OracleCommand commandOracle = null;
-        public static OracleDataAdapter dataAdapterOracle = null;
-        public static DataSet resultsOracle = new DataSet();
-        public static string oracle_query;
+        private static string _oracleConex, _dtwhConex, _dtwTable, _ccbTable;
 
-        public static string _oracleConex, _dtwhConex, _dtwTable, _ccbTable;
-    
-        public static DataSet setDSDefaultStructure(string ccb, string dwt)
+       
+        public static string DtwTable { get => _dtwTable; set => _dtwTable = value; }
+        public static string CcbTable { get => _ccbTable; set => _ccbTable = value; }
+
+        public static DataSet setResponseStructure()
         {
             DataSet dsResult = new DataSet("dsResults");
             DataTable dtResult = new DataTable("dtResult");
-            dtResult.Columns.Add(dwt);
-            dtResult.Columns.Add(ccb);
+            dtResult.Columns.Add("DWH");
+            dtResult.Columns.Add("Oracle");
             dtResult.Columns.Add("result");
             dtResult.Columns.Add("Error");
-            dtResult.Rows.Add(0, 0, 0, "");
+            dtResult.Columns.Add("Diff");
+            dtResult.Rows.Add(0, 0, 0, "", 0);
             dsResult.Tables.Add(dtResult);
             return dsResult;
         }       
 
-        public Util(string oracleConex, string dtwhConex, string dtwTable, string ccbTable)
+        public UnitTest(string ccbConex, string dtwhConex, string identifier)
         {
-            _oracleConex = oracleConex;
+            _oracleConex = ccbConex;
             _dtwhConex = dtwhConex;
-            _dtwTable = dtwTable;
-            _ccbTable = ccbTable;
+            setTablesByIdentifier(identifier);
+         
 
             oracle_query = "SELECT COUNT(*) as count FROM " + _ccbTable;
             sql_query = "SELECT COUNT(*) as count FROM " + _dtwTable;
 
-            resultsOracle = setDSDefaultStructure(ccbTable, dtwTable);
-            resultDTWH = setDSDefaultStructure(ccbTable, dtwTable);
+            resultsOracle = setResponseStructure();
+            resultDTWH = setResponseStructure();
         }
-    
-        /// <summary>
-        /// Convert a DataTabla into Json
-        /// </summary>
-        /// <param name="table"></param>
-        /// <returns></returns>
-        public static string DataTableToJSONWithStringBuilder(DataTable table)
-        {
-            var JSONString = new StringBuilder();
-            if (table.Rows.Count > 0)
-            {
-                //JSONString.Append("[");
-                for (int i = 0; i < table.Rows.Count; i++)
-                {
-                    JSONString.Append("{");
-                    for (int j = 0; j < table.Columns.Count; j++)
-                    {
-                        if (j < table.Columns.Count - 1)
-                        {
-                            JSONString.Append("\"" + table.Columns[j].ColumnName.ToString() + "\":" + "\"" + table.Rows[i][j].ToString() + "\",");
-                        }
-                        else if (j == table.Columns.Count - 1)
-                        {
-                            JSONString.Append("\"" + table.Columns[j].ColumnName.ToString() + "\":" + "\"" + table.Rows[i][j].ToString() + "\"");
-                        }
-                    }
-                    if (i == table.Rows.Count - 1)
-                    {
-                        JSONString.Append("}");
-                    }
-                    else
-                    {
-                        JSONString.Append("},");
-                    }
-                }
-                //JSONString.Append("]");
-            }
-            return JSONString.ToString();
-        }
+           
 
         /// <summary>
         /// Get Rowws Count from a specified table of Datawarehouse in a conext of an object in th instance
@@ -121,12 +87,12 @@ namespace UnitTest
                 }
                 catch (Exception dte)
                 {
-                    myDS = setDSDefaultStructure("error", "error");
+                    myDS = setResponseStructure();
                     // Return -1 in Colum "OK" and the Error description in "Any Error" column
                     Console.Write("Conexion DTW: " + _dtwhConex + "\n");
                     Console.Write("Exception: " + dte + "\n");
                     myDS.Tables[0].Rows[0][0] = -1;
-                    myDS.Tables[0].Rows[0][0] += ("Exception: " + dte.ToString());
+                    myDS.Tables[0].Rows[0][0] += (" Error Detail: " + dte.ToString());
                     return myDS;
                 }
             });           
@@ -160,15 +126,80 @@ namespace UnitTest
                 }
                 catch (Exception ccbe)
                 {
-                    myDS = setDSDefaultStructure("error","error");
+                    myDS = setResponseStructure();
                     // Return -1 in Colum "OK" and the Error description in "Any Error" column
                     Console.Write("Conexion CCB: " + _oracleConex + "\n");
-                    Console.Write("Exception: " + ccbe);
+                    Console.Write("Exception: " + ccbe);                
                     myDS.Tables[0].Rows[0][0] = -1;
-                    myDS.Tables[0].Rows[0][0] += ("Exception: " + ccbe.ToString());
+                    myDS.Tables[0].Rows[0][0] += (" Exception Detail: " + ccbe.ToString());                    
                     return myDS;
                 }              
             });
         }
+
+        /// <summary>
+        /// This method is for Identify the two tables for the Unit Test
+        /// </summary>
+        /// <param name="tableIdentifier"></param>
+        public static void setTablesByIdentifier(string tableIdentifier)
+        {           
+            switch (tableIdentifier.Trim().ToUpper())
+            {
+                case "UOM":
+                    _dtwTable = "dwadm2.CD_UOM";
+                    _ccbTable = "CISADM.CI_UOM";
+                    break;
+                case "FISCAL_CAL":
+                case "CAL_PERIOD":
+                    _dtwTable = "dwadm2.CD_FISCAL_CAL";
+                    _ccbTable = "CISADM.CI_CAL_PERIOD";
+                    break;
+
+                case "ACCT":
+                    _dtwTable = "dwadm2.CD_ACCT";
+                    _ccbTable = "CISADM.CI_ACCT";
+                    break;
+
+                case "ADDR":
+                    _dtwTable = "dwadm2.CD_ADDR";
+                    _ccbTable = "CISADM.CI_PREM";
+                    break;
+
+                case "PREM":
+                    _dtwTable = "dwadm2.CD_PREM";
+                    _ccbTable = "CISADM.CI_PREM";
+                    break;
+
+                case "RATE":
+                case "RS":
+                    _dtwTable = "dwadm2.CD_RATE";
+                    _ccbTable = "CISADM.CI_RS";
+                    break;
+
+                case "SA":
+                    _dtwTable = "dwadm2.CD_SA";
+                    _ccbTable = "CISADM.CI_SA";
+                    break;
+
+                case "PER":
+                case "PERSON":
+                    _dtwTable = "dwadm2.CD_PER";
+                    _ccbTable = "CISADM.CI_PER";
+                    break;
+
+                case "SQI":
+                    _dtwTable = "dwadm2.CD_SQI";
+                    _ccbTable = "CISADM.CI_SQI";
+                    break;
+
+                default:
+                    _dtwTable = "";
+                    _ccbTable = "";
+                    break;
+            }
+
+        }
+
+       
     }
 }
