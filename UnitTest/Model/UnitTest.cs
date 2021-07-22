@@ -1,10 +1,10 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using System.Threading;
 using Oracle.ManagedDataAccess.Client;
 using System;
 using System.Data;
 using System.Data.SqlClient;
-using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 
 namespace UnitTest.Models
 {
@@ -22,12 +22,11 @@ namespace UnitTest.Models
         private static OracleDataAdapter dataAdapterOracle = null;
         private static DataSet resultsOracle = new DataSet();
         private static string oracle_query;
-
+        readonly ILogger<UnitTest> _log;
         private static string _oracleConex, _dtwhConex, _dtwTable, _ccbTable;
-
        
-        public static string DtwTable { get => _dtwTable; set => _dtwTable = value; }
-        public static string CcbTable { get => _ccbTable; set => _ccbTable = value; }
+        public string DtwTable { get => _dtwTable; set => _dtwTable = value; }
+        public string CcbTable { get => _ccbTable; set => _ccbTable = value; }
 
         public static DataSet setResponseStructure()
         {
@@ -47,9 +46,7 @@ namespace UnitTest.Models
         {
             _oracleConex = ccbConex;
             _dtwhConex = dtwhConex;
-            setTablesByIdentifier(identifier);
-         
-
+            setTablesByIdentifier(identifier);           
             oracle_query = "SELECT COUNT(*) as count FROM " + _ccbTable;
             sql_query = "SELECT COUNT(*) as count FROM " + _dtwTable;
 
@@ -66,34 +63,54 @@ namespace UnitTest.Models
         {
             DataSet myDS = new DataSet();
             return Task.Run(() =>
-            {                
-            try
-                {                   
-                    //Conexion to Datawarehouse
-                    using (myConnection = new SqlConnection(_dtwhConex))
+            {
+                int i = 0;
+               
+                using (myConnection = new SqlConnection(_dtwhConex))
+                {
+                    //Do-While for try to connect 3 times on the database
+                    do
                     {
-                        myConnection.Open();
-                        using (command = new SqlCommand(sql_query, myConnection))
+                        try
                         {
-                            using (dataAdapter = new SqlDataAdapter(command))
+                            myConnection.Open();
+                            if (myConnection.State == ConnectionState.Open) break; else i++; //if connection is open exit of boucle else keep                          
+                        }
+                        catch (Exception e)
+                        {
+                            i++;
+                            Console.Write("Error trying to connect to DTWH, attempt #" + (i + 1));
+                            Console.Write("Exception: " + e.ToString());
+                            Thread.Sleep(3000);
+                            if (i == 3)
                             {
-                                //dataAdapter.SelectCommand.CommandType = CommandType.Text;
-                                dataAdapter.Fill(myDS);
-                                myConnection.Close();                               
+                                myDS = setResponseStructure();                                
+                                myDS.Tables[0].Rows[0][0] = ("DTWH, There is a Conexion Exception, 3 attemp were made");
                                 return myDS;
                             }
                         }
                     }
-                }
-                catch (Exception dte)
-                {
-                    myDS = setResponseStructure();
-                    // Return -1 in Colum "OK" and the Error description in "Any Error" column
-                    Console.Write("Conexion DTW: " + _dtwhConex + "\n");
-                    Console.Write("Exception: " + dte + "\n");
-                    myDS.Tables[0].Rows[0][0] = -1;
-                    myDS.Tables[0].Rows[0][0] += (" Error Detail: " + dte.ToString());
-                    return myDS;
+                    while (i <= 3);
+
+                    try
+                    {
+                        using (command = new SqlCommand(sql_query, myConnection))
+                        {
+                            using (dataAdapter = new SqlDataAdapter(command))
+                            {                                
+                                dataAdapter.Fill(myDS);
+                                myConnection.Close();
+                                return myDS;
+                            }
+                        }
+                    }
+                    catch(Exception b)
+                    {
+                        Console.Write("Error executing the command");
+                        Console.Write("Exception Details: " + b.ToString());
+                        myDS.Tables[0].Rows[0][0] = ("Error executing the command on database");
+                        return myDS;
+                    }                               
                 }
             });           
         }
@@ -105,34 +122,56 @@ namespace UnitTest.Models
         public static Task<DataSet> GetRowsCountFromCCB()
         {
             DataSet myDS = new DataSet();
+            
             return Task.Run(() =>
             {
-                try
-                {                  
-                    using (myOracleConnection = new OracleConnection(_oracleConex))
+                int i = 0;
+                                
+                using (myOracleConnection = new OracleConnection(_oracleConex))
+                {   
+                    //Do-While for try to connect 3 times on the database
+                    do
                     {
-                        myOracleConnection.Open();
+                        try
+                        {
+                            myOracleConnection.Open();
+                            if (myOracleConnection.State == ConnectionState.Open) break; else i++; //if connection is open exit of boucle else keep                          
+                        } 
+                        catch(Exception err)
+                        {
+                            i++;
+                            Console.Write("Error trying to connect to CCB, attempt #" + (i+1));
+                            Console.Write("Exception: " + err.ToString());
+                            Thread.Sleep(3000);
+                            if (i == 3)
+                            {                                
+                                myDS = setResponseStructure();                          
+                                myDS.Tables[0].Rows[0][0] = ("CCB, There is a Conexion Error , 3 attemp were made");
+                                return myDS;
+                            }   
+                        }
+                    } while (i  <=  3);
+
+                      
+                    try
+                    {
                         using (commandOracle = new OracleCommand(oracle_query, myOracleConnection))
                         {
                             using (dataAdapterOracle = new OracleDataAdapter(commandOracle))
                             {
-                                //dataAdapterOracle.SelectCommand.CommandType = CommandType.Text;
                                 dataAdapterOracle.Fill(myDS);
                                 myOracleConnection.Close();
-                                return myDS;                               
+                                return myDS;
                             }
                         }
                     }
-                }
-                catch (Exception ccbe)
-                {
-                    myDS = setResponseStructure();
-                    // Return -1 in Colum "OK" and the Error description in "Any Error" column
-                    Console.Write("Conexion CCB: " + _oracleConex + "\n");
-                    Console.Write("Exception: " + ccbe);                
-                    myDS.Tables[0].Rows[0][0] = -1;
-                    myDS.Tables[0].Rows[0][0] += (" Exception Detail: " + ccbe.ToString());                    
-                    return myDS;
+                    catch(Exception e)
+                    {
+                        Console.Write("Error executing the command");
+                        Console.Write("Exception Details: " + e.ToString());   
+                        myDS.Tables[0].Rows[0][0] = (" Error executing the command, exception Detail: ");
+                        return myDS;                        
+                    }                   
                 }              
             });
         }
