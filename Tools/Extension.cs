@@ -68,5 +68,13 @@ namespace Tools.DataConversion
             }
             return JSONString.ToString();
         }
+
+        public static string messageToJSON(string msg)
+        {         
+            DataTable dt = new DataTable();   
+            dt.Columns.Add("msg");    
+            dt.Rows.Add(msg);
+            return DataTableToJSONWithStringBuilder(dt);
+        }
     }
 }

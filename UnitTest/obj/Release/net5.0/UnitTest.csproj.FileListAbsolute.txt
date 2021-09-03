@@ -66,3 +66,5 @@ C:\BIProjectUT\UnitTest\bin\Release\net5.0\Serilog.Sinks.File.dll
 C:\BIProjectUT\UnitTest\bin\Release\net5.0\Serilog.Sinks.RollingFile.dll
 C:\BIProjectUT\UnitTest\bin\Release\net5.0\YamlDotNet.dll
 C:\BIProjectUT\UnitTest\obj\Release\net5.0\UnitTest.MvcApplicationPartsAssemblyInfo.cs
+C:\BIProjectUT\UnitTest\bin\Release\net5.0\DBHelper.dll
+C:\BIProjectUT\UnitTest\bin\Release\net5.0\DBHelper.pdb

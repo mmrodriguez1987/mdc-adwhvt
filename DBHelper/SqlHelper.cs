@@ -441,32 +441,32 @@ namespace DBHelper.SqlHelper
             return ExecuteDataset(connectionString, commandType, commandText, (SqlParameter[])null);
         }
 
-        /// <summary>
-        /// Ejecuta un SqlCommand sobre la base de datos especificada en la cadena de conexion
+        /// <summary>       
+        /// Execute a SqlCommand on the speficied database on the connection string
         /// </summary>
-        /// <example>
-        /// Para utilizar este metodo es necesario una implementacion parecida a lo siguiente:
+        /// <example> 
+        /// Example:
         /// <code>
         /// DataSet ds = ExecuteDataset(connString, CommandType.StoredProcedure, "GetOrders", new SqlParameter("@prodid", 24));
         /// </code>
         /// </example>
         /// <remarks>
-        /// Devuelve un conjunto de resultados
+        /// Return the dataset with the required data if there are any error the dataset will 
+        /// return a daset.datatable with one only column "error" with the error
         /// </remarks>     
-        /// <param name="connectionString">Una cadena de conexion válida para <see cref="System.Data.SqlClient.SqlConnection"/></param>
-        /// <param name="commandType">El <see cref="System.Data.CommandType"/> (Procedimiento Almacenado, Consulta, etc)</param>
-        /// <param name="commandText">El procedimiento, consulta o T-SQL a ejecutar</param>
-        /// <param name="commandParameters">Un arreglo de parametros de Objetos que seran asignados como parametros de entrada al SP</param>
-        /// <returns>Un <see cref="System.Data.DataSet"/> conteniendo el resultado generado por el Comnado ejecutado</returns>      
+        /// <param name="connectionString"> valid connection string for <see cref="System.Data.SqlClient.SqlConnection"/></param>
+        /// <param name="commandType">The <see cref="System.Data.CommandType"/> (Stored Procedure, query, etc)</param>
+        /// <param name="commandText">Stored Procedure, T-SQL Query</param>
+        /// <param name="commandParameters">Param array objects that will be used on the SP or Function</param>
+        /// <returns>Un <see cref="System.Data.DataSet"/> Datase with the resultset</returns>      
         public static DataSet ExecuteDataset(string connectionString, CommandType commandType, string commandText, params SqlParameter[] commandParameters)
-        {
-            //crea y abre uncreate & open SqlConnection, y dispone de ella después de que haya terminado.
-            using (SqlConnection cn = new SqlConnection(connectionString))
+        {           
+            SqlConnection cn; 
+            using (cn = new SqlConnection(connectionString))
             {
-                cn.Open();
-                //llama al metodo de recarga para que tome la connexion en lugar de la Cadena de String.
+                cn.Open();                    
                 return ExecuteDataset(cn, commandType, commandText, commandParameters);
-            }
+            }          
         }
 
         /// <summary>
@@ -559,6 +559,7 @@ namespace DBHelper.SqlHelper
             //separar los SqlParameters desde el objeto de comando, para que puedan ser utilizados de nuevo.           
             cmd.Parameters.Clear();
             //return el dataset
+            connection.Close();
             return ds;
         }
 

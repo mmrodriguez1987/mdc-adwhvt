@@ -33,6 +33,7 @@
     ".NETCoreApp,Version=v5.0": {
       "UnitTest/1.0.0": {
         "dependencies": {
+          "DBHelper": "1.0.0",
           "Microsoft.EntityFrameworkCore.Design": "5.0.8",
           "NSwag.AspNetCore": "13.12.0",
           "Oracle.ManagedDataAccess.Core": "3.21.1",
@@ -2564,6 +2565,14 @@
           "lib/netstandard2.1/YamlDotNet.dll": {}
         }
       },
+      "DBHelper/1.0.0": {
+        "dependencies": {
+          "System.Data.SqlClient": "4.8.2"
+        },
+        "compile": {
+          "DBHelper.dll": {}
+        }
+      },
       "Tools/1.0.0": {
         "compile": {
           "Tools.dll": {}
@@ -2573,6 +2582,7 @@
     ".NETCoreApp,Version=v5.0/win-x64": {
       "UnitTest/1.0.0": {
         "dependencies": {
+          "DBHelper": "1.0.0",
           "Microsoft.EntityFrameworkCore.Design": "5.0.8",
           "NSwag.AspNetCore": "13.12.0",
           "Oracle.ManagedDataAccess.Core": "3.21.1",
@@ -3782,6 +3792,14 @@
           }
         }
       },
+      "DBHelper/1.0.0": {
+        "dependencies": {
+          "System.Data.SqlClient": "4.8.2"
+        },
+        "runtime": {
+          "DBHelper.dll": {}
+        }
+      },
       "Tools/1.0.0": {
         "runtime": {
           "Tools.dll": {}
@@ -4641,6 +4659,11 @@
       "sha512": "sha512-dVVZVhQxTI4xTNc9YorE+RruBFPPYKP44kMijE6Z5OQQE7zK+SEmh2sPm091CrTYVz1jjIuXKIBm1kFLrlsQJg==",
       "path": "yamldotnet/9.1.4",
       "hashPath": "yamldotnet.9.1.4.nupkg.sha512"
+    },
+    "DBHelper/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
     },
     "Tools/1.0.0": {
       "type": "project",

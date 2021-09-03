@@ -31,6 +31,8 @@ C:\BIProjectUT\UnitTest\obj\Release\net5.0\win-x64\PubTmp\Out\System.DirectorySe
 C:\BIProjectUT\UnitTest\obj\Release\net5.0\win-x64\PubTmp\Out\System.Security.Cryptography.ProtectedData.dll
 C:\BIProjectUT\UnitTest\obj\Release\net5.0\win-x64\PubTmp\Out\YamlDotNet.dll
 C:\BIProjectUT\UnitTest\obj\Release\net5.0\win-x64\PubTmp\Out\sni.dll
+C:\BIProjectUT\UnitTest\obj\Release\net5.0\win-x64\PubTmp\Out\DBHelper.dll
 C:\BIProjectUT\UnitTest\obj\Release\net5.0\win-x64\PubTmp\Out\Tools.dll
+C:\BIProjectUT\UnitTest\obj\Release\net5.0\win-x64\PubTmp\Out\DBHelper.pdb
 C:\BIProjectUT\UnitTest\obj\Release\net5.0\win-x64\PubTmp\Out\Tools.pdb
 C:\BIProjectUT\UnitTest\obj\Release\net5.0\win-x64\PubTmp\Out\UnitTest.deps.json

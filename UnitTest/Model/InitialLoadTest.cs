@@ -6,9 +6,9 @@ using System.Data.SqlClient;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 
-namespace UnitTest.Models
+namespace UnitTest.Model
 {
-    public class UnitTest
+    public class InitialLoadTest
     {       
 
         private static SqlConnection myConnection;
@@ -22,7 +22,7 @@ namespace UnitTest.Models
         private static OracleDataAdapter dataAdapterOracle = null;
         private static DataSet resultsOracle = new DataSet();
         private static string oracle_query;
-        readonly ILogger<UnitTest> _log;
+        private readonly ILogger<InitialLoadTest> _log;
         private static string _oracleConex, _dtwhConex, _dtwTable, _ccbTable;
        
         public string DtwTable { get => _dtwTable; set => _dtwTable = value; }
@@ -42,7 +42,7 @@ namespace UnitTest.Models
             return dsResult;
         }       
 
-        public UnitTest(string ccbConex, string dtwhConex, string identifier)
+        public InitialLoadTest(string ccbConex, string dtwhConex, string identifier)
         {
             _oracleConex = ccbConex;
             _dtwhConex = dtwhConex;
@@ -81,11 +81,11 @@ namespace UnitTest.Models
                             i++;
                             Console.Write("Error trying to connect to DTWH, attempt #" + (i + 1));
                             Console.Write("Exception: " + e.ToString());
-                            Thread.Sleep(3000);
+                            Thread.Sleep(1000);
                             if (i == 3)
                             {
                                 myDS = setResponseStructure();                                
-                                myDS.Tables[0].Rows[0][0] = ("DTWH, There is a Conexion Exception, 3 attemp were made");
+                                myDS.Tables[0].Rows[0][0] = ("-1 - DTWH, There is a Conexion Exception, 3 attemp were made");
                                 return myDS;
                             }
                         }
@@ -108,7 +108,7 @@ namespace UnitTest.Models
                     {
                         Console.Write("Error executing the command");
                         Console.Write("Exception Details: " + b.ToString());
-                        myDS.Tables[0].Rows[0][0] = ("Error executing the command on database");
+                        myDS.Tables[0].Rows[0][0] = ("-1 - Error executing the command on database");
                         return myDS;
                     }                               
                 }
@@ -142,11 +142,11 @@ namespace UnitTest.Models
                             i++;
                             Console.Write("Error trying to connect to CCB, attempt #" + (i+1));
                             Console.Write("Exception: " + err.ToString());
-                            Thread.Sleep(3000);
+                            Thread.Sleep(1000);
                             if (i == 3)
                             {                                
                                 myDS = setResponseStructure();                          
-                                myDS.Tables[0].Rows[0][0] = ("CCB, There is a Conexion Error , 3 attemp were made");
+                                myDS.Tables[0].Rows[0][0] = ("-1 - CCB, There is a Conexion Error , 3 attemp were made");
                                 return myDS;
                             }   
                         }
@@ -169,7 +169,7 @@ namespace UnitTest.Models
                     {
                         Console.Write("Error executing the command");
                         Console.Write("Exception Details: " + e.ToString());   
-                        myDS.Tables[0].Rows[0][0] = (" Error executing the command, exception Detail: ");
+                        myDS.Tables[0].Rows[0][0] = ("-1 - Error executing the command, exception Detail: ");
                         return myDS;                        
                     }                   
                 }              
