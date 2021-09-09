@@ -9,4 +9,3 @@ C:\BIProjectUT\DBHelper\obj\Debug\net5.0\DBHelper.csproj.CoreCompileInputs.cache
 C:\BIProjectUT\DBHelper\obj\Debug\net5.0\DBHelper.dll
 C:\BIProjectUT\DBHelper\obj\Debug\net5.0\ref\DBHelper.dll
 C:\BIProjectUT\DBHelper\obj\Debug\net5.0\DBHelper.pdb
-C:\BIProjectUT\DBHelper\obj\Debug\net5.0\DBHelper.csproj.AssemblyReference.cache

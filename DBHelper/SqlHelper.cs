@@ -78,14 +78,15 @@ namespace DBHelper.SqlHelper
         /// <param name="parameterValues">Arreglo de <see cref="System.Object"/> que guarda los valores a asignar</param>
         /// <exception cref="System.ArgumentException">Conteo de parametros 'commandParameters' no concuerda con cantidad de valores en 'parameterValues'</exception>
         private static void AssignParameterValues(SqlParameter[] commandParameters, object[] parameterValues)
-        {
+        {         
+
             if ((commandParameters == null) || (parameterValues == null))
             {
                 return;
             }
-            if (commandParameters.Length != parameterValues.Length)
+            if (commandParameters.Length != (parameterValues.Length))
             {
-                throw new ArgumentException("Conteo de Parametros no concuerda con cantidad de valores.");
+                throw new ArgumentException("Parameter count doesn't fit with values count.");
             }
             for (int i = 0, j = commandParameters.Length; i < j; i++)
             {

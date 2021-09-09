@@ -35,7 +35,7 @@ namespace UnitTest.Controllers
 
 
         [HttpGet]
-        public async Task<IActionResult> Get(string tableIdentifier, string enviroment, DateTime startDate, DateTime endDate)
+        public async Task<IActionResult> Get(string tableIdentifier, string enviroment, DateTime startDate, DateTime endDate, Boolean IsSPorQuery)
         {            
             DataSet dsResult = new DataSet();
             dsResult = IncrLoadTest.setResponseStructure();
@@ -72,14 +72,14 @@ namespace UnitTest.Controllers
                 case "CDCPROD":
                 case "CDCPRODUCTION":
                     _log.LogInformation(myDict.messages["UT.CDCProdCnx"] + _conf.GetConnectionString("CDCProdConnection"));
-                    incrLT = new IncrLoadTest(_conf.GetConnectionString("CDCProdConnection"), tableIdentifier, startDate, endDate);
+                    incrLT = new IncrLoadTest(_conf.GetConnectionString("CDCProdConnection"), tableIdentifier, startDate, endDate, IsSPorQuery);
                     break;
 
                 case "STGE":
                 case "CDCSTGE":
                 case "CDCSTAGE":
                     _log.LogInformation(myDict.messages["UT.CDCStgeCnx"] + _conf.GetConnectionString("CDCStgeConnection"));
-                    incrLT = new IncrLoadTest(_conf.GetConnectionString("CDCStgeConnection"), tableIdentifier, startDate, endDate);
+                    incrLT = new IncrLoadTest(_conf.GetConnectionString("CDCStgeConnection"), tableIdentifier, startDate, endDate, IsSPorQuery);
                     break;
              
                 default:                    
