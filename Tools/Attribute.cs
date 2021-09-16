@@ -1,106 +1,105 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace Tools
+
+namespace Tools.Documentation
 {
     /// <summary>
-    /// Clase que Crea en el ensamblado el nombre del Autor como un atributo
+    /// Class that create author name in assembly as attribute
     /// </summary>
     [AttributeUsage(AttributeTargets.Interface | AttributeTargets.Class | AttributeTargets.Method | AttributeTargets.Constructor, AllowMultiple = true)]
-    public class Autor : System.Attribute
+    public class Author : System.Attribute
     {
-        private string name, fechacreacion, descripcion;
+        private string name, creationDate, description;
 
 
         /// <summary>
-        /// Autor del Ensamblado
+        /// Assambly Author
         /// </summary>
-        /// <param name="name">Nombre completo del Arquitecto</param>
-        public Autor(string name)
+        /// <param name="name">Architec name</param>
+        public Author(string name)
         {
             this.name = name;
-            this.fechacreacion = DateTime.Today.ToShortDateString();
+            this.creationDate = DateTime.Today.ToShortDateString();
+        }
+        /// <summary>
+        ///Assambly Author
+        /// </summary>
+        /// <param name="name">Architec name</param>
+        /// <param name="date">Creation date</param>
+        public Author(string name, string date)
+        {
+            this.name = name;
+            this.creationDate = date;
         }
         /// <summary>
         /// Autor del Ensamblado
         /// </summary>
-        /// <param name="name">Nombre completo del Arquitecto</param>
-        /// <param name="fecha">Fecha de Creación</param>
-        public Autor(string name, string fecha)
+        /// <param name="name">Architec name</param>
+        /// <param name="date">Creation date</param>
+        /// <param name="descript">Tecnical description</param>
+        public Author(string name, string date, string descript)
         {
             this.name = name;
-            this.fechacreacion = fecha;
-        }
-        /// <summary>
-        /// Autor del Ensamblado
-        /// </summary>
-        /// <param name="name">Nombre completo del Arquitecto</param>
-        /// <param name="fecha">Fecha de Creación</param>
-        /// <param name="descrip">Descripcion Tecnica</param>
-        public Autor(string name, string fecha, string descrip)
-        {
-            this.name = name;
-            this.fechacreacion = fecha;
-            this.descripcion = descrip;
+            this.creationDate = date;
+            this.description = descript;
         }
     }
 
     /// <summary>
-    /// Clase que Crea en el ensamblado la Version del Metodo
+    /// class that creates the version of the method in the assembly
     /// </summary>
     [AttributeUsage(AttributeTargets.Interface | AttributeTargets.Class | AttributeTargets.Method, AllowMultiple = true)]
     public class AssemblyVersion : System.Attribute
     {
-        private string p_arquitecto;
+        private string p_architect;
         private double p_version;
-        private string p_fecha;
-        private string p_descripcion;
+        private string p_date;
+        private string p_description;
 
         /// <summary>
-        /// Version del Ensamblado para el metodo
+        /// assembly version for method
         /// </summary>
-        /// <param name="version">Numero de la Version</param>
-        /// <param name="arquitecto">Nombre del Arquitecto</param>
-        public AssemblyVersion(double version, string arquitecto)
+        /// <param name="version">Version number</param>
+        /// <param name="architect">Architect name</param>
+        public AssemblyVersion(double version, string architect)
         {
-            this.p_fecha = DateTime.Today.ToShortDateString();
-            this.p_arquitecto = arquitecto;
+            this.p_date = DateTime.Today.ToShortDateString();
+            this.p_architect = architect;
             this.p_version = version;
         }
 
         /// <summary>
-        /// Version del Ensamblado para el metodo
+        /// assembly version for method
         /// </summary>
-        /// <param name="version">Numero de la Version</param>
-        /// <param name="arquitecto">Nombre del Arquitecto</param>
-        /// <param name="descripcion">Descripcion del Ensamblado</param>
-        public AssemblyVersion(double version, string arquitecto, string descripcion)
+        /// <param name="version">Version number</param>
+        /// <param name="architect">Architect name</param>
+        /// <param name="description">Assambly description</param>
+        public AssemblyVersion(double version, string architect, string description)
         {
-            this.p_fecha = DateTime.Today.ToShortDateString();
-            this.p_arquitecto = arquitecto;
+            this.p_date = DateTime.Today.ToShortDateString();
+            this.p_architect = architect;
             this.p_version = version;
-            this.p_descripcion = descripcion;
+            this.p_description = description;
         }
 
         /// <summary>
-        /// Version del Ensamblado para el metodo 
+        /// assembly version for method 
         /// </summary>
-        /// <param name="version">Numero de la Version</param>
-        /// <param name="arquitecto">Nombre del Arquitecto</param>
-        /// <param name="descripcion">Descripcion del Ensamblado</param>
-        /// <param name="fecha">Fecha en que se efectuo el cambio</param>
-        public AssemblyVersion(double version, string arquitecto, string descripcion, string fecha)
+        /// <param name="version">Version number</param>
+        /// <param name="architect">Architect name</param>
+        /// <param name="description">Assambly description</param>
+        /// <param name="date">updated date of the assambly</param>
+        public AssemblyVersion(double version, string architect, string description, string date)
         {
-            this.p_fecha = fecha;
-            this.p_arquitecto = arquitecto;
+            this.p_date = date;
+            this.p_architect = architect;
             this.p_version = version;
-            this.p_descripcion = descripcion;
+            this.p_description = description;
         }
     }
 
     /// <summary>
-    /// Clase que Crea en el ensamblado la ayuda proveida por el autor
+    /// Class that creates in the assembly the help provided by the author
     /// </summary>
     [AttributeUsage(AttributeTargets.Interface | AttributeTargets.Class | AttributeTargets.Method | AttributeTargets.Constructor, AllowMultiple = true)]
     public class Helper : System.Attribute
@@ -108,22 +107,103 @@ namespace Tools
         private string Link, topic;
 
         /// <summary>
-        /// Ayuda del Ensamblado
+        /// Assambly help
         /// </summary>
-        /// <param name="lnk">Link de la ayuda</param>
+        /// <param name="lnk">Help link</param>
         public Helper(string lnk)
         {
             this.Link = lnk;
         }
         /// <summary>
-        /// Ayuda del Ensamblado
+        ///  Assambly help
         /// </summary>
-        /// <param name="lnk">Link de la ayuda</param>
-        /// <param name="topic">Topico de la ayuda</param>
+        /// <param name="lnk">Help link</param>
+        /// <param name="topic">Topic name</param>
         public Helper(string lnk, string topic)
         {
             this.Link = lnk;
             this.topic = topic;
         }
+    }
+
+
+   
+    [AttributeUsage(AttributeTargets.Interface | AttributeTargets.Class | AttributeTargets.Method | AttributeTargets.Constructor, AllowMultiple = true)]
+    public class Description : System.Attribute
+    {
+        private string p_sumary, p_remark, p_param1, p_param2, p_param3, p_param4, p_param5, p_param6;
+
+
+        public Description(String summary, String remark)
+        {
+            this.p_sumary = summary;
+            this.p_remark = remark;
+        }
+
+        public Description(String summary)
+        {
+            this.p_sumary = summary;            
+        }
+
+        public Description(String summary, String remark, String param1)
+        {
+            this.p_sumary = summary;
+            this.p_remark = remark;
+            this.p_param1 = param1;
+        }
+
+
+        public Description(String summary, String remark, String param1, String param2)
+        {
+            this.p_sumary = summary;
+            this.p_remark = remark;
+            this.p_param1 = param1;
+            this.p_param2 = param2;
+        }
+
+
+        public Description(String summary, String remark, String param1, String param2, String param3)
+        {
+            this.p_sumary = summary;
+            this.p_remark = remark;
+            this.p_param1 = param1;
+            this.p_param2 = param2;
+            this.p_param3 = param3;
+        }
+
+        public Description(String summary, String remark, String param1, String param2, String param3, String param4)
+        {
+            this.p_sumary = summary;
+            this.p_remark = remark;
+            this.p_param1 = param1;
+            this.p_param2 = param2;
+            this.p_param3 = param3;
+            this.p_param4 = param4;
+        }
+
+        public Description(String summary, String remark, String param1, String param2, String param3, String param4, String param5)
+        {
+            this.p_sumary = summary;
+            this.p_remark = remark;
+            this.p_param1 = param1;
+            this.p_param2 = param2;
+            this.p_param3 = param3;
+            this.p_param4 = param4;
+            this.p_param5 = param5;
+        }
+
+        public Description(String summary, String remark, String param1, String param2, String param3, String param4, String param5, String param6)
+        {
+            this.p_sumary = summary;
+            this.p_remark = remark;
+            this.p_param1 = param1;
+            this.p_param2 = param2;
+            this.p_param3 = param3;
+            this.p_param4 = param4;
+            this.p_param5 = param5;
+            this.p_param6 = param6;
+
+        }
+
     }
 }

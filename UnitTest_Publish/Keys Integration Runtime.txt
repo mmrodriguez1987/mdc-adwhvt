@@ -1,4 +1,0 @@
-IR@b9cdebbc-85ee-403e-b135-d40446f340b8@adf-mr-dev@ServiceEndpoint=adf-mr-dev.eastus.datafactory.azure.net@vxlchzIrCpHCykwlZC+T7cytWU3L8eK0Xi6PK8Nw/GM=
-
-
-IR@b9cdebbc-85ee-403e-b135-d40446f340b8@adf-mr-dev@ServiceEndpoint=adf-mr-dev.eastus.datafactory.azure.net@2YcmpiD+qot99UnGJyQk1i4p8bOSNE9sqEd0QjrC6jg=

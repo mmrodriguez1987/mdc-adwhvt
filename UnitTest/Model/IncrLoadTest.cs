@@ -14,22 +14,25 @@ namespace UnitTest.Model
     {
         private SqlHelper helper;
         private readonly ILogger<IncrLoadTest> _log;
-        private static string query;
+        private static string storedProcedureName;
         private static DataSet result = new DataSet();
         private static string _conexion;
         private static string _identifier;
         private static DateTime _startDate, _endDate;
         private static DataSet myResponse, sqlCDCResponse = new DataSet();
-        private static Boolean _IsSPorQuery;
+        //private static Boolean _IsSPorQuery;
+        private static Int64 _adfNewRowsCount, _adfUpdatedRowsCount;
 
-        public IncrLoadTest(string conexion, string tableIdentifier, DateTime startDate, DateTime endDate, Boolean IsSPorQuery)
+        public IncrLoadTest(string conexion, string tableIdentifier, DateTime startDate, DateTime endDate, Int64 adfNewRowsCount, Int64 adfUpdatedRowsCount)
         {
             helper = new SqlHelper(conexion);
             _conexion = conexion;
             _identifier = tableIdentifier;
             _startDate = startDate;
             _endDate = endDate;
-            _IsSPorQuery = IsSPorQuery;
+            _adfNewRowsCount = adfNewRowsCount;
+            _adfUpdatedRowsCount = adfUpdatedRowsCount;
+           // _IsSPorQuery = IsSPorQuery;
         }
 
         /// <summary>
@@ -38,101 +41,49 @@ namespace UnitTest.Model
         /// <returns>The query string already done</returns>
         private static string prepareQuery()
         {
-            string tableOrSPName;
-            // If is a Stored Procedure to execute
-
-            if (_IsSPorQuery)
+            switch (_identifier.Trim().ToUpper())
             {
-
-                switch (_identifier.Trim().ToUpper())
-                {
-                    case "ACCT":
-                        tableOrSPName = "cdc.sp_ci_acct_ct"; break;
-                    case "BSEG":
-                        tableOrSPName = "cdc.sp_ci_bseg_ct"; break;
-                    case "BSEG_CALC":
-                        tableOrSPName = "cdc.sp_ci_bseg_calc_ct"; break;
-                    case "BSEG_CALC_LN":
-                        tableOrSPName = "cdc.sp_ci_bseg_calc_ln_ct"; break;
-                    case "BSEG_SQ":
-                        tableOrSPName = "cdc.sp_ci_bseg_sq_ct"; break;
-                    case "CAL_PERIOD":
-                        tableOrSPName = "cdc.sp_ci_cal_period_ct"; break;
-                    case "FT":
-                        tableOrSPName = "cdc.sp_ci_ft_ct"; break;
-                    case "PREM":
-                        tableOrSPName = "cdc.sp_ci_prem_ct"; break;
-                    case "RS":
-                        tableOrSPName = "cdc.sp_ci_rs_ct"; break;
-                    case "SA":
-                        tableOrSPName = "cdc.sp_ci_sa_ct"; break;
-                    case "SQI":
-                        tableOrSPName = "cdc.sp_ci_sqi_ct"; break;
-                    case "UOM":
-                        tableOrSPName = "cdc.sp_ci_uom_ct"; break;
-                    default:
-                        tableOrSPName = "wrong stored procedure name"; break;
-                }
-
-                query = tableOrSPName;
+                case "ACCT":
+                    storedProcedureName = "cdc.sp_ci_acct_ct"; break;
+                case "BSEG":
+                    storedProcedureName = "cdc.sp_ci_bseg_ct"; break;
+                case "BSEG_CALC":
+                    storedProcedureName = "cdc.sp_ci_bseg_calc_ct"; break;
+                case "BSEG_CALC_LN":
+                    storedProcedureName = "cdc.sp_ci_bseg_calc_ln_ct"; break;
+                case "BSEG_SQ":
+                    storedProcedureName = "cdc.sp_ci_bseg_sq_ct"; break;
+                case "CAL_PERIOD":
+                    storedProcedureName = "cdc.sp_ci_cal_period_ct"; break;
+                case "FT":
+                    storedProcedureName = "cdc.sp_ci_ft_ct"; break;
+                case "PREM":
+                    storedProcedureName = "cdc.sp_ci_prem_ct"; break;
+                case "RS":
+                    storedProcedureName = "cdc.sp_ci_rs_ct"; break;
+                case "SA":
+                    storedProcedureName = "cdc.sp_ci_sa_ct"; break;
+                case "SQI":
+                    storedProcedureName = "cdc.sp_ci_sqi_ct"; break;
+                case "UOM":
+                    storedProcedureName = "cdc.sp_ci_uom_ct"; break;
+                case "PER":
+                    storedProcedureName = "cdc.sp_ci_per_ct"; break;
+                default:
+                    storedProcedureName = "Error: No stored procedure finded"; break;
             }
-            else
-            {
 
-                switch (_identifier.Trim().ToUpper())
-                {
-                    case "UOM":
-                        tableOrSPName = "cdc.CISADM_CI_UOM_CT"; break;
-                    case "BSEG":
-                        tableOrSPName = "cdc.CISADM_CI_BSEG_CT"; break;
-                    case "BSEG_CALC":
-                        tableOrSPName = "cdc.CISADM_CI_BSEG_CALC_CT"; break;
-                    case "BSEG_CALC_LN":
-                        tableOrSPName = "cdc.CISADM_CI_BSEG_CALC_LN_CT"; break;
-                    case "BSEG_SQ":
-                        tableOrSPName = "cdc.CISADM_CI_BSEG_SQ_CT"; break;
-                    case "CAL_PERIOD":
-                        tableOrSPName = "cdc.CISADM_CI_CAL_PERIOD_CT"; break;
-                    case "FT":
-                        tableOrSPName = "cdc.CISADM_CI_FT_CT"; break;
-                    case "PER":
-                        tableOrSPName = "cdc.CISADM_CI_PER_CT"; break;
-                    case "PREM":
-                        tableOrSPName = "cdc.CISADM_CI_PREM_CT"; break;
-                    case "RS":
-                        tableOrSPName = "cdc.CISADM_CI_RS_CT"; break;
-                    case "SA":
-                        tableOrSPName = "cdc.CISADM_CI_SA_CT"; break;
-                    case "SQI":
-                        tableOrSPName = "cdc.CISADM_CI_SQI_CT"; break;
-                    case "ACCT":
-                        tableOrSPName = "cdc.CISADM_CI_ACCT_CT"; break;
-                    default:
-                        tableOrSPName = "wrong table name"; break;
-                }
-
-                query = "SELECT CT.__$operation AS Operation, COUNT(CT.__$operation) AS [Count] FROM " + tableOrSPName + " CT " +
-                        "LEFT JOIN cdc.lsn_time_mapping T ON CT.__$start_lsn=T.start_lsn WHERE T.tran_begin_time " +
-                        " BETWEEN '" + _startDate.ToString("yyyy-MM-dd HH:mm") + "' AND '" + _endDate.ToString("yyyy-MM-dd HH:mm") + "' GROUP BY CT.__$operation";
-
-            }
-            
-            if (tableOrSPName.StartsWith("wrong"))      
-                return tableOrSPName;
-
-     
-           
-            return query; //2021-01-20 10:00
+            return storedProcedureName; 
         }
 
         /// <summary>
         /// Prepara the response structure on Dataset
         /// 
-        /// ----------------------------------------
-        /// delete | insert | update |     msg     |
-        /// ----------------------------------------
-        ///     0  |    0   |   0    |             |
-        /// ----------------------------------------
+        /// ----------------------------------------------------------------------------------
+        /// delete | insert | update |     msg     |  ADF Inserted RC   |    ADF Updated RC  |
+        /// ----------------------------------------------------------------------------------
+        ///     0  |    0   |   0    |             |         0          |           0        |
+        /// ----------------------------------------------------------------------------------
         /// </summary>
         /// <returns>a Dataset with a structure ready to be converted in JSON</returns>
         public static DataSet setResponseStructure()
@@ -143,7 +94,9 @@ namespace UnitTest.Model
             dtResult.Columns.Add("update"); //Item array 1
             dtResult.Columns.Add("delete"); //Item array 2
             dtResult.Columns.Add("msg");    //Item array 3
-            dtResult.Rows.Add(0, 0, 0, "");
+            dtResult.Columns.Add("adf-insert"); //Item array 4
+            dtResult.Columns.Add("adf-update"); //Item array 5
+            dtResult.Rows.Add(0, 0, 0, "", 0);
             
             dsResult.Tables.Add(dtResult);
             return dsResult;
@@ -155,56 +108,55 @@ namespace UnitTest.Model
         /// </summary>
         /// <returns>Dataset with the information requested</returns>
         public static Task<DataSet> GetOperationsCount()
-        {            
+        {
+            Int64 diffInsertedRowsCount, diffUpdatedRowsCount;
+
             myResponse = setResponseStructure();
            
             return Task.Run(() =>
             {
-                if (prepareQuery().StartsWith("wrong"))
+                if (prepareQuery().StartsWith("Error"))
                 {
-                    myResponse.Tables[0].Rows[0][3] = ("wrong table name");
+                    myResponse.Tables[0].Rows[0][3] = ("Error: wrong table name");
                     return myResponse;
                 }
                 else
                 {
                     try
-                    {
-                        if (_IsSPorQuery)
-                        {
+                    {                        
                            
-                            Object[] param = { _startDate.ToString("yyyy-MM-dd HH:mm"), _endDate.ToString("yyyy-MM-dd HH:mm") };
+                        Object[] param = { _startDate.ToString("yyyy-MM-dd HH:mm"), _endDate.ToString("yyyy-MM-dd HH:mm") };
                           
-                            sqlCDCResponse = SqlHelper.ExecuteDataset(_conexion, query, param);
+                        sqlCDCResponse = SqlHelper.ExecuteDataset(_conexion, storedProcedureName, param);
                             
-                            //New Rows, Inserts Count
-                            myResponse.Tables[0].Rows[0][0] = sqlCDCResponse.Tables[0].Select("toInsert = 1").Length;
+                        //New Rows, Inserts Count
+                        myResponse.Tables[0].Rows[0][0] = sqlCDCResponse.Tables[0].Select("toInsert = 1").Length;
                             
-                            //Updated Rows, Modified Rows Count
-                            myResponse.Tables[0].Rows[0][1] = sqlCDCResponse.Tables[0].Select("toInsert = 0 and [__$operation] = 4").Length;
+                        //Updated Rows, Modified Rows Count
+                        myResponse.Tables[0].Rows[0][1] = sqlCDCResponse.Tables[0].Select("toInsert = 0 and [__$operation] = 4").Length;
 
-                            return myResponse;
-                        }
-                        else
-                        {   
-                            sqlCDCResponse = SqlHelper.ExecuteDataset(_conexion, CommandType.Text, query);
+                        myResponse.Tables[0].Rows[0][4] = _adfNewRowsCount;
+                        myResponse.Tables[0].Rows[0][5] = _adfUpdatedRowsCount;
 
-                            foreach (DataRow row in sqlCDCResponse.Tables[0].Rows)
-                            {
-                                if (int.Parse(row[0].ToString()) == 1) // DELETE                                                                 
-                                    myResponse.Tables[0].Rows[0][2] = row[1].ToString();
 
-                                if (int.Parse(row[0].ToString()) == 2) // INSERT                                                    
-                                    myResponse.Tables[0].Rows[0][0] = row[1].ToString();
+                        //Compute the diference between the ADF Rows Count and the SP-DW Rows Count, if the differences is 0 everithing is OK!
+                        diffInsertedRowsCount = Math.Abs(Convert.ToInt64(myResponse.Tables[0].Rows[0][4]) - Convert.ToInt64(myResponse.Tables[0].Rows[0][0]));
 
-                                if (int.Parse(row[0].ToString()) == 4) // UPDATE                        
-                                    myResponse.Tables[0].Rows[0][1] = row[1].ToString();
-                            }
-                            return myResponse;
-                        }      
+                        //Compute the diference between the ADF Rows Count and the SP-DW Rows Count, if the differences is 0 everithing is OK!
+                        diffUpdatedRowsCount = Math.Abs(Convert.ToInt64(myResponse.Tables[0].Rows[0][1]) - Convert.ToInt64(myResponse.Tables[0].Rows[0][5]));
+
+                        //If any Rows Count that come from ADF is different from 0 and the ADF have changes
+                        if ((diffInsertedRowsCount != 0 || diffUpdatedRowsCount != 0)  && (Convert.ToInt64(myResponse.Tables[0].Rows[0][0]) != 0 || Convert.ToInt64(myResponse.Tables[0].Rows[0][0]) != 0))                            
+                            myResponse.Tables[0].Rows[0][3] = "There is a discrepancy: Inserted Rows Differences = "+ diffInsertedRowsCount + ", Updated Rows Difference = " + diffUpdatedRowsCount + ", please check the the process.";                        
+                        else                        
+                            myResponse.Tables[0].Rows[0][3] = "OK";                                             
+                            
+                        return myResponse;
+                      
                     }
                     catch (Exception e)
                     {
-                        myResponse.Tables[0].Rows[0][3] = ("wrong connection error: " + e.ToString());
+                        myResponse.Tables[0].Rows[0][3] = ("Error: " + e.ToString());
                         return myResponse;
                     }
                 }

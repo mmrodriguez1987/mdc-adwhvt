@@ -9,11 +9,7 @@ namespace Tools
 {
 
 
-    /// <summary>
-    /// Clase que administra el envio de correos electronicos
-    /// </summary>
-    [AssemblyVersion(1.0, "Ing. Michael Rodriguez", "Se creo la Clase y el metodo Send", "18/03/2013")]
-    [Autor("Ing. Michael Rodriguez", "13/03/2013")]
+
     public class Mail
     {
         #region Variables Miembros

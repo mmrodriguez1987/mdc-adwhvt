@@ -8,14 +8,15 @@ using System.Collections;
 namespace DBHelper.SqlHelper
 {
        
+    
     public class SqlHelper
     {
        
         private static string _connection;
 
-        #region Metodos Construnctores y utilitarios
+        #region Constructors and Methods
         /// <summary>
-        /// Constructor unico de la clase que inicializa las Conexiónes en la clase SkyConnection
+        /// Constructor class that initializes the connection       
         /// </summary>
         public SqlHelper(String connectionString)
         {
@@ -23,11 +24,11 @@ namespace DBHelper.SqlHelper
         }
 
         /// <summary>
-        /// Recupera la cadena de conexión a traves de un llamado al metodo GiveConnection
+        /// Retrieves the connection string through a call to the GetConnectionString method
         /// </summary>
-        /// <param name="cnnName">Cadena de Coenxion elegida</param>
-        /// <returns>Cadena de Conexión en formato <see cref="System.Data.SqlClient.SqlConnection"/></returns>
-        /// <exception cref="System.ArgumentNullException">Se debe especificar un parametro valido para generar una cadena de conexion consistente</exception>
+        /// <param name="cnnName">Connection String in String Format</param>
+        /// <returns>Connection string in <see cref="System.Data.SqlClient.SqlConnection"/> format</returns>
+        /// <exception cref="System.ArgumentNullException">Must specified a valida parameter to generate a valid SqlConnection</exception>
         public static SqlConnection GetConnectString()
         {      
             try
@@ -36,30 +37,29 @@ namespace DBHelper.SqlHelper
             }
             catch (Exception e)
             {
-                throw new Exception("Error en el Método GetConnectString en clase SqlHelper ", e);
+                throw new Exception("Error on GetConnectString SqlHelper: ", e);
             }
         }
 
 
         /// <summary>
-        /// Este metodo es usado para adjuntar un arreglo de <see cref="System.Data.SqlClient.SqlParameter"/> a 
-        /// un <see cref="System.Data.SqlClient.SqlCommand"/> cabe destacar que el metodo asignara un valor de 
-        /// DbNull a cualquier parametro con una direccion de InputOutput y a valores Nulos. 
-        /// <remarks>Este procedimiento prevendra valores por defecto desde que se hace uso</remarks>
+        /// Method to attach and arrary of <see cref="System.Data.SqlClient.SqlParameter"/> to a <see cref="System.Data.SqlClient.SqlCommand"/>
+        /// The method will assign a DBNull value to any parameter with InpoutOutput direcction also to null values.
+        /// <remarks> This procedure will prevent default values from when it is used </remarks>
         /// </summary>
-        /// <param name="command">El <see cref="System.Data.SqlClient.SqlCommand"/> al cual seran agregados los <see cref="System.Data.SqlClient.SqlParameter"/></param>
-        /// <param name="commandParameters">Un arreglo de <see cref="System.Data.SqlClient.SqlParameter"/> que sera agregado al command</param>
-        /// <exception cref="System.ArgumentNullException">Se debe incluir un command valido</exception>
-        /// <exception cref="System.ArgumentNullException">Se debe incluir un arreglo valido</exception>
+        /// <param name="command">The <see cref="System.Data.SqlClient.SqlCommand"/> which the value will be added the <see cref="System.Data.SqlClient.SqlParameter"/></param>
+        /// <param name="commandParameters">Array of <see cref="System.Data.SqlClient.SqlParameter"/> that will be added to the command</param>
+        /// <exception cref="System.ArgumentNullException">Must includ a valid command</exception>
+        /// <exception cref="System.ArgumentNullException">Must includ a valid arraay</exception>
         private static void AttachParameters(SqlCommand command, SqlParameter[] commandParameters)
         {
             if (command == null)
             {
-                throw new ArgumentNullException("command", "Comando invalido");
+                throw new ArgumentNullException("command", "Invalid Command");
             }
             if (commandParameters == null)
             {
-                throw new ArgumentNullException("commandParameters", "Parametros Nulos");
+                throw new ArgumentNullException("commandParameters", "Null Parameters");
             }
             foreach (SqlParameter p in commandParameters)
             {
@@ -71,23 +71,19 @@ namespace DBHelper.SqlHelper
             }
         }
 
-        /// <summary>        
-        /// Este metodo asigna un arreglo de valores a un arreglo de <see cref="System.Data.SqlClient.SqlParameter"/>.
+        /// <summary>    
+        /// This method assign a value's array to a <see cref="System.Data.SqlClient.SqlParameter"/> array        
         /// </summary>
-        /// <param name="commandParameters">Arreglo de <see cref="System.Data.SqlClient.SqlParameter"/> al que seran asignados los valores</param>
-        /// <param name="parameterValues">Arreglo de <see cref="System.Object"/> que guarda los valores a asignar</param>
-        /// <exception cref="System.ArgumentException">Conteo de parametros 'commandParameters' no concuerda con cantidad de valores en 'parameterValues'</exception>
+        /// <param name="commandParameters">Array of <see cref="System.Data.SqlClient.SqlParameter"/> that will be assigned the values</param>
+        /// <param name="parameterValues">Array of <see cref="System.Object"/>that save the values to assign</param>
+        /// <exception cref="System.ArgumentException">Parameter count 'commandParameters' doesn't match with 'parameterValues' quantity</exception>
         private static void AssignParameterValues(SqlParameter[] commandParameters, object[] parameterValues)
         {         
 
-            if ((commandParameters == null) || (parameterValues == null))
-            {
-                return;
-            }
-            if (commandParameters.Length != (parameterValues.Length))
-            {
-                throw new ArgumentException("Parameter count doesn't fit with values count.");
-            }
+            if ((commandParameters == null) || (parameterValues == null))            
+                return;           
+            if (commandParameters.Length != (parameterValues.Length))            
+                throw new ArgumentException("Parameter count doesn't fit with values count.");           
             for (int i = 0, j = commandParameters.Length; i < j; i++)
             {
                 commandParameters[i].Value = parameterValues[i];
@@ -95,17 +91,16 @@ namespace DBHelper.SqlHelper
         }
 
         /// <summary>
-        /// Este metodo abre (Si es necesario) y asigna un <see cref="System.Data.SqlClient.SqlConnection"/>, 
-        /// <see cref="System.Data.SqlClient.SqlTransaction"/>, <see cref="System.Data.CommandType"/> y 
-        /// <see cref="System.Data.SqlClient.SqlParameter"/> 
-        /// a un comando proveido
+        /// This method open (if it's needed) and assign a <see cref="System.Data.SqlClient.SqlConnection"/>        
+        /// <see cref="System.Data.SqlClient.SqlTransaction"/>, <see cref="System.Data.CommandType"/> and
+        /// <see cref="System.Data.SqlClient.SqlParameter"/> to a provided command
         /// </summary>
-        /// <param name="command">El <see cref="System.Data.SqlClient.SqlCommand"/> que sera preparado</param>
-        /// <param name="connection">Un <see cref="System.Data.SqlClient.SqlConnection"/> en el cual sera ejecutado el comando</param>
-        /// <param name="transaction">Un <see cref="System.Data.SqlClient.SqlTransaction"/> valido o un valor 'null'</param>
-        /// <param name="commandType">El <see cref="System.Data.CommandType"/> (Procedimiento Almacenado, Consulta, etc)</param>
-        /// <param name="commandText">El procedimiento, consulta o T-SQL a ejecutar</param>
-        /// <param name="commandParameters">Un Arreglo de <see cref="System.Data.SqlClient.SqlParameter"/> para ser asociado con el comando o 'null' si el parametro no es requerido</param>
+        /// <param name="command">The <see cref="System.Data.SqlClient.SqlCommand"/> which the value will be added the <see cref="System.Data.SqlClient.SqlParameter"/></param>
+        /// <param name="connection">A <see cref="System.Data.SqlClient.SqlConnection"/> that will be executed on the command</param>
+        /// <param name="transaction">A valid <see cref="System.Data.SqlClient.SqlTransaction"/> or 'null'</param>
+        /// <param name="commandType">A <see cref="System.Data.CommandType"/> (Stored Procedure, query, etc)</param>
+        /// <param name="commandText">Stored Procedure name, T-SQL Query, etc</param>
+        /// <param name="commandParameters">Array of <see cref="System.Data.SqlClient.SqlParameter"/> that will be added to the command</param>
         private static void PrepareCommand(SqlCommand command, SqlConnection connection, SqlTransaction transaction, CommandType commandType, string commandText, SqlParameter[] commandParameters)
         {
             if (connection.State != ConnectionState.Open)
@@ -125,51 +120,50 @@ namespace DBHelper.SqlHelper
             }
             return;
         }
-        #endregion Metodos Construnctores y utilitarios
+        #endregion  Constructors and Methods
 
         #region ExecuteNonQuery
 
         /// <summary>
-        /// Ejecutar un SqlCommand contra la base de datos especificada en la cadena de conexión.
+        /// Execute a SQL Command to the database refered at the connection string.        
         /// </summary>
         /// <example>
-        /// Para utilizar este metodo es necesario una implementacion parecida a lo siguiente:
+        /// Execution sample:        
         /// <code>
         /// int result;
         /// result = ExecuteNonQuery(connString, CommandType.StoredProcedure, "PublishOrders");
         /// </code>
         /// </example>
         /// <remarks>
-        /// No devuelve ningún conjunto de resultados y no toma ningún parámetro
+        /// The method doesn't return any dataset.        
         /// </remarks>
-        /// <param name="connectionString">Una cadena de conexion válida para <see cref="System.Data.SqlClient.SqlConnection"/></param>
-        /// <param name="commandType">El <see cref="System.Data.CommandType"/> (Procedimiento Almacenado, Consulta, etc)</param>
-        /// <param name="commandText">El procedimiento, consulta o T-SQL a ejecutar</param>
-        /// <returns>Un <see cref="System.Int64"/> que representa el numero de filas afectadas con el comando</returns>
+        /// <param name="connectionString">A valid connection string for the <see cref="System.Data.SqlClient.SqlConnection"/></param>
+        /// <param name="commandType">A <see cref="System.Data.CommandType"/> (Stored Procedure, query, etc)</param>
+        /// <param name="commandText">Stored Procedure name, T-SQL Query, etc</param>
+        /// <returns>A <see cref="System.Int64"/> that represent the affected rows number with the command.</returns>
         public static int ExecuteNonQuery(string connectionString, CommandType commandType, string commandText)
         {
             return ExecuteNonQuery(connectionString, commandType, commandText, (SqlParameter[])null);
         }
 
         /// <summary>
-        /// Ejecutar un SqlCommand contra la base de datos especificada en la cadena de conexión, 
-        /// haciendo uso de arreglos de parametros.       
+        /// Execute a SQL Command to the database refered on the connection string, passing a param array
         /// </summary>
         /// <example>
-        /// Para utilizar este metodo es necesario una implementacion parecida a lo siguiente:
+        /// Execution sample: 
         /// <code>
         /// int result;
         /// result = ExecuteNonQuery(connString, CommandType.StoredProcedure, "SpGeneraOrdenesCompra","20120101","20120331");
         /// </code>
         /// </example>
         /// <remarks>
-        /// No devuelve ningún conjunto de resultados
+        /// The method doesn't return any dataset.
         /// </remarks>
-        /// <param name="connectionString">Una cadena de conexion válida para <see cref="System.Data.SqlClient.SqlConnection"/></param>
-        /// <param name="commandType">El <see cref="System.Data.CommandType"/> (Procedimiento Almacenado, Consulta, etc)</param>
-        /// <param name="commandText">El procedimiento, consulta o T-SQL a ejecutar</param>
-        /// <param name="commandParameters">Un arreglo de SqlParameters usados para ejecutar el comando</param>
-        /// <returns>Un <see cref="System.Int64"/> que representa el numero de filas afectadas con el comando</returns>
+        /// <param name="connectionString">A valid connection string for the <see cref="System.Data.SqlClient.SqlConnection"/></param>
+        /// <param name="commandType">A <see cref="System.Data.CommandType"/> (Stored Procedure, query, etc)</param>
+        /// <param name="commandText">Stored Procedure name, T-SQL Query, etc</param>
+        /// <param name="commandParameters">An array of SqlParameters used to execute the command</param>
+        /// <returns>A <see cref="System.Int64"/> thta represent the affected rows count with the command</returns>
         public static int ExecuteNonQuery(string connectionString, CommandType commandType, string commandText, params SqlParameter[] commandParameters)
         {
             //create & open a SqlConnection, and dispose of it after we are done.
@@ -183,25 +177,21 @@ namespace DBHelper.SqlHelper
         }
 
         /// <summary>
-        /// Ejecutar un procedimiento almacenado mediante un SqlCommand contra la base de datos especificada 
-        /// en la cadena de conexión utilizando los valores de los parámetros proporcionados. Este método  
-        /// consultara la base de datos para descubrir los parámetros para el procedimiento almacenado y asi asignara
-        /// los valores basados en el orden de los parámetros.  
-        /// </summary>         
+        /// Execute a Stored Procedure using a SqlCommand on the database refered at the connection string with a param arrays
         /// <example>
-        /// Para utilizar este metodo es necesario una implementacion parecida a lo siguiente:
+        /// Exceution sample:
         /// <code>
         /// int result;
         /// result = ExecuteNonQuery(connString, "PublishOrders", 24, 36);
         /// </code>
         /// </example>
         /// <remarks>
-        /// No devuelve ningún conjunto de resultados y no toma ningún parámetro
+        /// The method doesn't return any dataset.
         /// </remarks>
-        /// <param name="connectionString">Una cadena de conexion válida para <see cref="System.Data.SqlClient.SqlConnection"/></param>
-        /// <param name="spName">Nombre del Procedimiento Almacenados</param>
-        /// <param name="parameterValues">Un arreglo de parametros de Objetos que seran asignados como parametros de entrada al SP</param>
-        /// <returns>Un <see cref="System.Int64"/> que representa el numero de filas afectadas con el comando</returns>
+        /// <param name="connectionString">A valid connection string for the <see cref="System.Data.SqlClient.SqlConnection"/></param>
+        /// <param name="spName">Stored Procedure name</param>
+        /// <param name="parameterValues">An array of Object parameters that will be assigned as input parameters to the SP</param>
+        /// <returns>A <see cref="System.Int64"/> thta represent the affected rows count with the command</returns>
         public static int ExecuteNonQuery(string connectionString, string spName, params object[] parameterValues)
         {
             //if we receive parameter values, we need to figure out where they go
@@ -223,47 +213,47 @@ namespace DBHelper.SqlHelper
             }
         }
 
-        /// <summary>
-        /// Ejecuta un SqlCommand contra un SqlConnection proporcionado       
+        /// <summary>        
+        /// Execute a SqlCommand using a provided SqlConnection
         /// </summary>
         /// <example>
-        /// Para utilizar este metodo es necesario una implementacion parecida a lo siguiente:
+        /// Exceution sample:
         /// <code>
         /// int result;
         /// result =  ExecuteNonQuery(conn, CommandType.StoredProcedure, "PublishOrders");
         /// </code>
         /// </example>
         /// <remarks>
-        /// No devuelve ningún conjunto de resultados y no toma ningún parámetro
+        /// The method doesn't return any dataset. y no toma ningún parámetro
         /// </remarks>        
-        /// <param name="connection">Un <see cref="System.Data.SqlClient.SqlConnection"/> en el cual sera ejecutado el comando</param>
-        /// <param name="commandType">El <see cref="System.Data.CommandType"/> (Procedimiento Almacenado, Consulta, etc)</param>
-        /// <param name="commandText">El procedimiento, consulta o T-SQL a ejecutar</param>
-        /// <returns>Un <see cref="System.Int64"/> que representa el numero de filas afectadas con el comando</returns>
+        /// <param name="connection">A <see cref="System.Data.SqlClient.SqlConnection"/> that will be executed on the command</param>
+        /// <param name="commandType">A <see cref="System.Data.CommandType"/> (Stored Procedure, query, etc)</param>
+        /// <param name="commandText">Stored Procedure name, T-SQL Query, etc</param>
+        /// <returns>A <see cref="System.Int64"/> thta represent the affected rows count with the command</returns>
         public static int ExecuteNonQuery(SqlConnection connection, CommandType commandType, string commandText)
         {
             //pass through the call providing null for the set of SqlParameters
             return ExecuteNonQuery(connection, commandType, commandText, (SqlParameter[])null);
         }
 
-        /// <summary>
-        /// Ejecuta un SqlCommand contra el SqlConnection proporcionado utilizando los parámetros proporcionados.
+        /// <summary>        
+        /// Execute a SqlCommand to the provided SqlConnection on the parammeters
         /// </summary>
         /// <example>
-        /// Para utilizar este metodo es necesario una implementacion parecida a lo siguiente:
+        /// Exceution sample:
         /// <code>
         /// int result;
         /// result =  ExecuteNonQuery(conn, CommandType.StoredProcedure, "PublishOrders", new SqlParameter("@prodid", 24));
         /// </code>
         /// </example>
         /// <remarks>
-        /// No devuelve ningún conjunto de resultados y no toma ningún parámetro 
+        /// The method doesn't return any dataset. y no toma ningún parámetro 
         /// </remarks>
-        /// <param name="connection">Un <see cref="System.Data.SqlClient.SqlConnection"/> en el cual sera ejecutado el comando</param>
-        /// <param name="commandType">El <see cref="System.Data.CommandType"/> (Procedimiento Almacenado, Consulta, etc)</param>
-        /// <param name="commandText">El procedimiento, consulta o T-SQL a ejecutar</param>
-        /// <param name="commandParameters">Un arreglo de SqlParameters usados para ejecutar el comando</param>
-        /// <returns>Un <see cref="System.Int64"/> que representa el numero de filas afectadas con el comando</returns>
+        /// <param name="connection">A <see cref="System.Data.SqlClient.SqlConnection"/> that will be executed on the command</param>
+        /// <param name="commandType">A <see cref="System.Data.CommandType"/> (Stored Procedure, query, etc)</param>
+        /// <param name="commandText">Stored Procedure name, T-SQL Query, etc</param>
+        /// <param name="commandParameters">An array of SqlParameters used to execute the command</param>
+        /// <returns>A <see cref="System.Int64"/> thta represent the affected rows count with the command</returns>
         public static int ExecuteNonQuery(SqlConnection connection, CommandType commandType, string commandText, params SqlParameter[] commandParameters)
         {
             //create a command and prepare it for execution
@@ -279,25 +269,22 @@ namespace DBHelper.SqlHelper
         }
 
         /// <summary>
-        /// Ejecutar un procedimiento almacenado mediante un SqlCommand contra la base de datos especificada 
-        /// en la cadena de conexión utilizando los valores de los parámetros proporcionados. Este método  
-        /// consultara la base de datos para descubrir los parámetros para el procedimiento almacenado y asi asignara
-        /// los valores basados en el orden de los parámetros.       
+        /// Execute a Stored Procedure using a SqlCommand on the database refered at the connection string with a param array values 
         /// </summary>
         /// <example>
-        /// Para utilizar este metodo es necesario una implementacion parecida a lo siguiente:
+        /// Exceution sample:
         /// <code>
         /// int result;
         /// result =  ExecuteNonQuery(conn, "PublishOrders", 24, 36);
         /// </code>
         /// </example>
         /// <remarks>
-        /// No devuelve ningún conjunto de resultados y no toma ningún parámetro
+        /// The method doesn't return any dataset. y no toma ningún parámetro
         /// </remarks>
-        /// <param name="connection">Un <see cref="System.Data.SqlClient.SqlConnection"/> en el cual sera ejecutado el comando</param>
-        /// <param name="spName">Nombre del Procedimiento Almacenados</param>
-        /// <param name="parameterValues">Un arreglo de parametros de Objetos que seran asignados como parametros de entrada al SP</param>
-        /// <returns>Un <see cref="System.Int64"/> que representa el numero de filas afectadas con el comando</returns>
+        /// <param name="connection">A <see cref="System.Data.SqlClient.SqlConnection"/> that will be executed on the command</param>
+        /// <param name="spName">Stored Procedure name</param>
+        /// <param name="parameterValues">An array of Object parameters that will be assigned as input parameters to the SP</param>
+        /// <returns>A <see cref="System.Int64"/> thta represent the affected rows count with the command</returns>
         public static int ExecuteNonQuery(SqlConnection connection, string spName, params object[] parameterValues)
         {
             //if we receive parameter values, we need to figure out where they go
@@ -319,47 +306,47 @@ namespace DBHelper.SqlHelper
             }
         }
 
-        /// <summary>
-        /// Ejecuta un SqlCommand contra un <see cref="System.Data.SqlClient.SqlTransaction"/> proveido
+        /// <summary>        
+        /// Execute a SqlCommand on a <see cref="System.Data.SqlClient.SqlTransaction"/> provided
         /// </summary>
         /// <example>
-        /// Para utilizar este metodo es necesario una implementacion parecida a lo siguiente:
+        /// Exceution sample:
         /// <code>
         /// int result;
         /// result =  ExecuteNonQuery(conn, CommandType.StoredProcedure, "PublishOrders");
         /// </code>
         /// </example>
         /// <remarks>
-        /// No devuelve ningún conjunto de resultados y no toma ningún parámetro
+        /// The method doesn't return any dataset. y no toma ningún parámetro
         /// </remarks>      
-        /// <param name="transaction">El <see cref="System.Data.SqlClient.SqlTransaction"/> sobre el cual sera ejecutado el comando</param>
-        /// <param name="commandType">El <see cref="System.Data.CommandType"/> (Procedimiento Almacenado, Consulta, etc)</param>
-        /// <param name="commandText">El procedimiento, consulta o T-SQL a ejecutar</param>
-        /// <returns>Un <see cref="System.Int64"/> que representa el numero de filas afectadas con el comando</returns>
+        /// <param name="transaction">A valid <see cref="System.Data.SqlClient.SqlTransaction"/> or 'null'</param>
+        /// <param name="commandType">A <see cref="System.Data.CommandType"/> (Stored Procedure, query, etc)</param>
+        /// <param name="commandText">Stored Procedure name, T-SQL Query, etc</param>
+        /// <returns>A <see cref="System.Int64"/> thta represent the affected rows count with the command</returns>
         public static int ExecuteNonQuery(SqlTransaction transaction, CommandType commandType, string commandText)
         {
             //pass through the call providing null for the set of SqlParameters
             return ExecuteNonQuery(transaction, commandType, commandText, (SqlParameter[])null);
         }
 
-        /// <summary>
-        /// Ejecuta un SqlCommand contra un <see cref="System.Data.SqlClient.SqlTransaction"/> proveido
+        /// <summary>        
+        /// Execute a SqlCommand on a <see cref="System.Data.SqlClient.SqlTransaction"/> provided
         /// </summary>
         /// <example>
-        /// Para utilizar este metodo es necesario una implementacion parecida a lo siguiente:
+        /// Exceution sample:
         /// <code>
         /// int result;
         /// result =  ExecuteNonQuery(trans, CommandType.StoredProcedure, "GetOrders", new SqlParameter("@prodid", 24));
         /// </code>
         /// </example>
         /// <remarks>
-        /// No devuelve ningún conjunto de resultados y no toma ningún parámetro
+        /// The method doesn't return any dataset. y no toma ningún parámetro
         /// </remarks>         
-        /// <param name="transaction">El <see cref="System.Data.SqlClient.SqlTransaction"/> sobre el cual sera ejecutado el comando</param>
-        /// <param name="commandType">El <see cref="System.Data.CommandType"/> (Procedimiento Almacenado, Consulta, etc)</param>
-        /// <param name="commandText">El procedimiento, consulta o T-SQL a ejecutar</param>
-        /// <param name="commandParameters">Un arreglo de SqlParameters usados para ejecutar el comando</param>
-        /// <returns>Un <see cref="System.Int64"/> que representa el numero de filas afectadas con el comando</returns>
+        /// <param name="transaction">A valid <see cref="System.Data.SqlClient.SqlTransaction"/> or 'null'</param>
+        /// <param name="commandType">A <see cref="System.Data.CommandType"/> (Stored Procedure, query, etc)</param>
+        /// <param name="commandText">Stored Procedure name, T-SQL Query, etc</param>
+        /// <param name="commandParameters">An array of SqlParameters used to execute the command</param>
+        /// <returns>A <see cref="System.Int64"/> thta represent the affected rows count with the command</returns>
         public static int ExecuteNonQuery(SqlTransaction transaction, CommandType commandType, string commandText, params SqlParameter[] commandParameters)
         {
             //create a command and prepare it for execution
@@ -375,25 +362,22 @@ namespace DBHelper.SqlHelper
         }
 
         /// <summary>
-        /// Ejecutar un procedimiento almacenado mediante un SqlCommand contra la base de datos especificada 
-        /// en la cadena de conexión utilizando los valores de los parámetros proporcionados. Este método  
-        /// consultara la base de datos para descubrir los parámetros para el procedimiento almacenado y asi asignara
-        /// los valores basados en el orden de los parámetros. 
+        /// Execute a Stored Procedure on a <see cref="System.Data.SqlClient.SqlTransaction"/> provided using a parameter values array object
         /// </summary>
         /// <example>
-        /// Para utilizar este metodo es necesario una implementacion parecida a lo siguiente:
+        /// Exceution sample:
         /// <code>
         /// int result;
         /// result =  ExecuteNonQuery(conn, trans, "PublishOrders", 24, 36);
         /// </code>
         /// </example>
         /// <remarks>
-        /// No devuelve ningún conjunto de resultados y no toma ningún parámetro
+        /// The method doesn't return any dataset. y no toma ningún parámetro
         /// </remarks>           
-        /// <param name="transaction">El <see cref="System.Data.SqlClient.SqlTransaction"/> sobre el cual sera ejecutado el comando</param>
-        /// <param name="spName">Nombre del Procedimiento Almacenados</param>
-        /// <param name="parameterValues">Un arreglo de parametros de Objetos que seran asignados como parametros de entrada al SP</param>
-        /// <returns>Un <see cref="System.Int64"/> que representa el numero de filas afectadas con el comando</returns>
+        /// <param name="transaction">A valid <see cref="System.Data.SqlClient.SqlTransaction"/> or 'null'</param>
+        /// <param name="spName">Stored Procedure name</param>
+        /// <param name="parameterValues">An array of Object parameters that will be assigned as input parameters to the SP</param>
+        /// <returns>A <see cref="System.Int64"/> thta represent the affected rows count with the command</returns>
         public static int ExecuteNonQuery(SqlTransaction transaction, string spName, params object[] parameterValues)
         {
             //si recibimos valores de los parámetros, tenemos que averiguar dónde se dirigen
@@ -415,27 +399,28 @@ namespace DBHelper.SqlHelper
             }
         }
 
-     
+
         #endregion ExecuteNonQuery
 
         #region ExecuteDataSet
 
         /// <summary>
-        /// Ejecuta un SqlCommand contra un SqlConnection proporcionado     
+        /// Execute a SqlCommand on a SqlConnection provided
         /// </summary>
         /// <example>
-        /// Para utilizar este metodo es necesario una implementacion parecida a lo siguiente:
+        /// Exceution sample:
         /// <code>
         ///  DataSet ds = ExecuteDataset(connString, CommandType.StoredProcedure, "GetOrders");
         /// </code>
         /// </example>
         /// <remarks>
-        /// Devuelve un conjunto de resultados
+        /// Return the dataset with the required data if there are any error the dataset will 
+        /// return a daset.datatable with one only column "error" with the error
         /// </remarks>     
-        /// <param name="connectionString">Una cadena de conexion válida para <see cref="System.Data.SqlClient.SqlConnection"/></param>
-        /// <param name="commandType">El <see cref="System.Data.CommandType"/> (Procedimiento Almacenado, Consulta, etc)</param>
-        /// <param name="commandText">El procedimiento, consulta o T-SQL a ejecutar</param>
-        /// <returns>Un <see cref="System.Data.DataSet"/> conteniendo el resultado generado por el Comnado ejecutado</returns>
+        /// <param name="connectionString">A valid connection string for the <see cref="System.Data.SqlClient.SqlConnection"/></param>
+        /// <param name="commandType">A <see cref="System.Data.CommandType"/> (Stored Procedure, query, etc)</param>
+        /// <param name="commandText">Stored Procedure name, T-SQL Query, etc</param>
+        /// <returns>A <see cref="System.Data.DataSet"/> containing the result generated by the Command executed</returns>
         public static DataSet ExecuteDataset(string connectionString, CommandType commandType, string commandText)
         {
             //pass through the call providing null for the set of SqlParameters
@@ -452,8 +437,8 @@ namespace DBHelper.SqlHelper
         /// </code>
         /// </example>
         /// <remarks>
-        /// Return the dataset with the required data if there are any error the dataset will 
-        /// return a daset.datatable with one only column "error" with the error
+        /// Return the dataset with the required data if there are any error the dataset will.
+        /// Return a daset.datatable with one only column "error" with the error
         /// </remarks>     
         /// <param name="connectionString"> valid connection string for <see cref="System.Data.SqlClient.SqlConnection"/></param>
         /// <param name="commandType">The <see cref="System.Data.CommandType"/> (Stored Procedure, query, etc)</param>
@@ -470,51 +455,42 @@ namespace DBHelper.SqlHelper
             }          
         }
 
-        /// <summary>
-        /// Ejecutar un procedimiento almacenado mediante un SqlCommand contra la base de datos especificada 
-        /// en la cadena de conexión utilizando los valores de los parámetros proporcionados. Este método  
-        /// consultara la base de datos para descubrir los parámetros para el procedimiento almacenado y asi asignara
-        /// los valores basados en el orden de los parámetros. 
+        /// <summary>        
+        /// Execute a Stored Procedure using a SqlCommand on the database refered at the connection string with a param array values        
         /// </summary>
         /// <example>
-        /// Para utilizar este metodo es necesario una implementacion parecida a lo siguiente:
+        /// Exceution sample:
         /// <code>
         /// DataSet ds =  ExecuteDataset(connString, "GetOrders", 24, 36);
         /// </code>
         /// </example>
-        /// <remarks>
-        /// Este metodo no provee acceso a parametros de salida o al valor de retorno del procedimiento almacenado
+        /// <remarks>        
+        /// Ths method doesn't provide access to OutputParams or the return value of the Stored Procedure
         /// </remarks>  
-        /// <param name="connectionString">Una cadena de conexion válida para <see cref="System.Data.SqlClient.SqlConnection"/></param>
-        /// <param name="spName">Nombre del Procedimiento Almacenados</param>
-        /// <param name="parameterValues">Un arreglo de parametros de Objetos que seran asignados como parametros de entrada al SP</param>
-        /// <returns>Un <see cref="System.Data.DataSet"/> conteniendo el resultado generado por el Comnado ejecutado</returns>
+        /// <param name="connectionString">A valid connection string for the <see cref="System.Data.SqlClient.SqlConnection"/></param>
+        /// <param name="spName">Stored Procedure name</param>
+        /// <param name="parameterValues">An array of Object parameters that will be assigned as input parameters to the SP</param>
+        /// <returns>A <see cref="System.Data.DataSet"/> containing the result generated by the Command executed</returns>
         public static DataSet ExecuteDataset(string connectionString, string spName, params object[] parameterValues)
         {
-            //si recibimos valores de los parámetros, tenemos que averiguar dónde se dirigen
+            
             if ((parameterValues != null) && (parameterValues.Length > 0))
             {
-                //tirar de los parámetros para este procedimiento almacenado desde la memoria caché de parámetros (o descubrirlos y poblar la memoria caché).
-                SqlParameter[] commandParameters = ParameterCache.GetSpParameterSet(connectionString, spName);
-
-                //Asigna los valores proveidos a los Parametros basado en el orden de los parametros
-                AssignParameterValues(commandParameters, parameterValues);
-
-                //llama al metodo sobrecargado que toma el arreglo de SqlParameters 
+            
+                SqlParameter[] commandParameters = ParameterCache.GetSpParameterSet(connectionString, spName);            
+                AssignParameterValues(commandParameters, parameterValues);            
                 return ExecuteDataset(connectionString, CommandType.StoredProcedure, spName, commandParameters);
-            }
-            //en otro caso solamente se llama al procedimiento sin parametros
-            else
-            {
+            }            
+            else            
                 return ExecuteDataset(connectionString, CommandType.StoredProcedure, spName);
-            }
+            
         }
 
-        /// <summary>
-        /// Ejecuta un SqlCommand contra un SqlConnection proporcionado     
+        /// <summary>        
+        /// Execute a SqlCommand on the database refered at the SqlConnection.
         /// </summary>
         /// <example>
-        /// Para utilizar este metodo es necesario una implementacion parecida a lo siguiente:
+        /// Exceution sample:
         /// <code>
         /// DataSet ds = ExecuteDataset(conn, CommandType.StoredProcedure, "GetOrders");
         /// </code>
@@ -522,10 +498,10 @@ namespace DBHelper.SqlHelper
         /// <remarks> 
         /// Este metodo no provee acceso a parametros de salida o al valor de retorno del procedimiento almacenado. No toma ningun parametro
         /// </remarks>         
-        /// <param name="connection">Un <see cref="System.Data.SqlClient.SqlConnection"/> en el cual sera ejecutado el comando</param>
-        /// <param name="commandType">El <see cref="System.Data.CommandType"/> (Procedimiento Almacenado, Consulta, etc)</param>
-        /// <param name="commandText">El procedimiento, consulta o T-SQL a ejecutar</param>
-        /// <returns>Un <see cref="System.Data.DataSet"/> conteniendo el resultado generado por el Comnado ejecutado</returns>
+        /// <param name="connection">A <see cref="System.Data.SqlClient.SqlConnection"/> that will be executed on the command</param>
+        /// <param name="commandType">A <see cref="System.Data.CommandType"/> (Stored Procedure, query, etc)</param>
+        /// <param name="commandText">Stored Procedure name, T-SQL Query, etc</param>
+        /// <returns>A <see cref="System.Data.DataSet"/> containing the result generated by the Command executed</returns>
         public static DataSet ExecuteDataset(SqlConnection connection, CommandType commandType, string commandText)
         {
             //pass through the call providing null for the set of SqlParameters
@@ -536,16 +512,16 @@ namespace DBHelper.SqlHelper
         /// Ejecuta un SqlCommand sobre una base de datos especificada en un SqlConnection proporcionado    
         /// </summary>
         /// <example>
-        /// Para utilizar este metodo es necesario una implementacion parecida a lo siguiente:
+        /// Exceution sample:
         /// <code>
         /// DataSet ds = ExecuteDataset(conn, CommandType.StoredProcedure, "GetOrders", new SqlParameter("@prodid", 24));
         /// </code>
         /// </example>     
-        /// <param name="connection">Un <see cref="System.Data.SqlClient.SqlConnection"/> en el cual sera ejecutado el comando</param>
-        /// <param name="commandType">El <see cref="System.Data.CommandType"/> (Procedimiento Almacenado, Consulta, etc)</param>
-        /// <param name="commandText">El procedimiento, consulta o T-SQL a ejecutar</param>
-        /// <param name="commandParameters">Un arreglo de parametros de Objetos que seran asignados como parametros de entrada al SP</param>
-        /// <returns>Un <see cref="System.Data.DataSet"/> conteniendo el resultado generado por el Comnado ejecutado</returns>
+        /// <param name="connection">A <see cref="System.Data.SqlClient.SqlConnection"/> that will be executed on the command</param>
+        /// <param name="commandType">A <see cref="System.Data.CommandType"/> (Stored Procedure, query, etc)</param>
+        /// <param name="commandText">Stored Procedure name, T-SQL Query, etc</param>
+        /// <param name="commandParameters">An array of Object parameters that will be assigned as input parameters to the SP</param>
+        /// <returns>A <see cref="System.Data.DataSet"/> containing the result generated by the Command executed</returns>
         public static DataSet ExecuteDataset(SqlConnection connection, CommandType commandType, string commandText, params SqlParameter[] commandParameters)
         {
             //crear un Command y prepararlo para la ejecucion
@@ -571,7 +547,7 @@ namespace DBHelper.SqlHelper
         /// los valores basados en el orden de los parámetros. 
         /// </summary>
         /// <example>
-        /// Para utilizar este metodo es necesario una implementacion parecida a lo siguiente:
+        /// Exceution sample:
         /// <code>
         /// DataSet ds = ExecuteDataset(conn, "GetOrders", 24, 36)
         /// </code>
@@ -579,10 +555,10 @@ namespace DBHelper.SqlHelper
         /// <remarks>
         /// Este metodo no provee acceso a parametros de salida o al valor de retorno del procedimiento almacenado
         /// </remarks>         
-        /// <param name="connection">Un <see cref="System.Data.SqlClient.SqlConnection"/> en el cual sera ejecutado el comando</param>
-        /// <param name="spName">Nombre del Procedimiento Almacenados</param>
-        /// <param name="parameterValues">Un arreglo de parametros de Objetos que seran asignados como parametros de entrada al SP</param>
-        /// <returns>Un <see cref="System.Data.DataSet"/> conteniendo el resultado generado por el Comnado ejecutado</returns>
+        /// <param name="connection">A <see cref="System.Data.SqlClient.SqlConnection"/> that will be executed on the command</param>
+        /// <param name="spName">Stored Procedure name</param>
+        /// <param name="parameterValues">An array of Object parameters that will be assigned as input parameters to the SP</param>
+        /// <returns>A <see cref="System.Data.DataSet"/> containing the result generated by the Command executed</returns>
         public static DataSet ExecuteDataset(SqlConnection connection, string spName, params object[] parameterValues)
         {
             //si recibimos valores de los parámetros, tenemos que averiguar dónde se dirigen
@@ -608,7 +584,7 @@ namespace DBHelper.SqlHelper
         /// Ejecuta un SqlCommand sobre un <see cref="System.Data.SqlClient.SqlTransaction"/> proveido
         /// </summary>
         /// <example>
-        /// Para utilizar este metodo es necesario una implementacion parecida a lo siguiente:
+        /// Exceution sample:
         /// <code>
         /// DataSet ds = ExecuteDataset(trans, CommandType.StoredProcedure, "GetOrders");
         /// </code>
@@ -616,10 +592,10 @@ namespace DBHelper.SqlHelper
         /// <remarks>
         /// Este metodo no provee acceso a parametros de salida o al valor de retorno del procedimiento almacenado
         /// </remarks>        
-        /// <param name="transaction">El <see cref="System.Data.SqlClient.SqlTransaction"/> sobre el cual sera ejecutado el comando</param>
-        /// <param name="commandType">El <see cref="System.Data.CommandType"/> (Procedimiento Almacenado, Consulta, etc)</param>
-        /// <param name="commandText">El procedimiento, consulta o T-SQL a ejecutar</param>
-        /// <returns>Un <see cref="System.Data.DataSet"/> conteniendo el resultado generado por el Comnado ejecutado</returns>
+        /// <param name="transaction">A valid <see cref="System.Data.SqlClient.SqlTransaction"/> or 'null'</param>
+        /// <param name="commandType">A <see cref="System.Data.CommandType"/> (Stored Procedure, query, etc)</param>
+        /// <param name="commandText">Stored Procedure name, T-SQL Query, etc</param>
+        /// <returns>A <see cref="System.Data.DataSet"/> containing the result generated by the Command executed</returns>
         public static DataSet ExecuteDataset(SqlTransaction transaction, CommandType commandType, string commandText)
         {
             //pasar parametros nulo a través de la llamada al metodo sobrecargado para proporcionar el conjunto de SqlParameters
@@ -630,7 +606,7 @@ namespace DBHelper.SqlHelper
         /// Ejecuta un SqlCommand sobre un <see cref="System.Data.SqlClient.SqlTransaction"/> proveido
         /// </summary>
         /// <example>
-        /// Para utilizar este metodo es necesario una implementacion parecida a lo siguiente:
+        /// Exceution sample:
         /// <code>
         /// DataSet ds = ExecuteDataset(trans, CommandType.StoredProcedure, "GetOrders", new SqlParameter("@prodid", 24));
         /// </code>
@@ -638,11 +614,11 @@ namespace DBHelper.SqlHelper
         /// <remarks>
         /// Este metodo no provee acceso a parametros de salida o al valor de retorno del procedimiento almacenado
         /// </remarks>        
-        /// <param name="transaction">El <see cref="System.Data.SqlClient.SqlTransaction"/> sobre el cual sera ejecutado el comando</param>
-        /// <param name="commandType">El <see cref="System.Data.CommandType"/> (Procedimiento Almacenado, Consulta, etc)</param>
-        /// <param name="commandText">El procedimiento, consulta o T-SQL a ejecutar</param>
-        /// <param name="commandParameters">Un arreglo de parametros de Objetos que seran asignados como parametros de entrada al SP</param>
-        /// <returns>Un <see cref="System.Data.DataSet"/> conteniendo el resultado generado por el Comnado ejecutado</returns>
+        /// <param name="transaction">A valid <see cref="System.Data.SqlClient.SqlTransaction"/> or 'null'</param>
+        /// <param name="commandType">A <see cref="System.Data.CommandType"/> (Stored Procedure, query, etc)</param>
+        /// <param name="commandText">Stored Procedure name, T-SQL Query, etc</param>
+        /// <param name="commandParameters">An array of Object parameters that will be assigned as input parameters to the SP</param>
+        /// <returns>A <see cref="System.Data.DataSet"/> containing the result generated by the Command executed</returns>
         public static DataSet ExecuteDataset(SqlTransaction transaction, CommandType commandType, string commandText, params SqlParameter[] commandParameters)
         {
             //crea un ccomando y lo prepara para la ejecucion
@@ -666,7 +642,7 @@ namespace DBHelper.SqlHelper
         /// almacenado y asi asignara los valores basados en el orden de los parámetros.    
         /// </summary>
         /// <example>
-        /// Para utilizar este metodo es necesario una implementacion parecida a lo siguiente:
+        /// Exceution sample:
         /// <code>
         /// DataSet ds = ExecuteDataset(trans, "GetOrders", 24, 36);
         /// </code>
@@ -674,10 +650,10 @@ namespace DBHelper.SqlHelper
         /// <remarks>
         /// Este metodo no provee acceso a parametros de salida o al valor de retorno del procedimiento almacenado
         /// </remarks>   
-        /// <param name="transaction">El <see cref="System.Data.SqlClient.SqlTransaction"/> sobre el cual sera ejecutado el comando</param>
-        /// <param name="spName">Nombre del Procedimiento Almacenados</param>
-        /// <param name="parameterValues">Un arreglo de parametros de Objetos que seran asignados como parametros de entrada al SP</param>
-        /// <returns>Un <see cref="System.Data.DataSet"/> conteniendo el resultado generado por el Comnado ejecutado</returns>
+        /// <param name="transaction">A valid <see cref="System.Data.SqlClient.SqlTransaction"/> or 'null'</param>
+        /// <param name="spName">Stored Procedure name</param>
+        /// <param name="parameterValues">An array of Object parameters that will be assigned as input parameters to the SP</param>
+        /// <returns>A <see cref="System.Data.DataSet"/> containing the result generated by the Command executed</returns>
         public static DataSet ExecuteDataset(SqlTransaction transaction, string spName, params object[] parameterValues)
         {
             //si recibimos valores de los parámetros, tenemos que averiguar dónde se dirigen
@@ -724,13 +700,13 @@ namespace DBHelper.SqlHelper
         /// Si se crea y se abre la conexión, y queremos que la conexión se cierre cuando el DataReader es closed.Connection es propiedad y está gestionado por la persona que llama
         /// Si quien hace el llamado al metodo es quien proporciona la conexion, entonces la administracion de la misma queda en mano de quien hace el llamado
         /// </remarks>
-        /// <param name="connection">Un <see cref="System.Data.SqlClient.SqlConnection"/> valido sobre el cual sera ejecutado este comando</param>
-        /// <param name="transaction">El <see cref="System.Data.SqlClient.SqlTransaction"/> sobre el cual sera ejecutado el comando, o null</param>
-        /// <param name="commandType">El <see cref="System.Data.CommandType"/> (Procedimiento Almacenado, Consulta, etc)</param>
-        /// <param name="commandText">El procedimiento, consulta o T-SQL a ejecutar</param>
+        /// <param name="connection">A <see cref="System.Data.SqlClient.SqlConnection"/> that will be executed on the command</param>
+        /// <param name="transaction">A valid <see cref="System.Data.SqlClient.SqlTransaction"/> or 'null'</param>
+        /// <param name="commandType">A <see cref="System.Data.CommandType"/> (Stored Procedure, query, etc)</param>
+        /// <param name="commandText">Stored Procedure name, T-SQL Query, etc</param>
         /// <param name="commandParameters">an array of SqlParameters to be associated with the command or 'null' if no parameters are required</param>
         /// <param name="connectionOwnership">indicates whether the connection parameter was provided by the caller, or created by SqlHelper</param>
-        /// <returns><see cref="System.Data.SqlClient.SqlDataReader" /> contieniendo los resultados del comando ejecutado</returns>
+        /// <returns><see cref="System.Data.SqlClient.SqlDataReader" /> containing the results of the command executed</returns>
         private static SqlDataReader ExecuteReader(SqlConnection connection, SqlTransaction transaction, CommandType commandType, string commandText, SqlParameter[] commandParameters, SqlConnectionOwnership connectionOwnership)
         {
 
@@ -765,10 +741,10 @@ namespace DBHelper.SqlHelper
         /// e.g.:  
         ///  SqlDataReader dr = ExecuteReader(connString, CommandType.StoredProcedure, "GetOrders");
         /// </remarks>
-        /// <param name="connectionString">Una cadena de conexion válida para <see cref="System.Data.SqlClient.SqlConnection"/></param>
-        /// <param name="commandType">El <see cref="System.Data.CommandType"/> (Procedimiento Almacenado, Consulta, etc)</param>
-        /// <param name="commandText">El procedimiento, consulta o T-SQL a ejecutar</param>
-        /// <returns><see cref="System.Data.SqlClient.SqlDataReader" /> contieniendo los resultados del comando ejecutado</returns>
+        /// <param name="connectionString">A valid connection string for the <see cref="System.Data.SqlClient.SqlConnection"/></param>
+        /// <param name="commandType">A <see cref="System.Data.CommandType"/> (Stored Procedure, query, etc)</param>
+        /// <param name="commandText">Stored Procedure name, T-SQL Query, etc</param>
+        /// <returns><see cref="System.Data.SqlClient.SqlDataReader" /> containing the results of the command executed</returns>
         public static SqlDataReader ExecuteReader(string connectionString, CommandType commandType, string commandText)
         {
             //pass through the call providing null for the set of SqlParameters
@@ -783,11 +759,11 @@ namespace DBHelper.SqlHelper
         /// e.g.:  
         ///  SqlDataReader dr = ExecuteReader(connString, CommandType.StoredProcedure, "GetOrders", new SqlParameter("@prodid", 24));
         /// </remarks>
-        /// <param name="connectionString">Una cadena de conexion válida para <see cref="System.Data.SqlClient.SqlConnection"/></param>
-        /// <param name="commandType">El <see cref="System.Data.CommandType"/> (Procedimiento Almacenado, Consulta, etc)</param>
-        /// <param name="commandText">El procedimiento, consulta o T-SQL a ejecutar</param>
-        /// <param name="commandParameters">Un arreglo de parametros de Objetos que seran asignados como parametros de entrada al SP</param>
-        /// <returns><see cref="System.Data.SqlClient.SqlDataReader" /> contieniendo los resultados del comando ejecutado</returns>
+        /// <param name="connectionString">A valid connection string for the <see cref="System.Data.SqlClient.SqlConnection"/></param>
+        /// <param name="commandType">A <see cref="System.Data.CommandType"/> (Stored Procedure, query, etc)</param>
+        /// <param name="commandText">Stored Procedure name, T-SQL Query, etc</param>
+        /// <param name="commandParameters">An array of Object parameters that will be assigned as input parameters to the SP</param>
+        /// <returns><see cref="System.Data.SqlClient.SqlDataReader" /> containing the results of the command executed</returns>
         public static SqlDataReader ExecuteReader(string connectionString, CommandType commandType, string commandText, params SqlParameter[] commandParameters)
         {
             //create & open a SqlConnection
@@ -818,10 +794,10 @@ namespace DBHelper.SqlHelper
         /// e.g.:  
         ///  SqlDataReader dr = ExecuteReader(connString, "GetOrders", 24, 36);
         /// </remarks>
-        /// <param name="connectionString">Una cadena de conexion válida para <see cref="System.Data.SqlClient.SqlConnection"/></param>
-        /// <param name="spName">Nombre del Procedimiento Almacenados</param>
-        /// <param name="parameterValues">Un arreglo de parametros de Objetos que seran asignados como parametros de entrada al SP</param>
-        /// <returns><see cref="System.Data.SqlClient.SqlDataReader" /> contieniendo los resultados del comando ejecutado</returns>
+        /// <param name="connectionString">A valid connection string for the <see cref="System.Data.SqlClient.SqlConnection"/></param>
+        /// <param name="spName">Stored Procedure name</param>
+        /// <param name="parameterValues">An array of Object parameters that will be assigned as input parameters to the SP</param>
+        /// <returns><see cref="System.Data.SqlClient.SqlDataReader" /> containing the results of the command executed</returns>
         public static SqlDataReader ExecuteReader(string connectionString, string spName, params object[] parameterValues)
         {
             //if we receive parameter values, we need to figure out where they go
@@ -850,10 +826,10 @@ namespace DBHelper.SqlHelper
         /// e.g.:  
         ///  SqlDataReader dr = ExecuteReader(conn, CommandType.StoredProcedure, "GetOrders");
         /// </remarks>
-        /// <param name="connection">Un <see cref="System.Data.SqlClient.SqlConnection"/> en el cual sera ejecutado el comando</param>
-        /// <param name="commandType">El <see cref="System.Data.CommandType"/> (Procedimiento Almacenado, Consulta, etc)</param>
-        /// <param name="commandText">El procedimiento, consulta o T-SQL a ejecutar</param>
-        /// <returns><see cref="System.Data.SqlClient.SqlDataReader" /> contieniendo los resultados del comando ejecutado</returns>
+        /// <param name="connection">A <see cref="System.Data.SqlClient.SqlConnection"/> that will be executed on the command</param>
+        /// <param name="commandType">A <see cref="System.Data.CommandType"/> (Stored Procedure, query, etc)</param>
+        /// <param name="commandText">Stored Procedure name, T-SQL Query, etc</param>
+        /// <returns><see cref="System.Data.SqlClient.SqlDataReader" /> containing the results of the command executed</returns>
         public static SqlDataReader ExecuteReader(SqlConnection connection, CommandType commandType, string commandText)
         {
             //pass through the call providing null for the set of SqlParameters
@@ -868,11 +844,11 @@ namespace DBHelper.SqlHelper
         /// e.g.:  
         ///  SqlDataReader dr = ExecuteReader(conn, CommandType.StoredProcedure, "GetOrders", new SqlParameter("@prodid", 24));
         /// </remarks>
-        /// <param name="connection">Un <see cref="System.Data.SqlClient.SqlConnection"/> en el cual sera ejecutado el comando</param>
-        /// <param name="commandType">El <see cref="System.Data.CommandType"/> (Procedimiento Almacenado, Consulta, etc)</param>
-        /// <param name="commandText">El procedimiento, consulta o T-SQL a ejecutar</param>
-        /// <param name="commandParameters">Un arreglo de parametros de Objetos que seran asignados como parametros de entrada al SP</param>
-        /// <returns><see cref="System.Data.SqlClient.SqlDataReader" /> contieniendo los resultados del comando ejecutado</returns>
+        /// <param name="connection">A <see cref="System.Data.SqlClient.SqlConnection"/> that will be executed on the command</param>
+        /// <param name="commandType">A <see cref="System.Data.CommandType"/> (Stored Procedure, query, etc)</param>
+        /// <param name="commandText">Stored Procedure name, T-SQL Query, etc</param>
+        /// <param name="commandParameters">An array of Object parameters that will be assigned as input parameters to the SP</param>
+        /// <returns><see cref="System.Data.SqlClient.SqlDataReader" /> containing the results of the command executed</returns>
         public static SqlDataReader ExecuteReader(SqlConnection connection, CommandType commandType, string commandText, params SqlParameter[] commandParameters)
         {
             //pass through the call to the private overload using a null transaction value and an externally owned connection
@@ -890,10 +866,10 @@ namespace DBHelper.SqlHelper
         /// e.g.:  
         ///  SqlDataReader dr = ExecuteReader(conn, "GetOrders", 24, 36);
         /// </remarks>
-        /// <param name="connection">Un <see cref="System.Data.SqlClient.SqlConnection"/> en el cual sera ejecutado el comando</param>
-        /// <param name="spName">Nombre del Procedimiento Almacenados</param>
-        /// <param name="parameterValues">Un arreglo de parametros de Objetos que seran asignados como parametros de entrada al SP</param>
-        /// <returns><see cref="System.Data.SqlClient.SqlDataReader" /> contieniendo los resultados del comando ejecutado</returns>
+        /// <param name="connection">A <see cref="System.Data.SqlClient.SqlConnection"/> that will be executed on the command</param>
+        /// <param name="spName">Stored Procedure name</param>
+        /// <param name="parameterValues">An array of Object parameters that will be assigned as input parameters to the SP</param>
+        /// <returns><see cref="System.Data.SqlClient.SqlDataReader" /> containing the results of the command executed</returns>
         public static SqlDataReader ExecuteReader(SqlConnection connection, string spName, params object[] parameterValues)
         {
             //if we receive parameter values, we need to figure out where they go
@@ -919,10 +895,10 @@ namespace DBHelper.SqlHelper
         /// e.g.:  
         ///  SqlDataReader dr = ExecuteReader(trans, CommandType.StoredProcedure, "GetOrders");
         /// </remarks>
-        /// <param name="transaction">El <see cref="System.Data.SqlClient.SqlTransaction"/> sobre el cual sera ejecutado el comando</param>
-        /// <param name="commandType">El <see cref="System.Data.CommandType"/> (Procedimiento Almacenado, Consulta, etc)</param>
-        /// <param name="commandText">El procedimiento, consulta o T-SQL a ejecutar</param>
-        /// <returns><see cref="System.Data.SqlClient.SqlDataReader" /> contieniendo los resultados del comando ejecutado</returns>
+        /// <param name="transaction">A valid <see cref="System.Data.SqlClient.SqlTransaction"/> or 'null'</param>
+        /// <param name="commandType">A <see cref="System.Data.CommandType"/> (Stored Procedure, query, etc)</param>
+        /// <param name="commandText">Stored Procedure name, T-SQL Query, etc</param>
+        /// <returns><see cref="System.Data.SqlClient.SqlDataReader" /> containing the results of the command executed</returns>
         public static SqlDataReader ExecuteReader(SqlTransaction transaction, CommandType commandType, string commandText)
         {
             //pass through the call providing null for the set of SqlParameters
@@ -937,11 +913,11 @@ namespace DBHelper.SqlHelper
         /// e.g.:  
         ///   SqlDataReader dr = ExecuteReader(trans, CommandType.StoredProcedure, "GetOrders", new SqlParameter("@prodid", 24));
         /// </remarks>
-        /// <param name="transaction">El <see cref="System.Data.SqlClient.SqlTransaction"/> sobre el cual sera ejecutado el comando</param>
-        /// <param name="commandType">El <see cref="System.Data.CommandType"/> (Procedimiento Almacenado, Consulta, etc)</param>
-        /// <param name="commandText">El procedimiento, consulta o T-SQL a ejecutar</param>
-        /// <param name="commandParameters">Un arreglo de parametros de Objetos que seran asignados como parametros de entrada al SP</param>
-        /// <returns><see cref="System.Data.SqlClient.SqlDataReader" /> contieniendo los resultados del comando ejecutado</returns>
+        /// <param name="transaction">A valid <see cref="System.Data.SqlClient.SqlTransaction"/> or 'null'</param>
+        /// <param name="commandType">A <see cref="System.Data.CommandType"/> (Stored Procedure, query, etc)</param>
+        /// <param name="commandText">Stored Procedure name, T-SQL Query, etc</param>
+        /// <param name="commandParameters">An array of Object parameters that will be assigned as input parameters to the SP</param>
+        /// <returns><see cref="System.Data.SqlClient.SqlDataReader" /> containing the results of the command executed</returns>
         public static SqlDataReader ExecuteReader(SqlTransaction transaction, CommandType commandType, string commandText, params SqlParameter[] commandParameters)
         {
             //pass through to private overload, indicating that the connection is owned by the caller
@@ -959,10 +935,10 @@ namespace DBHelper.SqlHelper
         /// e.g.:  
         ///  SqlDataReader dr = ExecuteReader(trans, "GetOrders", 24, 36);
         /// </remarks>
-        /// <param name="transaction">El <see cref="System.Data.SqlClient.SqlTransaction"/> sobre el cual sera ejecutado el comando</param>
-        /// <param name="spName">Nombre del Procedimiento Almacenados</param>
-        /// <param name="parameterValues">Un arreglo de parametros de Objetos que seran asignados como parametros de entrada al SP</param>
-        /// <returns><see cref="System.Data.SqlClient.SqlDataReader" /> contieniendo los resultados del comando ejecutado</returns>
+        /// <param name="transaction">A valid <see cref="System.Data.SqlClient.SqlTransaction"/> or 'null'</param>
+        /// <param name="spName">Stored Procedure name</param>
+        /// <param name="parameterValues">An array of Object parameters that will be assigned as input parameters to the SP</param>
+        /// <returns><see cref="System.Data.SqlClient.SqlDataReader" /> containing the results of the command executed</returns>
         public static SqlDataReader ExecuteReader(SqlTransaction transaction, string spName, params object[] parameterValues)
         {
             //if we receive parameter values, we need to figure out where they go
@@ -995,9 +971,9 @@ namespace DBHelper.SqlHelper
         /// e.g.:  
         ///  int orderCount = (int)ExecuteScalar(connString, CommandType.StoredProcedure, "GetOrderCount");
         /// </remarks>
-        /// <param name="connectionString">Una cadena de conexion válida para <see cref="System.Data.SqlClient.SqlConnection"/></param>
-        /// <param name="commandType">El <see cref="System.Data.CommandType"/> (Procedimiento Almacenado, Consulta, etc)</param>
-        /// <param name="commandText">El procedimiento, consulta o T-SQL a ejecutar</param>
+        /// <param name="connectionString">A valid connection string for the <see cref="System.Data.SqlClient.SqlConnection"/></param>
+        /// <param name="commandType">A <see cref="System.Data.CommandType"/> (Stored Procedure, query, etc)</param>
+        /// <param name="commandText">Stored Procedure name, T-SQL Query, etc</param>
         /// <returns>an object containing the value in the 1x1 resultset generated by the command</returns>
         public static object ExecuteScalar(string connectionString, CommandType commandType, string commandText)
         {
@@ -1013,10 +989,10 @@ namespace DBHelper.SqlHelper
         /// e.g.:  
         ///  int orderCount = (int)ExecuteScalar(connString, CommandType.StoredProcedure, "GetOrderCount", new SqlParameter("@prodid", 24));
         /// </remarks>
-        /// <param name="connectionString">Una cadena de conexion válida para <see cref="System.Data.SqlClient.SqlConnection"/></param>
-        /// <param name="commandType">El <see cref="System.Data.CommandType"/> (Procedimiento Almacenado, Consulta, etc)</param>
-        /// <param name="commandText">El procedimiento, consulta o T-SQL a ejecutar</param>
-        /// <param name="commandParameters">Un arreglo de parametros de Objetos que seran asignados como parametros de entrada al SP</param>
+        /// <param name="connectionString">A valid connection string for the <see cref="System.Data.SqlClient.SqlConnection"/></param>
+        /// <param name="commandType">A <see cref="System.Data.CommandType"/> (Stored Procedure, query, etc)</param>
+        /// <param name="commandText">Stored Procedure name, T-SQL Query, etc</param>
+        /// <param name="commandParameters">An array of Object parameters that will be assigned as input parameters to the SP</param>
         /// <returns>an object containing the value in the 1x1 resultset generated by the command</returns>
         public static object ExecuteScalar(string connectionString, CommandType commandType, string commandText, params SqlParameter[] commandParameters)
         {
@@ -1041,9 +1017,9 @@ namespace DBHelper.SqlHelper
         /// e.g.:  
         ///  int orderCount = (int)ExecuteScalar(connString, "GetOrderCount", 24, 36);
         /// </remarks>
-        /// <param name="connectionString">Una cadena de conexion válida para <see cref="System.Data.SqlClient.SqlConnection"/></param>
-        /// <param name="spName">Nombre del Procedimiento Almacenados</param>
-        /// <param name="parameterValues">Un arreglo de parametros de Objetos que seran asignados como parametros de entrada al SP</param>
+        /// <param name="connectionString">A valid connection string for the <see cref="System.Data.SqlClient.SqlConnection"/></param>
+        /// <param name="spName">Stored Procedure name</param>
+        /// <param name="parameterValues">An array of Object parameters that will be assigned as input parameters to the SP</param>
         /// <returns>an object containing the value in the 1x1 resultset generated by the command</returns>
         public static object ExecuteScalar(string connectionString, string spName, params object[] parameterValues)
         {
@@ -1073,9 +1049,9 @@ namespace DBHelper.SqlHelper
         /// e.g.:  
         ///  int orderCount = (int)ExecuteScalar(conn, CommandType.StoredProcedure, "GetOrderCount");
         /// </remarks>
-        /// <param name="connection">Un <see cref="System.Data.SqlClient.SqlConnection"/> en el cual sera ejecutado el comando</param>
-        /// <param name="commandType">El <see cref="System.Data.CommandType"/> (Procedimiento Almacenado, Consulta, etc)</param>
-        /// <param name="commandText">El procedimiento, consulta o T-SQL a ejecutar</param>
+        /// <param name="connection">A <see cref="System.Data.SqlClient.SqlConnection"/> that will be executed on the command</param>
+        /// <param name="commandType">A <see cref="System.Data.CommandType"/> (Stored Procedure, query, etc)</param>
+        /// <param name="commandText">Stored Procedure name, T-SQL Query, etc</param>
         /// <returns>an object containing the value in the 1x1 resultset generated by the command</returns>
         public static object ExecuteScalar(SqlConnection connection, CommandType commandType, string commandText)
         {
@@ -1091,10 +1067,10 @@ namespace DBHelper.SqlHelper
         /// e.g.:  
         ///  int orderCount = (int)ExecuteScalar(conn, CommandType.StoredProcedure, "GetOrderCount", new SqlParameter("@prodid", 24));
         /// </remarks>
-        /// <param name="connection">Un <see cref="System.Data.SqlClient.SqlConnection"/> en el cual sera ejecutado el comando</param>
-        /// <param name="commandType">El <see cref="System.Data.CommandType"/> (Procedimiento Almacenado, Consulta, etc)</param>
-        /// <param name="commandText">El procedimiento, consulta o T-SQL a ejecutar</param>
-        /// <param name="commandParameters">Un arreglo de parametros de Objetos que seran asignados como parametros de entrada al SP</param>
+        /// <param name="connection">A <see cref="System.Data.SqlClient.SqlConnection"/> that will be executed on the command</param>
+        /// <param name="commandType">A <see cref="System.Data.CommandType"/> (Stored Procedure, query, etc)</param>
+        /// <param name="commandText">Stored Procedure name, T-SQL Query, etc</param>
+        /// <param name="commandParameters">An array of Object parameters that will be assigned as input parameters to the SP</param>
         /// <returns>an object containing the value in the 1x1 resultset generated by the command</returns>
         public static object ExecuteScalar(SqlConnection connection, CommandType commandType, string commandText, params SqlParameter[] commandParameters)
         {
@@ -1122,9 +1098,9 @@ namespace DBHelper.SqlHelper
         /// e.g.:  
         ///  int orderCount = (int)ExecuteScalar(conn, "GetOrderCount", 24, 36);
         /// </remarks>
-        /// <param name="connection">Un <see cref="System.Data.SqlClient.SqlConnection"/> en el cual sera ejecutado el comando</param>
-        /// <param name="spName">Nombre del Procedimiento Almacenados</param>
-        /// <param name="parameterValues">Un arreglo de parametros de Objetos que seran asignados como parametros de entrada al SP</param>
+        /// <param name="connection">A <see cref="System.Data.SqlClient.SqlConnection"/> that will be executed on the command</param>
+        /// <param name="spName">Stored Procedure name</param>
+        /// <param name="parameterValues">An array of Object parameters that will be assigned as input parameters to the SP</param>
         /// <returns>an object containing the value in the 1x1 resultset generated by the command</returns>
         public static object ExecuteScalar(SqlConnection connection, string spName, params object[] parameterValues)
         {
@@ -1154,9 +1130,9 @@ namespace DBHelper.SqlHelper
         /// e.g.:  
         ///  int orderCount = (int)ExecuteScalar(trans, CommandType.StoredProcedure, "GetOrderCount");
         /// </remarks>
-        /// <param name="transaction">El <see cref="System.Data.SqlClient.SqlTransaction"/> sobre el cual sera ejecutado el comando</param>
-        /// <param name="commandType">El <see cref="System.Data.CommandType"/> (Procedimiento Almacenado, Consulta, etc)</param>
-        /// <param name="commandText">El procedimiento, consulta o T-SQL a ejecutar</param>
+        /// <param name="transaction">A valid <see cref="System.Data.SqlClient.SqlTransaction"/> or 'null'</param>
+        /// <param name="commandType">A <see cref="System.Data.CommandType"/> (Stored Procedure, query, etc)</param>
+        /// <param name="commandText">The Stored Procedure name, T-SQL Query, etc</param>
         /// <returns>an object containing the value in the 1x1 resultset generated by the command</returns>
         public static object ExecuteScalar(SqlTransaction transaction, CommandType commandType, string commandText)
         {
@@ -1172,10 +1148,10 @@ namespace DBHelper.SqlHelper
         /// e.g.:  
         ///  int orderCount = (int)ExecuteScalar(trans, CommandType.StoredProcedure, "GetOrderCount", new SqlParameter("@prodid", 24));
         /// </remarks>
-        /// <param name="transaction">El <see cref="System.Data.SqlClient.SqlTransaction"/> sobre el cual sera ejecutado el comando</param>
-        /// <param name="commandType">El <see cref="System.Data.CommandType"/> (Procedimiento Almacenado, Consulta, etc)</param>
-        /// <param name="commandText">El procedimiento, consulta o T-SQL a ejecutar</param>
-        /// <param name="commandParameters">Un arreglo de parametros de Objetos que seran asignados como parametros de entrada al SP</param>
+        /// <param name="transaction">A valid <see cref="System.Data.SqlClient.SqlTransaction"/> or 'null'</param>
+        /// <param name="commandType">A <see cref="System.Data.CommandType"/> (Stored Procedure, query, etc)</param>
+        /// <param name="commandText">The Stored Procedure name, T-SQL Query, etc</param>
+        /// <param name="commandParameters">An array of Object parameters that will be assigned as input parameters to the SP</param>
         /// <returns>an object containing the value in the 1x1 resultset generated by the command</returns>
         public static object ExecuteScalar(SqlTransaction transaction, CommandType commandType, string commandText, params SqlParameter[] commandParameters)
         {
@@ -1202,9 +1178,9 @@ namespace DBHelper.SqlHelper
         /// e.g.:  
         ///  int orderCount = (int)ExecuteScalar(trans, "GetOrderCount", 24, 36);
         /// </remarks>
-        /// <param name="transaction">El <see cref="System.Data.SqlClient.SqlTransaction"/> sobre el cual sera ejecutado el comando</param>
-        /// <param name="spName">Nombre del Procedimiento Almacenados</param>
-        /// <param name="parameterValues">Un arreglo de parametros de Objetos que seran asignados como parametros de entrada al SP</param>
+        /// <param name="transaction">A valid <see cref="System.Data.SqlClient.SqlTransaction"/> or 'null'</param>
+        /// <param name="spName">Stored Procedure name</param>
+        /// <param name="parameterValues">An array of Object parameters that will be assigned as input parameters to the SP</param>
         /// <returns>an object containing the value in the 1x1 resultset generated by the command</returns>
         public static object ExecuteScalar(SqlTransaction transaction, string spName, params object[] parameterValues)
         {
@@ -1238,9 +1214,9 @@ namespace DBHelper.SqlHelper
         /// e.g.:  
         ///  XmlReader r = ExecuteXmlReader(conn, CommandType.StoredProcedure, "GetOrders");
         /// </remarks>
-        /// <param name="connection">Un <see cref="System.Data.SqlClient.SqlConnection"/> en el cual sera ejecutado el comando</param>
-        /// <param name="commandType">El <see cref="System.Data.CommandType"/> (Procedimiento Almacenado, Consulta, etc)</param>
-        /// <param name="commandText">the stored procedure name or T-SQL command using "FOR XML AUTO"</param>
+        /// <param name="connection">A <see cref="System.Data.SqlClient.SqlConnection"/> that will be executed on the command</param>
+        /// <param name="commandType">A <see cref="System.Data.CommandType"/> (Stored Procedure, query, etc)</param>
+        /// <param name="commandText">The Stored Procedure name or T-SQL command using "FOR XML AUTO"</param>
         /// <returns>an XmlReader containing the resultset generated by the command</returns>
         public static XmlReader ExecuteXmlReader(SqlConnection connection, CommandType commandType, string commandText)
         {
@@ -1256,10 +1232,10 @@ namespace DBHelper.SqlHelper
         /// e.g.:  
         ///  XmlReader r = ExecuteXmlReader(conn, CommandType.StoredProcedure, "GetOrders", new SqlParameter("@prodid", 24));
         /// </remarks>
-        /// <param name="connection">Un <see cref="System.Data.SqlClient.SqlConnection"/> en el cual sera ejecutado el comando</param>
-        /// <param name="commandType">El <see cref="System.Data.CommandType"/> (Procedimiento Almacenado, Consulta, etc)</param>
-        /// <param name="commandText">the stored procedure name or T-SQL command using "FOR XML AUTO"</param>
-        /// <param name="commandParameters">Un arreglo de parametros de Objetos que seran asignados como parametros de entrada al SP</param>
+        /// <param name="connection">A <see cref="System.Data.SqlClient.SqlConnection"/> that will be executed on the command</param>
+        /// <param name="commandType">A <see cref="System.Data.CommandType"/> (Stored Procedure, query, etc)</param>
+        /// <param name="commandText">The Stored Procedure name or T-SQL command using "FOR XML AUTO"</param>
+        /// <param name="commandParameters">An array of Object parameters that will be assigned as input parameters to the SP</param>
         /// <returns>an XmlReader containing the resultset generated by the command</returns>
         public static XmlReader ExecuteXmlReader(SqlConnection connection, CommandType commandType, string commandText, params SqlParameter[] commandParameters)
         {
@@ -1287,9 +1263,9 @@ namespace DBHelper.SqlHelper
         /// e.g.:  
         ///  XmlReader r = ExecuteXmlReader(conn, "GetOrders", 24, 36);
         /// </remarks>
-        /// <param name="connection">Un <see cref="System.Data.SqlClient.SqlConnection"/> en el cual sera ejecutado el comando</param>
-        /// <param name="spName">the name of the stored procedure using "FOR XML AUTO"</param>
-        /// <param name="parameterValues">Un arreglo de parametros de Objetos que seran asignados como parametros de entrada al SP</param>
+        /// <param name="connection">A <see cref="System.Data.SqlClient.SqlConnection"/> that will be executed on the command</param>
+        /// <param name="spName">The name of the stored procedure using "FOR XML AUTO"</param>
+        /// <param name="parameterValues">An array of Object parameters that will be assigned as input parameters to the SP</param>
         /// <returns>an XmlReader containing the resultset generated by the command</returns>
         public static XmlReader ExecuteXmlReader(SqlConnection connection, string spName, params object[] parameterValues)
         {
@@ -1319,9 +1295,9 @@ namespace DBHelper.SqlHelper
         /// e.g.:  
         ///  XmlReader r = ExecuteXmlReader(trans, CommandType.StoredProcedure, "GetOrders");
         /// </remarks>
-        /// <param name="transaction">El <see cref="System.Data.SqlClient.SqlTransaction"/> sobre el cual sera ejecutado el comando</param>
-        /// <param name="commandType">El <see cref="System.Data.CommandType"/> (Procedimiento Almacenado, Consulta, etc)</param>
-        /// <param name="commandText">the stored procedure name or T-SQL command using "FOR XML AUTO"</param>
+        /// <param name="transaction">A valid <see cref="System.Data.SqlClient.SqlTransaction"/> or 'null'</param>
+        /// <param name="commandType">A <see cref="System.Data.CommandType"/> (Stored Procedure, query, etc)</param>
+        /// <param name="commandText">The Stored Procedure name or T-SQL command using "FOR XML AUTO"</param>
         /// <returns>an XmlReader containing the resultset generated by the command</returns>
         public static XmlReader ExecuteXmlReader(SqlTransaction transaction, CommandType commandType, string commandText)
         {
@@ -1337,10 +1313,10 @@ namespace DBHelper.SqlHelper
         /// e.g.:  
         ///  XmlReader r = ExecuteXmlReader(trans, CommandType.StoredProcedure, "GetOrders", new SqlParameter("@prodid", 24));
         /// </remarks>
-        /// <param name="transaction">El <see cref="System.Data.SqlClient.SqlTransaction"/> sobre el cual sera ejecutado el comando</param>
-        /// <param name="commandType">El <see cref="System.Data.CommandType"/> (Procedimiento Almacenado, Consulta, etc)</param>
-        /// <param name="commandText">the stored procedure name or T-SQL command using "FOR XML AUTO"</param>
-        /// <param name="commandParameters">Un arreglo de parametros de Objetos que seran asignados como parametros de entrada al SP</param>
+        /// <param name="transaction">A valid <see cref="System.Data.SqlClient.SqlTransaction"/> or 'null'</param>
+        /// <param name="commandType">A <see cref="System.Data.CommandType"/> (Stored Procedure, query, etc)</param>
+        /// <param name="commandText">The Stored Procedure name or T-SQL command using "FOR XML AUTO"</param>
+        /// <param name="commandParameters">An array of Object parameters that will be assigned as input parameters to the SP</param>
         /// <returns>an XmlReader containing the resultset generated by the command</returns>
         public static XmlReader ExecuteXmlReader(SqlTransaction transaction, CommandType commandType, string commandText, params SqlParameter[] commandParameters)
         {
@@ -1367,10 +1343,10 @@ namespace DBHelper.SqlHelper
         /// e.g.:  
         ///  XmlReader r = ExecuteXmlReader(trans, "GetOrders", 24, 36);
         /// </remarks>
-        /// <param name="transaction">El <see cref="System.Data.SqlClient.SqlTransaction"/> sobre el cual sera ejecutado el comando</param>
-        /// <param name="spName">Nombre del Procedimiento Almacenados</param>
-        /// <param name="parameterValues">Un arreglo de parametros de Objetos que seran asignados como parametros de entrada al SP</param>
-        /// <returns>Un <see cref="System.Data.DataSet"/> conteniendo el resultado generado por el Comnado ejecutado</returns>
+        /// <param name="transaction">A valid <see cref="System.Data.SqlClient.SqlTransaction"/> or 'null'</param>
+        /// <param name="spName">Stored Procedure name</param>
+        /// <param name="parameterValues">An array of Object parameters that will be assigned as input parameters to the SP</param>
+        /// <returns>A <see cref="System.Data.DataSet"/> containing the result generated by the Command executed</returns>
         public static XmlReader ExecuteXmlReader(SqlTransaction transaction, string spName, params object[] parameterValues)
         {
             //if we receive parameter values, we need to figure out where they go
