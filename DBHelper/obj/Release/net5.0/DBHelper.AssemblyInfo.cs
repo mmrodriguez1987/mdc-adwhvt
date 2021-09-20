@@ -13,6 +13,9 @@ using System.Reflection;
 
 [assembly: System.Reflection.AssemblyCompanyAttribute("Miami Dade County")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Release")]
+[assembly: System.Reflection.AssemblyCopyrightAttribute("Copyright © 2021 Miami-Dade County. All rights reserved.")]
+[assembly: System.Reflection.AssemblyDescriptionAttribute("Class library for manage connection to Oracle and SQL Server databases, the goals" +
+    " is to facilite the job and stablish a stanrtard in the code")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
 [assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
 [assembly: System.Reflection.AssemblyProductAttribute("Database Helper Library")]
