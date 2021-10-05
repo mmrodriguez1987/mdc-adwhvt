@@ -70,6 +70,13 @@ C:\Users\e327464\source\repos\BIProject\UnitTest\obj\Debug\net5.0\ref\UnitTest.d
 C:\Users\e327464\source\repos\BIProject\UnitTest\obj\Debug\net5.0\UnitTest.pdb
 C:\Users\e327464\source\repos\BIProject\UnitTest\obj\Debug\net5.0\UnitTest.genruntimeconfig.cache
 C:\Users\e327464\source\repos\BIProject\UnitTest\obj\Debug\net5.0\UnitTest.csproj.AssemblyReference.cache
+C:\BIProjectUT\UnitTest\obj\Debug\net5.0\UnitTest.csproj.AssemblyReference.cache
+C:\BIProjectUT\UnitTest\obj\Debug\net5.0\UnitTest.GeneratedMSBuildEditorConfig.editorconfig
+C:\BIProjectUT\UnitTest\obj\Debug\net5.0\UnitTest.AssemblyInfoInputs.cache
+C:\BIProjectUT\UnitTest\obj\Debug\net5.0\UnitTest.AssemblyInfo.cs
+C:\BIProjectUT\UnitTest\obj\Debug\net5.0\UnitTest.csproj.CoreCompileInputs.cache
+C:\BIProjectUT\UnitTest\obj\Debug\net5.0\UnitTest.MvcApplicationPartsAssemblyInfo.cs
+C:\BIProjectUT\UnitTest\obj\Debug\net5.0\UnitTest.MvcApplicationPartsAssemblyInfo.cache
 C:\BIProjectUT\UnitTest\bin\Debug\net5.0\appsettings.Development.json
 C:\BIProjectUT\UnitTest\bin\Debug\net5.0\UnitTest.exe
 C:\BIProjectUT\UnitTest\bin\Debug\net5.0\appsettings.json
@@ -85,7 +92,24 @@ C:\BIProjectUT\UnitTest\bin\Debug\net5.0\Microsoft.EntityFrameworkCore.Abstracti
 C:\BIProjectUT\UnitTest\bin\Debug\net5.0\Microsoft.EntityFrameworkCore.Design.dll
 C:\BIProjectUT\UnitTest\bin\Debug\net5.0\Microsoft.EntityFrameworkCore.Relational.dll
 C:\BIProjectUT\UnitTest\bin\Debug\net5.0\Microsoft.Extensions.DependencyInjection.dll
+C:\BIProjectUT\UnitTest\bin\Debug\net5.0\Namotion.Reflection.dll
+C:\BIProjectUT\UnitTest\bin\Debug\net5.0\Newtonsoft.Json.dll
+C:\BIProjectUT\UnitTest\bin\Debug\net5.0\NJsonSchema.dll
+C:\BIProjectUT\UnitTest\bin\Debug\net5.0\NJsonSchema.Yaml.dll
+C:\BIProjectUT\UnitTest\bin\Debug\net5.0\NSwag.Annotations.dll
+C:\BIProjectUT\UnitTest\bin\Debug\net5.0\NSwag.AspNetCore.dll
+C:\BIProjectUT\UnitTest\bin\Debug\net5.0\NSwag.Core.dll
+C:\BIProjectUT\UnitTest\bin\Debug\net5.0\NSwag.Core.Yaml.dll
+C:\BIProjectUT\UnitTest\bin\Debug\net5.0\NSwag.Generation.dll
+C:\BIProjectUT\UnitTest\bin\Debug\net5.0\NSwag.Generation.AspNetCore.dll
 C:\BIProjectUT\UnitTest\bin\Debug\net5.0\Oracle.ManagedDataAccess.dll
+C:\BIProjectUT\UnitTest\bin\Debug\net5.0\Serilog.dll
+C:\BIProjectUT\UnitTest\bin\Debug\net5.0\Serilog.Extensions.Logging.dll
+C:\BIProjectUT\UnitTest\bin\Debug\net5.0\Serilog.Extensions.Logging.File.dll
+C:\BIProjectUT\UnitTest\bin\Debug\net5.0\Serilog.Formatting.Compact.dll
+C:\BIProjectUT\UnitTest\bin\Debug\net5.0\Serilog.Sinks.Async.dll
+C:\BIProjectUT\UnitTest\bin\Debug\net5.0\Serilog.Sinks.File.dll
+C:\BIProjectUT\UnitTest\bin\Debug\net5.0\Serilog.Sinks.RollingFile.dll
 C:\BIProjectUT\UnitTest\bin\Debug\net5.0\System.Configuration.ConfigurationManager.dll
 C:\BIProjectUT\UnitTest\bin\Debug\net5.0\System.Data.SqlClient.dll
 C:\BIProjectUT\UnitTest\bin\Debug\net5.0\System.Diagnostics.DiagnosticSource.dll
@@ -93,6 +117,7 @@ C:\BIProjectUT\UnitTest\bin\Debug\net5.0\System.Diagnostics.PerformanceCounter.d
 C:\BIProjectUT\UnitTest\bin\Debug\net5.0\System.DirectoryServices.dll
 C:\BIProjectUT\UnitTest\bin\Debug\net5.0\System.DirectoryServices.Protocols.dll
 C:\BIProjectUT\UnitTest\bin\Debug\net5.0\System.Security.Cryptography.ProtectedData.dll
+C:\BIProjectUT\UnitTest\bin\Debug\net5.0\YamlDotNet.dll
 C:\BIProjectUT\UnitTest\bin\Debug\net5.0\runtimes\win-arm64\native\sni.dll
 C:\BIProjectUT\UnitTest\bin\Debug\net5.0\runtimes\win-x64\native\sni.dll
 C:\BIProjectUT\UnitTest\bin\Debug\net5.0\runtimes\win-x86\native\sni.dll
@@ -102,11 +127,10 @@ C:\BIProjectUT\UnitTest\bin\Debug\net5.0\runtimes\win\lib\netcoreapp2.0\System.D
 C:\BIProjectUT\UnitTest\bin\Debug\net5.0\runtimes\win\lib\netcoreapp2.0\System.DirectoryServices.dll
 C:\BIProjectUT\UnitTest\bin\Debug\net5.0\runtimes\win\lib\netcoreapp2.0\System.DirectoryServices.Protocols.dll
 C:\BIProjectUT\UnitTest\bin\Debug\net5.0\runtimes\win\lib\netstandard2.0\System.Security.Cryptography.ProtectedData.dll
-C:\BIProjectUT\UnitTest\obj\Debug\net5.0\UnitTest.GeneratedMSBuildEditorConfig.editorconfig
-C:\BIProjectUT\UnitTest\obj\Debug\net5.0\UnitTest.AssemblyInfoInputs.cache
-C:\BIProjectUT\UnitTest\obj\Debug\net5.0\UnitTest.AssemblyInfo.cs
-C:\BIProjectUT\UnitTest\obj\Debug\net5.0\UnitTest.csproj.CoreCompileInputs.cache
-C:\BIProjectUT\UnitTest\obj\Debug\net5.0\UnitTest.MvcApplicationPartsAssemblyInfo.cache
+C:\BIProjectUT\UnitTest\bin\Debug\net5.0\DBHelper.dll
+C:\BIProjectUT\UnitTest\bin\Debug\net5.0\Tools.dll
+C:\BIProjectUT\UnitTest\bin\Debug\net5.0\DBHelper.pdb
+C:\BIProjectUT\UnitTest\bin\Debug\net5.0\Tools.pdb
 C:\BIProjectUT\UnitTest\obj\Debug\net5.0\staticwebassets\UnitTest.StaticWebAssets.Manifest.cache
 C:\BIProjectUT\UnitTest\obj\Debug\net5.0\staticwebassets\UnitTest.StaticWebAssets.xml
 C:\BIProjectUT\UnitTest\obj\Debug\net5.0\scopedcss\bundle\UnitTest.styles.css
@@ -116,3 +140,4 @@ C:\BIProjectUT\UnitTest\obj\Debug\net5.0\UnitTest.dll
 C:\BIProjectUT\UnitTest\obj\Debug\net5.0\ref\UnitTest.dll
 C:\BIProjectUT\UnitTest\obj\Debug\net5.0\UnitTest.pdb
 C:\BIProjectUT\UnitTest\obj\Debug\net5.0\UnitTest.genruntimeconfig.cache
+C:\BIProjectUT\UnitTest\bin\Debug\net5.0\UnitTest BI.postman_collection.json

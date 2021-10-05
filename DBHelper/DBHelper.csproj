@@ -1,0 +1,16 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+    <Company>Miami Dade County</Company>
+    <Product>Database Helper Library</Product>
+    <Authors>Information Technology Department</Authors>
+    <Description>Class library for manage connection to Oracle and SQL Server databases, the goals is to facilite the job and stablish a stanrtard in the code</Description>
+    <Copyright>Copyright © 2021 Miami-Dade County. All rights reserved.</Copyright>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.Data.SqlClient" Version="4.8.2" />
+  </ItemGroup>
+
+</Project>
