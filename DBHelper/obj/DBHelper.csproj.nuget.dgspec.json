@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\BIProjectUT\\UnitTest\\UnitTest.csproj": {}
+    "C:\\BIProjectUT\\DBHelper\\DBHelper.csproj": {}
   },
   "projects": {
-    "C:\\BIProjectUT\\UnitTest\\UnitTest.csproj": {
+    "C:\\BIProjectUT\\DBHelper\\DBHelper.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\BIProjectUT\\UnitTest\\UnitTest.csproj",
-        "projectName": "UnitTest",
-        "projectPath": "C:\\BIProjectUT\\UnitTest\\UnitTest.csproj",
+        "projectUniqueName": "C:\\BIProjectUT\\DBHelper\\DBHelper.csproj",
+        "projectName": "DBHelper",
+        "projectPath": "C:\\BIProjectUT\\DBHelper\\DBHelper.csproj",
         "packagesPath": "C:\\Users\\e327464\\.nuget\\packages\\",
-        "outputPath": "C:\\BIProjectUT\\UnitTest\\obj\\",
+        "outputPath": "C:\\BIProjectUT\\DBHelper\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages",
@@ -46,16 +46,6 @@
         "net5.0": {
           "targetAlias": "net5.0",
           "dependencies": {
-            "Microsoft.EntityFrameworkCore.Design": {
-              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
-              "suppressParent": "All",
-              "target": "Package",
-              "version": "[5.0.7, )"
-            },
-            "Oracle.ManagedDataAccess.Core": {
-              "target": "Package",
-              "version": "[3.21.1, )"
-            },
             "System.Data.SqlClient": {
               "target": "Package",
               "version": "[4.8.2, )"
@@ -72,9 +62,6 @@
           "assetTargetFallback": true,
           "warn": true,
           "frameworkReferences": {
-            "Microsoft.AspNetCore.App": {
-              "privateAssets": "none"
-            },
             "Microsoft.NETCore.App": {
               "privateAssets": "all"
             }
