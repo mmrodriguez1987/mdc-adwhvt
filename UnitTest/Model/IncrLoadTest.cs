@@ -13,7 +13,7 @@ namespace UnitTest.Model
     public class IncrLoadTest
     {
         private SqlHelper helper;
-        private readonly ILogger<IncrLoadTest> _log;
+  
         private static string storedProcedureName;
         private static DataSet result = new DataSet();
         private static string _conexion;
@@ -25,14 +25,15 @@ namespace UnitTest.Model
 
         public IncrLoadTest(string conexion, string tableIdentifier, DateTime startDate, DateTime endDate, Int64 adfNewRowsCount, Int64 adfUpdatedRowsCount)
         {
-            helper = new SqlHelper(conexion);
+            
             _conexion = conexion;
             _identifier = tableIdentifier;
             _startDate = startDate;
             _endDate = endDate;
             _adfNewRowsCount = adfNewRowsCount;
             _adfUpdatedRowsCount = adfUpdatedRowsCount;
-           // _IsSPorQuery = IsSPorQuery;
+            helper = new SqlHelper(_conexion);
+            // _IsSPorQuery = IsSPorQuery;
         }
 
         /// <summary>
@@ -123,8 +124,8 @@ namespace UnitTest.Model
                 else
                 {
                     try
-                    {                        
-                           
+                    {
+
                         Object[] param = { _startDate.ToString("yyyy-MM-dd HH:mm"), _endDate.ToString("yyyy-MM-dd HH:mm") };
                           
                         sqlCDCResponse = SqlHelper.ExecuteDataset(_conexion, storedProcedureName, param);

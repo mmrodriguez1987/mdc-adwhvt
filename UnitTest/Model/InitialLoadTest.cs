@@ -22,7 +22,7 @@ namespace UnitTest.Model
         private static OracleDataAdapter dataAdapterOracle = null;
         private static DataSet resultsOracle = new DataSet();
         private static string oracle_query;
-        private readonly ILogger<InitialLoadTest> _log;
+
         private static string _oracleConex, _dtwhConex, _dtwTable, _ccbTable;
        
         public string DtwTable { get => _dtwTable; set => _dtwTable = value; }

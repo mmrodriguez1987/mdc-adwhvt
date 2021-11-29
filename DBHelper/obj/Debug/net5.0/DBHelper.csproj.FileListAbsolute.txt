@@ -2,6 +2,7 @@ C:\BIProjectUT\DBHelper\bin\Debug\net5.0\DBHelper.deps.json
 C:\BIProjectUT\DBHelper\bin\Debug\net5.0\DBHelper.dll
 C:\BIProjectUT\DBHelper\bin\Debug\net5.0\ref\DBHelper.dll
 C:\BIProjectUT\DBHelper\bin\Debug\net5.0\DBHelper.pdb
+C:\BIProjectUT\DBHelper\obj\Debug\net5.0\DBHelper.csproj.AssemblyReference.cache
 C:\BIProjectUT\DBHelper\obj\Debug\net5.0\DBHelper.GeneratedMSBuildEditorConfig.editorconfig
 C:\BIProjectUT\DBHelper\obj\Debug\net5.0\DBHelper.AssemblyInfoInputs.cache
 C:\BIProjectUT\DBHelper\obj\Debug\net5.0\DBHelper.AssemblyInfo.cs
