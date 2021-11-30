@@ -28,7 +28,9 @@ namespace Tools.Files
         /// <param name="dataTable">Information to write</param>
         public void writeNewOrExistingFile (DataTable dataTable)
         {
-            if (!File.Exists(_path))
+            string path = Directory.GetCurrentDirectory();
+
+            if (!File.Exists(_path)) 
             {
                 var config = new CsvConfiguration(CultureInfo.CurrentCulture)
                 {

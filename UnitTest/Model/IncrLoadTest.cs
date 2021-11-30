@@ -37,7 +37,7 @@ namespace UnitTest.Model
         }
 
         /// <summary>
-        /// Prepare the query that will by executed on facebook
+        /// Prepare the query that will by executed 
         /// </summary>
         /// <returns>The query string already done</returns>
         private static string prepareQuery()

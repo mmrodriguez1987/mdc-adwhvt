@@ -2,9 +2,7 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using System;
-using System.Collections.Generic;
 using System.Data;
-using System.Linq;
 using System.Threading.Tasks;
 using Tools.Mechanism;
 using Tools.DataConversion;
@@ -12,6 +10,8 @@ using UnitTest.Model.DataWarehouse;
 
 namespace UnitTest.Controllers
 {
+    [Route("api/[controller]")]
+    [ApiController]
     public class BillUsageController : ControllerBase
     {
         private IConfiguration _conf { get; }
@@ -27,10 +27,11 @@ namespace UnitTest.Controllers
             //billusage = new BillUsage()
         }
 
-        /*private async Task<IActionResult> Get(Int64 testID, DateTime startDate, DateTime endDate)
+       private async Task<IActionResult> Get(Int64 testID, DateTime startDate, DateTime endDate)
         {
             DataSet dsResult = new DataSet();
-            dsResult = BillUsage.getResponseStructure();
+            BillUsage bu = new BillUsage(_conf.GetConnectionString("DTWttdpConnection"));
+            dsResult = bu.getResponseStructure("");
 
 
 
@@ -48,11 +49,11 @@ namespace UnitTest.Controllers
                 return base.BadRequest(Extensions.messageToJSON(myDict.messages["UT.BadStartDate"]));
             }
 
-            //dsResult = await Bu
+            dsResult = await bu.GetBillGeneratedOnWrongFiscalYear(startDate, endDate);
+            return base.Ok(Extensions.DataTableToJSONWithStringBuilder(dsResult.Tables[0]));
 
 
-
-        }*/
+        }
 
 
     }

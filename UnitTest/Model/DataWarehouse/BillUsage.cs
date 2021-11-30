@@ -20,24 +20,18 @@ namespace UnitTest.Model.DataWarehouse
         public BillUsage(string conexion)
         {
             _conexion = conexion;
-            _testFileName = Environment.CurrentDirectory + "UT_BI_ADWH_" + DateTime.Today.ToString("yyyy-MM-dd");
+            _testFileName = @"C:\\ADW_UT\\UT_BI_ADWH_" + DateTime.Today.ToString("yyyy_MM_dd") + ".csv";
         }
 
 
         /// <summary>
         /// Prepara the response structure on Dataset
-        /// 
-        /// ----------------------------------------------------------------------------------
-        /// delete | insert | update |     msg     |  ADF Inserted RC   |    ADF Updated RC  |
-        /// ----------------------------------------------------------------------------------
-        ///     0  |    0   |   0    |             |         0          |           0        |
-        /// ----------------------------------------------------------------------------------
         /// </summary>
         /// <returns>a Dataset with a structure ready to be converted in JSON</returns>
-        public static DataSet getResponseStructure()
+        public  DataSet getResponseStructure(String dataTableName)
         {
             DataSet dsResult = new DataSet("dsResults");
-            DataTable TestResult = new DataTable("TestResult");
+            DataTable TestResult = new DataTable(dataTableName);
             //DataTable TestResultDetail = new DataTable("TestResultDetail");
             TestResult.Columns.Add("State");
             TestResult.Columns.Add("Test-Information");
@@ -68,7 +62,7 @@ namespace UnitTest.Model.DataWarehouse
         /// <returns></returns>
         public Task<DataSet> GetBillsGeneratedOnWeekend(DateTime startDate, DateTime endDate)
         {
-            myResponse = getResponseStructure();
+            myResponse = getResponseStructure("BillsGeneratedOnWeekend");
             string query = "SELECT B.BILLED_USAGE_KEY, B.SRC_BILL_ID, B.PER_KEY,"  + 
                 "B.ACCT_KEY, D.BillDayofWeek, D.BillWorkDayCode, B.UDDGEN1 BillDate " + 
                 "FROM dwadm2.CF_BILLED_USAGE B INNER JOIN dwadm2.vw_BillDate D ON B.BILL_DATE_KEY=D.BillDateKey " +
@@ -122,7 +116,7 @@ namespace UnitTest.Model.DataWarehouse
         /// <returns></returns>
         public Task<DataSet> GetBillGeneratedOnWrongFiscalYear(DateTime startDate, DateTime endDate)
         {
-            myResponse = getResponseStructure();
+            myResponse = getResponseStructure("BillGeneratedOnWrongFiscalYear");
             string query = "SELECT  B.BILL_DATE_KEY, B.BILLED_USAGE_KEY, B.UDDGEN1, B.FISCAL_CAL_KEY, C.StartDate, " +
                 "C.EndDate, CASE WHEN (B.UDDGEN1 BETWEEN C.StartDate AND C.EndDate) THEN 1 ELSE 0 END AS IsCorrectFiscalYear " + 
                 "FROM dwadm2.CF_BILLED_USAGE B INNER JOIN dwadm2.vw_CD_FISCAL_CAL C ON B.FISCAL_CAL_KEY=C.FISCAL_CAL_KEY "+
