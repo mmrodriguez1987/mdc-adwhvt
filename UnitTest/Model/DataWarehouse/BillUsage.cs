@@ -47,6 +47,10 @@ namespace UnitTest.Model.DataWarehouse
 
                     parameters.Add(new SqlParameter("@startDate", startDate.ToString("yyyy-MM-dd HH:mm")));
                     parameters.Add(new SqlParameter("@endDate", endDate.ToString("yyyy-MM-dd HH:mm")));
+                    String interpoledQuery = "SELECT B.BILLED_USAGE_KEY, B.SRC_BILL_ID, B.PER_KEY," +
+                        "B.ACCT_KEY, D.BillDayofWeek, D.BillWorkDayCode, B.UDDGEN1 BillDate " +
+                        "FROM dwadm2.CF_BILLED_USAGE B INNER JOIN dwadm2.vw_BillDate D ON B.BILL_DATE_KEY=D.BillDateKey " +
+                        "WHERE B.DATA_LOAD_DTTM BETWEEN '"+ startDate.ToString("yyyy-MM-dd HH:mm") + "' AND '"+ endDate.ToString("yyyy-MM-dd HH:mm") + "' AND BillWorkDayCode = 0";
 
                     evaluatedData = SqlHelper.ExecuteDataset(_conexion, CommandType.Text, query, parameters.ToArray());
 
@@ -59,7 +63,9 @@ namespace UnitTest.Model.DataWarehouse
                     //myResponse.Tables[0].Rows[0][6] = (evaluatedData.Tables[0].Select("1 = 1").Length > 0) ? ("BILLED_USAGE_KEY: " + Extensions.GetDelimitedString(evaluatedData.Tables[0], "1 = 1", "BILLED_USAGE_KEY", "|")) : "N/A";
                     myResponse.Tables[0].Rows[0][6] = -1;
                     myResponse.Tables[0].Rows[0][7] = -1;
-                    myResponse.Tables[0].Rows[0][8] = DateTime.Now.ToString("yyyy-MM-dd HH:mm");                 
+                    myResponse.Tables[0].Rows[0][8] = "";
+                    myResponse.Tables[0].Rows[0][9] = interpoledQuery;
+                    myResponse.Tables[0].Rows[0][10] = endDate.ToString("yyyy-MM-dd HH:mm");
 
                     CSV logFile = new CSV(_testFileName + ".csv");
                     logFile.writeNewOrExistingFile(myResponse.Tables[0]);
@@ -94,7 +100,8 @@ namespace UnitTest.Model.DataWarehouse
             string query = "SELECT  B.BILL_DATE_KEY, B.BILLED_USAGE_KEY, B.UDDGEN1, B.FISCAL_CAL_KEY, C.StartDate, " +
                 "C.EndDate, CASE WHEN (B.UDDGEN1 BETWEEN C.StartDate AND C.EndDate) THEN 1 ELSE 0 END AS IsCorrectFiscalYear " + 
                 "FROM dwadm2.CF_BILLED_USAGE B INNER JOIN dwadm2.vw_CD_FISCAL_CAL C ON B.FISCAL_CAL_KEY=C.FISCAL_CAL_KEY "+
-                "WHERE (B.DATA_LOAD_DTTM BETWEEN @startDate AND @endDate)";
+                "WHERE (B.DATA_LOAD_DTTM BETWEEN @startDate AND @endDate) ";
+            
 
             return Task.Run(() =>
             {
@@ -106,8 +113,12 @@ namespace UnitTest.Model.DataWarehouse
                     parameters.Add(new SqlParameter("@endDate", endDate.ToString("yyyy-MM-dd HH:mm")));
 
                     evaluatedData = SqlHelper.ExecuteDataset(_conexion, CommandType.Text, query, parameters.ToArray());
-                                       
-                    
+
+                    string interpolatedQuery = "SELECT  B.BILL_DATE_KEY, B.BILLED_USAGE_KEY, B.UDDGEN1, B.FISCAL_CAL_KEY, C.StartDate, " +
+                        "C.EndDate, CASE WHEN (B.UDDGEN1 BETWEEN C.StartDate AND C.EndDate) THEN 1 ELSE 0 END AS IsCorrectFiscalYear " +
+                        "FROM dwadm2.CF_BILLED_USAGE B INNER JOIN dwadm2.vw_CD_FISCAL_CAL C ON B.FISCAL_CAL_KEY=C.FISCAL_CAL_KEY " +
+                        "WHERE (B.DATA_LOAD_DTTM BETWEEN '" + startDate.ToString("yyyy-MM-dd HH:mm") + "' AND '"+ endDate.ToString("yyyy-MM-dd HH:mm") + "') ";
+
                     myResponse.Tables[0].Rows[0][0] = (evaluatedData.Tables[0].Select("IsCorrectFiscalYear = 0").Length > 0) ? "Warning" : "Test Passed";
                     myResponse.Tables[0].Rows[0][1] = "Get-Bill-Generated-On-Wrong-Fiscal-Year";
                     myResponse.Tables[0].Rows[0][2] = "BillUsage, Fiscal Year";
@@ -117,7 +128,9 @@ namespace UnitTest.Model.DataWarehouse
                     //myResponse.Tables[0].Rows[0][6] = (evaluatedData.Tables[0].Select("IsCorrectFiscalYear = 0").Length > 0) ? ("BILLED_USAGE_KEY: " + Extensions.GetDelimitedString(evaluatedData.Tables[0], "IsCorrectFiscalYear = 0", "BILLED_USAGE_KEY", "|"))  : "N/A";
                     myResponse.Tables[0].Rows[0][6] = -1;
                     myResponse.Tables[0].Rows[0][7] = -1;
-                    myResponse.Tables[0].Rows[0][8] = DateTime.Now.ToString("yyyy-MM-dd HH:mm");                                        
+                    myResponse.Tables[0].Rows[0][8] = "";
+                    myResponse.Tables[0].Rows[0][9] = interpolatedQuery + "IsCorrectFiscalYear = 0";
+                    myResponse.Tables[0].Rows[0][10] = endDate.ToString("yyyy-MM-dd HH:mm");
 
                     CSV logFile = new CSV(_testFileName + ".csv");
                     logFile.writeNewOrExistingFile(myResponse.Tables[0]);

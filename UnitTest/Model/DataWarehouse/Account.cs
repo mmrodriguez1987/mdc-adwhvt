@@ -53,12 +53,13 @@ namespace UnitTest.Model.DataWarehouse
 
                     parameters.Add(new SqlParameter("@startDate", startDate.ToString("yyyy-MM-dd HH:mm")));
                     parameters.Add(new SqlParameter("@endDate", endDate.ToString("yyyy-MM-dd HH:mm")));
+                    string interpoledQueryDTW = "SELECT  COUNT(DISTINCT SRC_ACCT_ID) as DTW_Count from [dwadm2].[CD_ACCT] where DATA_LOAD_DTTM BETWEEN '"+ startDate.ToString("yyyy-MM-dd HH:mm") + "' AND '" + endDate.ToString("yyyy-MM-dd HH:mm") + "'";
 
                     evalDataDTW = SqlHelper.ExecuteDataset(_ccnDTW, CommandType.Text, queryDTW, parameters.ToArray());
                     evalDataCDC = SqlHelper.ExecuteDataset(_ccnCDC, CommandType.StoredProcedure, queryCDC, parameters.ToArray());
                     
                     int cdcCount = evalDataCDC.Tables[0].DefaultView.ToTable(true, "ACCT_ID").Rows.Count;
-                    int dtwCount = Convert.ToInt32(evalDataCDC.Tables[0].Rows[0][0]);
+                    int dtwCount = Convert.ToInt32(evalDataDTW.Tables[0].Rows[0][0]);
 
                     myResponse.Tables[0].Rows[0][0] = (cdcCount != dtwCount) ? "Warning" : "Test Passed";
                     myResponse.Tables[0].Rows[0][1] = "Count Distinct ACCT_ID on DTW and CDC";
@@ -68,7 +69,9 @@ namespace UnitTest.Model.DataWarehouse
                     myResponse.Tables[0].Rows[0][5] = endDate.ToString("yyyy-MM-dd HH:mm");                    
                     myResponse.Tables[0].Rows[0][6] = cdcCount;
                     myResponse.Tables[0].Rows[0][7] = dtwCount;
-                    myResponse.Tables[0].Rows[0][8] = DateTime.Now.ToString("yyyy-MM-dd HH:mm");
+                    myResponse.Tables[0].Rows[0][8] = "EXEC " + queryCDC + " @startDate='" + startDate.ToString("yyyy-MM-dd HH:mm") + "', @endDate= '" + endDate.ToString("yyyy-MM-dd HH:mm") + "'";
+                    myResponse.Tables[0].Rows[0][9] = interpoledQueryDTW;
+                    myResponse.Tables[0].Rows[0][10] = endDate.ToString("yyyy-MM-dd HH:mm");
 
                     CSV logFile = new CSV(_testFileName + ".csv");
                     logFile.writeNewOrExistingFile(myResponse.Tables[0]);                  

@@ -30,15 +30,15 @@ namespace UnitTest.Controllers
             myDict = new DDictionary();
             finalResultDS  = new DataSet();
             dsResult = new DataSet();
-            testFileName = @"C:\ADW_UT\UT_BI_ADWH_" + DateTime.Today.ToString("yyyy_MM_dd");
+            testFileName = @"C:\ADW_UT\UT_BI_ADWH_" + DateTime.UtcNow.ToString("yyyy_MM_dd");
         }
 
         [HttpGet]
         public async Task<IActionResult> Get()
-        {          
-            _startDate = DateTime.Now;
-            _endDate = _startDate.AddDays(1);
-            _log.LogInformation("Begin the Global Test at: " + DateTime.Now.ToString() + " \nEvaluated Date Range: StartDate => " + _startDate + " EndDate => " + _endDate);
+        {
+            _endDate = DateTime.UtcNow;
+            _startDate = _endDate.AddDays(-1);
+            _log.LogInformation("Begin the Global Test at: " + _endDate.ToString() + " \nEvaluated Date Range: StartDate => " + _startDate + " EndDate => " + _endDate);
 
             _log.LogInformation("DTW Con: " + _conf.GetConnectionString("DTWttdpConnection"));
             _log.LogInformation("CDC Con: " + _conf.GetConnectionString("CDCProdConnection"));
