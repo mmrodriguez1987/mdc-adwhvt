@@ -76,5 +76,53 @@ namespace Tools.DataConversion
             dt.Rows.Add(msg);
             return DataTableToJSONWithStringBuilder(dt);
         }
+
+
+        /// <summary>
+        /// Get delimited string fom a DataTable
+        /// </summary>
+        /// <param name="table">data</param>
+        /// <param name="filter">filter to apply</param>
+        /// <param name="ID"></param>
+        /// <param name="delimiter"></param>
+        /// <returns>Delimited String with the response</returns>
+        public static string GetDelimitedString(DataTable table, String filter, String ID, String delimiter)
+        {
+            
+            DataRow[] rows = table.Select(filter);
+            string[] args = new string[rows.Length];
+            
+
+            for (int i = 0; i < rows.Length; i++)                            
+                args[i] = rows[i][ID].ToString();
+            
+
+            return String.Join(delimiter, args);
+        }
+
+
+        /// <summary>
+        /// Prepara the response structure on Dataset
+        /// </summary>
+        /// <returns>a Dataset with a structure ready to be converted in JSON</returns>
+        public static DataSet getResponseStructure(String dataTableName)
+        {
+            DataSet dsResult = new DataSet("dsResults");
+            DataTable TestResult = new DataTable(dataTableName);
+
+            TestResult.Columns.Add("State");
+            TestResult.Columns.Add("Test Information");
+            TestResult.Columns.Add("Entities Involved");
+            TestResult.Columns.Add("Test Result Description");
+            TestResult.Columns.Add("Initial Evaluated Date");
+            TestResult.Columns.Add("End Evaluated Date");
+            TestResult.Columns.Add("count_CDC");
+            TestResult.Columns.Add("count_DTW");
+            TestResult.Columns.Add("Effectuated Date");
+            TestResult.Rows.Add(0, 0, "", "", "", "", 0, 0, "");
+
+            dsResult.Tables.Add(TestResult);
+            return dsResult;
+        }
     }
 }

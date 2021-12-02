@@ -68,3 +68,7 @@ C:\BIProjectUT\UnitTest\bin\Release\net5.0\YamlDotNet.dll
 C:\BIProjectUT\UnitTest\obj\Release\net5.0\UnitTest.MvcApplicationPartsAssemblyInfo.cs
 C:\BIProjectUT\UnitTest\bin\Release\net5.0\DBHelper.dll
 C:\BIProjectUT\UnitTest\bin\Release\net5.0\DBHelper.pdb
+C:\BIProjectUT\UnitTest\bin\Release\net5.0\UnitTest BI.postman_collection.json
+C:\BIProjectUT\UnitTest\bin\Release\net5.0\CsvHelper.dll
+C:\BIProjectUT\UnitTest\bin\Release\net5.0\runtimes\linux\lib\netcoreapp2.0\System.DirectoryServices.Protocols.dll
+C:\BIProjectUT\UnitTest\bin\Release\net5.0\runtimes\osx\lib\netcoreapp2.0\System.DirectoryServices.Protocols.dll

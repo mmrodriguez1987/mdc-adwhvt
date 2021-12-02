@@ -1,0 +1,2242 @@
+{
+	"info": {
+		"_postman_id": "ec11b2bf-c552-4e3d-b91d-34194a1f02bb",
+		"name": "UnitTest BI",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Incremental Test -S0146154",
+			"item": [
+				{
+					"name": "Incr-PROD-ACCT",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://{{servername}}/api/IncrLoadTest?tableIdentifier=ACCT&enviroment=PROD&startDate={{initialDate}}&endDate={{endDate}}&adfNewRowsCount=100&adfUpdatedRowsCount=100",
+							"protocol": "http",
+							"host": [
+								"{{servername}}"
+							],
+							"path": [
+								"api",
+								"IncrLoadTest"
+							],
+							"query": [
+								{
+									"key": "tableIdentifier",
+									"value": "ACCT"
+								},
+								{
+									"key": "enviroment",
+									"value": "PROD"
+								},
+								{
+									"key": "startDate",
+									"value": "{{initialDate}}"
+								},
+								{
+									"key": "endDate",
+									"value": "{{endDate}}"
+								},
+								{
+									"key": "adfNewRowsCount",
+									"value": "100"
+								},
+								{
+									"key": "adfUpdatedRowsCount",
+									"value": "100"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Incr-PROD-BSEG",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://{{servername}}/api/IncrLoadTest?tableIdentifier=BSEG&enviroment=PROD&startDate={{initialDate}}&endDate={{endDate}}&adfNewRowsCount=100&adfUpdatedRowsCount=100",
+							"protocol": "http",
+							"host": [
+								"{{servername}}"
+							],
+							"path": [
+								"api",
+								"IncrLoadTest"
+							],
+							"query": [
+								{
+									"key": "tableIdentifier",
+									"value": "BSEG"
+								},
+								{
+									"key": "enviroment",
+									"value": "PROD"
+								},
+								{
+									"key": "startDate",
+									"value": "{{initialDate}}"
+								},
+								{
+									"key": "endDate",
+									"value": "{{endDate}}"
+								},
+								{
+									"key": "adfNewRowsCount",
+									"value": "100"
+								},
+								{
+									"key": "adfUpdatedRowsCount",
+									"value": "100"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Incr-PROD-BSEG_CALC",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://{{servername}}/api/IncrLoadTest?tableIdentifier=BSEG_CALC&enviroment=PROD&startDate={{initialDate}}&endDate={{endDate}}&adfNewRowsCount=100&adfUpdatedRowsCount=100",
+							"protocol": "http",
+							"host": [
+								"{{servername}}"
+							],
+							"path": [
+								"api",
+								"IncrLoadTest"
+							],
+							"query": [
+								{
+									"key": "tableIdentifier",
+									"value": "BSEG_CALC"
+								},
+								{
+									"key": "enviroment",
+									"value": "PROD"
+								},
+								{
+									"key": "startDate",
+									"value": "{{initialDate}}"
+								},
+								{
+									"key": "endDate",
+									"value": "{{endDate}}"
+								},
+								{
+									"key": "adfNewRowsCount",
+									"value": "100"
+								},
+								{
+									"key": "adfUpdatedRowsCount",
+									"value": "100"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Incr-PROD-BSEG_CALC_LN",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://{{servername}}/api/IncrLoadTest?tableIdentifier=BSEG_CALC_LN&enviroment=PROD&startDate={{initialDate}}&endDate={{endDate}}&adfNewRowsCount=100&adfUpdatedRowsCount=100",
+							"protocol": "http",
+							"host": [
+								"{{servername}}"
+							],
+							"path": [
+								"api",
+								"IncrLoadTest"
+							],
+							"query": [
+								{
+									"key": "tableIdentifier",
+									"value": "BSEG_CALC_LN"
+								},
+								{
+									"key": "enviroment",
+									"value": "PROD"
+								},
+								{
+									"key": "startDate",
+									"value": "{{initialDate}}"
+								},
+								{
+									"key": "endDate",
+									"value": "{{endDate}}"
+								},
+								{
+									"key": "adfNewRowsCount",
+									"value": "100"
+								},
+								{
+									"key": "adfUpdatedRowsCount",
+									"value": "100"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Incr-PROD-BSEG_SQ",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://{{servername}}/api/IncrLoadTest?tableIdentifier=BSEG_SQ&enviroment=PROD&startDate={{initialDate}}&endDate={{endDate}}&adfNewRowsCount=100&adfUpdatedRowsCount=100",
+							"protocol": "http",
+							"host": [
+								"{{servername}}"
+							],
+							"path": [
+								"api",
+								"IncrLoadTest"
+							],
+							"query": [
+								{
+									"key": "tableIdentifier",
+									"value": "BSEG_SQ"
+								},
+								{
+									"key": "enviroment",
+									"value": "PROD"
+								},
+								{
+									"key": "startDate",
+									"value": "{{initialDate}}"
+								},
+								{
+									"key": "endDate",
+									"value": "{{endDate}}"
+								},
+								{
+									"key": "adfNewRowsCount",
+									"value": "100"
+								},
+								{
+									"key": "adfUpdatedRowsCount",
+									"value": "100"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Incr-PROD-CAL_PERIOD",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://{{servername}}/api/IncrLoadTest?tableIdentifier=CAL_PERIOD&enviroment=PROD&startDate={{initDate}}&endDate={{endDate}}&adfNewRowsCount=100&adfUpdatedRowsCount=100",
+							"protocol": "http",
+							"host": [
+								"{{servername}}"
+							],
+							"path": [
+								"api",
+								"IncrLoadTest"
+							],
+							"query": [
+								{
+									"key": "tableIdentifier",
+									"value": "CAL_PERIOD"
+								},
+								{
+									"key": "enviroment",
+									"value": "PROD"
+								},
+								{
+									"key": "startDate",
+									"value": "{{initDate}}"
+								},
+								{
+									"key": "endDate",
+									"value": "{{endDate}}"
+								},
+								{
+									"key": "adfNewRowsCount",
+									"value": "100"
+								},
+								{
+									"key": "adfUpdatedRowsCount",
+									"value": "100"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Incr-PROD-FT",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://{{servername}}/api/IncrLoadTest?tableIdentifier=FT&enviroment=PROD&startDate={{initDate}}&endDate={{endDate}}&adfNewRowsCount=100&adfUpdatedRowsCount=100",
+							"protocol": "http",
+							"host": [
+								"{{servername}}"
+							],
+							"path": [
+								"api",
+								"IncrLoadTest"
+							],
+							"query": [
+								{
+									"key": "tableIdentifier",
+									"value": "FT"
+								},
+								{
+									"key": "enviroment",
+									"value": "PROD"
+								},
+								{
+									"key": "startDate",
+									"value": "{{initDate}}"
+								},
+								{
+									"key": "endDate",
+									"value": "{{endDate}}"
+								},
+								{
+									"key": "adfNewRowsCount",
+									"value": "100"
+								},
+								{
+									"key": "adfUpdatedRowsCount",
+									"value": "100"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Incr-PROD-PER",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://{{servername}}/api/IncrLoadTest?tableIdentifier=PER&enviroment=PROD&startDate={{initDate}}&endDate={{endDate}}&adfNewRowsCount=100&adfUpdatedRowsCount=100",
+							"protocol": "http",
+							"host": [
+								"{{servername}}"
+							],
+							"path": [
+								"api",
+								"IncrLoadTest"
+							],
+							"query": [
+								{
+									"key": "tableIdentifier",
+									"value": "PER"
+								},
+								{
+									"key": "enviroment",
+									"value": "PROD"
+								},
+								{
+									"key": "startDate",
+									"value": "{{initDate}}"
+								},
+								{
+									"key": "endDate",
+									"value": "{{endDate}}"
+								},
+								{
+									"key": "adfNewRowsCount",
+									"value": "100"
+								},
+								{
+									"key": "adfUpdatedRowsCount",
+									"value": "100"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Incr-PROD-UOM",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://{{servername}}/api/IncrLoadTest?tableIdentifier=UOM&enviroment=PROD&startDate={{initDate}}&endDate={{endDate}}&adfNewRowsCount=100&adfUpdatedRowsCount=100",
+							"protocol": "http",
+							"host": [
+								"{{servername}}"
+							],
+							"path": [
+								"api",
+								"IncrLoadTest"
+							],
+							"query": [
+								{
+									"key": "tableIdentifier",
+									"value": "UOM"
+								},
+								{
+									"key": "enviroment",
+									"value": "PROD"
+								},
+								{
+									"key": "startDate",
+									"value": "{{initDate}}"
+								},
+								{
+									"key": "endDate",
+									"value": "{{endDate}}"
+								},
+								{
+									"key": "adfNewRowsCount",
+									"value": "100"
+								},
+								{
+									"key": "adfUpdatedRowsCount",
+									"value": "100"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Incr-PROD-PREM",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://{{servername}}/api/IncrLoadTest?tableIdentifier=PREM&enviroment=PROD&startDate={{initDate}}&endDate={{endDate}}&adfNewRowsCount=100&adfUpdatedRowsCount=100",
+							"protocol": "http",
+							"host": [
+								"{{servername}}"
+							],
+							"path": [
+								"api",
+								"IncrLoadTest"
+							],
+							"query": [
+								{
+									"key": "tableIdentifier",
+									"value": "PREM"
+								},
+								{
+									"key": "enviroment",
+									"value": "PROD"
+								},
+								{
+									"key": "startDate",
+									"value": "{{initDate}}"
+								},
+								{
+									"key": "endDate",
+									"value": "{{endDate}}"
+								},
+								{
+									"key": "adfNewRowsCount",
+									"value": "100"
+								},
+								{
+									"key": "adfUpdatedRowsCount",
+									"value": "100"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Incr-PROD-RS",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://{{servername}}/api/IncrLoadTest?tableIdentifier=RS&enviroment=PROD&startDate={{initDate}}&endDate={{endDate}}&adfNewRowsCount=100&adfUpdatedRowsCount=100",
+							"protocol": "http",
+							"host": [
+								"{{servername}}"
+							],
+							"path": [
+								"api",
+								"IncrLoadTest"
+							],
+							"query": [
+								{
+									"key": "tableIdentifier",
+									"value": "RS"
+								},
+								{
+									"key": "enviroment",
+									"value": "PROD"
+								},
+								{
+									"key": "startDate",
+									"value": "{{initDate}}"
+								},
+								{
+									"key": "endDate",
+									"value": "{{endDate}}"
+								},
+								{
+									"key": "adfNewRowsCount",
+									"value": "100"
+								},
+								{
+									"key": "adfUpdatedRowsCount",
+									"value": "100"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Incr-PROD-SA",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://{{servername}}/api/IncrLoadTest?tableIdentifier=SA&enviroment=PROD&startDate={{initDate}}&endDate={{endDate}}&adfNewRowsCount=100&adfUpdatedRowsCount=100",
+							"protocol": "http",
+							"host": [
+								"{{servername}}"
+							],
+							"path": [
+								"api",
+								"IncrLoadTest"
+							],
+							"query": [
+								{
+									"key": "tableIdentifier",
+									"value": "SA"
+								},
+								{
+									"key": "enviroment",
+									"value": "PROD"
+								},
+								{
+									"key": "startDate",
+									"value": "{{initDate}}"
+								},
+								{
+									"key": "endDate",
+									"value": "{{endDate}}"
+								},
+								{
+									"key": "adfNewRowsCount",
+									"value": "100"
+								},
+								{
+									"key": "adfUpdatedRowsCount",
+									"value": "100"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Incr-PROD-SQI",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://{{servername}}/api/IncrLoadTest?tableIdentifier=SQI&enviroment=PROD&startDate={{initDate}}&endDate={{endDate}}&adfNewRowsCount=100&adfUpdatedRowsCount=100",
+							"protocol": "http",
+							"host": [
+								"{{servername}}"
+							],
+							"path": [
+								"api",
+								"IncrLoadTest"
+							],
+							"query": [
+								{
+									"key": "tableIdentifier",
+									"value": "SQI"
+								},
+								{
+									"key": "enviroment",
+									"value": "PROD"
+								},
+								{
+									"key": "startDate",
+									"value": "{{initDate}}"
+								},
+								{
+									"key": "endDate",
+									"value": "{{endDate}}"
+								},
+								{
+									"key": "adfNewRowsCount",
+									"value": "100"
+								},
+								{
+									"key": "adfUpdatedRowsCount",
+									"value": "100"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Incr-STGE-ACCT",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://{{servername}}/api/IncrLoadTest?tableIdentifier=ACCT&enviroment=STGE&startDate={{initDate}}&endDate={{endDate}}&adfNewRowsCount=100&adfUpdatedRowsCount=100",
+							"protocol": "http",
+							"host": [
+								"{{servername}}"
+							],
+							"path": [
+								"api",
+								"IncrLoadTest"
+							],
+							"query": [
+								{
+									"key": "tableIdentifier",
+									"value": "ACCT"
+								},
+								{
+									"key": "enviroment",
+									"value": "STGE"
+								},
+								{
+									"key": "startDate",
+									"value": "{{initDate}}"
+								},
+								{
+									"key": "endDate",
+									"value": "{{endDate}}"
+								},
+								{
+									"key": "adfNewRowsCount",
+									"value": "100"
+								},
+								{
+									"key": "adfUpdatedRowsCount",
+									"value": "100"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Incr-STGE-BSEG",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://{{servername}}/api/IncrLoadTest?tableIdentifier=BSEG&enviroment=STGE&startDate={{initDate}}&endDate={{endDate}}&adfNewRowsCount=100&adfUpdatedRowsCount=100",
+							"protocol": "http",
+							"host": [
+								"{{servername}}"
+							],
+							"path": [
+								"api",
+								"IncrLoadTest"
+							],
+							"query": [
+								{
+									"key": "tableIdentifier",
+									"value": "BSEG"
+								},
+								{
+									"key": "enviroment",
+									"value": "STGE"
+								},
+								{
+									"key": "startDate",
+									"value": "{{initDate}}"
+								},
+								{
+									"key": "endDate",
+									"value": "{{endDate}}"
+								},
+								{
+									"key": "adfNewRowsCount",
+									"value": "100"
+								},
+								{
+									"key": "adfUpdatedRowsCount",
+									"value": "100"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Incr-STGE-BSEG_CALC",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://{{servername}}/api/IncrLoadTest?tableIdentifier=BSEG_CALC&enviroment=STGE&startDate={{initDate}}&endDate={{endDate}}&adfNewRowsCount=100&adfUpdatedRowsCount=100",
+							"protocol": "http",
+							"host": [
+								"{{servername}}"
+							],
+							"path": [
+								"api",
+								"IncrLoadTest"
+							],
+							"query": [
+								{
+									"key": "tableIdentifier",
+									"value": "BSEG_CALC"
+								},
+								{
+									"key": "enviroment",
+									"value": "STGE"
+								},
+								{
+									"key": "startDate",
+									"value": "{{initDate}}"
+								},
+								{
+									"key": "endDate",
+									"value": "{{endDate}}"
+								},
+								{
+									"key": "adfNewRowsCount",
+									"value": "100"
+								},
+								{
+									"key": "adfUpdatedRowsCount",
+									"value": "100"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Incr-STGE-BSEG_CALC_LN",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://{{servername}}/api/IncrLoadTest?tableIdentifier=BSEG_CALC_LN&enviroment=STGE&startDate={{initDate}}&endDate={{endDate}}&adfNewRowsCount=100&adfUpdatedRowsCount=100",
+							"protocol": "http",
+							"host": [
+								"{{servername}}"
+							],
+							"path": [
+								"api",
+								"IncrLoadTest"
+							],
+							"query": [
+								{
+									"key": "tableIdentifier",
+									"value": "BSEG_CALC_LN"
+								},
+								{
+									"key": "enviroment",
+									"value": "STGE"
+								},
+								{
+									"key": "startDate",
+									"value": "{{initDate}}"
+								},
+								{
+									"key": "endDate",
+									"value": "{{endDate}}"
+								},
+								{
+									"key": "adfNewRowsCount",
+									"value": "100"
+								},
+								{
+									"key": "adfUpdatedRowsCount",
+									"value": "100"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Incr-STGE-BSEG_SQ",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://{{servername}}/api/IncrLoadTest?tableIdentifier=BSEG_SQ&enviroment=STGE&startDate={{initDate}}&endDate={{endDate}}&adfNewRowsCount=100&adfUpdatedRowsCount=100",
+							"protocol": "http",
+							"host": [
+								"{{servername}}"
+							],
+							"path": [
+								"api",
+								"IncrLoadTest"
+							],
+							"query": [
+								{
+									"key": "tableIdentifier",
+									"value": "BSEG_SQ"
+								},
+								{
+									"key": "enviroment",
+									"value": "STGE"
+								},
+								{
+									"key": "startDate",
+									"value": "{{initDate}}"
+								},
+								{
+									"key": "endDate",
+									"value": "{{endDate}}"
+								},
+								{
+									"key": "adfNewRowsCount",
+									"value": "100"
+								},
+								{
+									"key": "adfUpdatedRowsCount",
+									"value": "100"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Incr-STGE-CAL_PERIOD",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://{{servername}}/api/IncrLoadTest?tableIdentifier=CAL_PERIOD&enviroment=STGE&startDate={{initDate}}&endDate={{endDate}}&adfNewRowsCount=100&adfUpdatedRowsCount=100",
+							"protocol": "http",
+							"host": [
+								"{{servername}}"
+							],
+							"path": [
+								"api",
+								"IncrLoadTest"
+							],
+							"query": [
+								{
+									"key": "tableIdentifier",
+									"value": "CAL_PERIOD"
+								},
+								{
+									"key": "enviroment",
+									"value": "STGE"
+								},
+								{
+									"key": "startDate",
+									"value": "{{initDate}}"
+								},
+								{
+									"key": "endDate",
+									"value": "{{endDate}}"
+								},
+								{
+									"key": "adfNewRowsCount",
+									"value": "100"
+								},
+								{
+									"key": "adfUpdatedRowsCount",
+									"value": "100"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Incr-STGE-FT",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://{{servername}}/api/IncrLoadTest?tableIdentifier=FT&enviroment=STGE&startDate={{initDate}}&endDate={{endDate}}&adfNewRowsCount=100&adfUpdatedRowsCount=100",
+							"protocol": "http",
+							"host": [
+								"{{servername}}"
+							],
+							"path": [
+								"api",
+								"IncrLoadTest"
+							],
+							"query": [
+								{
+									"key": "tableIdentifier",
+									"value": "FT"
+								},
+								{
+									"key": "enviroment",
+									"value": "STGE"
+								},
+								{
+									"key": "startDate",
+									"value": "{{initDate}}"
+								},
+								{
+									"key": "endDate",
+									"value": "{{endDate}}"
+								},
+								{
+									"key": "adfNewRowsCount",
+									"value": "100"
+								},
+								{
+									"key": "adfUpdatedRowsCount",
+									"value": "100"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Incr-STGE-PER",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://{{servername}}/api/IncrLoadTest?tableIdentifier=PER&enviroment=STGE&startDate={{initDate}}&endDate={{endDate}}&adfNewRowsCount=100&adfUpdatedRowsCount=100",
+							"protocol": "http",
+							"host": [
+								"{{servername}}"
+							],
+							"path": [
+								"api",
+								"IncrLoadTest"
+							],
+							"query": [
+								{
+									"key": "tableIdentifier",
+									"value": "PER"
+								},
+								{
+									"key": "enviroment",
+									"value": "STGE"
+								},
+								{
+									"key": "startDate",
+									"value": "{{initDate}}"
+								},
+								{
+									"key": "endDate",
+									"value": "{{endDate}}"
+								},
+								{
+									"key": "adfNewRowsCount",
+									"value": "100"
+								},
+								{
+									"key": "adfUpdatedRowsCount",
+									"value": "100"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Incr-STGE-SA",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://{{servername}}/api/IncrLoadTest?tableIdentifier=SA&enviroment=STGE&startDate={{initDate}}&endDate={{endDate}}&adfNewRowsCount=100&adfUpdatedRowsCount=100",
+							"protocol": "http",
+							"host": [
+								"{{servername}}"
+							],
+							"path": [
+								"api",
+								"IncrLoadTest"
+							],
+							"query": [
+								{
+									"key": "tableIdentifier",
+									"value": "SA"
+								},
+								{
+									"key": "enviroment",
+									"value": "STGE"
+								},
+								{
+									"key": "startDate",
+									"value": "{{initDate}}"
+								},
+								{
+									"key": "endDate",
+									"value": "{{endDate}}"
+								},
+								{
+									"key": "adfNewRowsCount",
+									"value": "100"
+								},
+								{
+									"key": "adfUpdatedRowsCount",
+									"value": "100"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Incr-STGE-SQI",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://{{servername}}/api/IncrLoadTest?tableIdentifier=SQI&enviroment=STGE&startDate={{initDate}}&endDate={{endDate}}&adfNewRowsCount=100&adfUpdatedRowsCount=100",
+							"protocol": "http",
+							"host": [
+								"{{servername}}"
+							],
+							"path": [
+								"api",
+								"IncrLoadTest"
+							],
+							"query": [
+								{
+									"key": "tableIdentifier",
+									"value": "SQI"
+								},
+								{
+									"key": "enviroment",
+									"value": "STGE"
+								},
+								{
+									"key": "startDate",
+									"value": "{{initDate}}"
+								},
+								{
+									"key": "endDate",
+									"value": "{{endDate}}"
+								},
+								{
+									"key": "adfNewRowsCount",
+									"value": "100"
+								},
+								{
+									"key": "adfUpdatedRowsCount",
+									"value": "100"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Incr-STGE-PREM",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://{{servername}}/api/IncrLoadTest?tableIdentifier=PREM&enviroment=STGE&startDate={{initDate}}&endDate={{endDate}}&adfNewRowsCount=100&adfUpdatedRowsCount=100",
+							"protocol": "http",
+							"host": [
+								"{{servername}}"
+							],
+							"path": [
+								"api",
+								"IncrLoadTest"
+							],
+							"query": [
+								{
+									"key": "tableIdentifier",
+									"value": "PREM"
+								},
+								{
+									"key": "enviroment",
+									"value": "STGE"
+								},
+								{
+									"key": "startDate",
+									"value": "{{initDate}}"
+								},
+								{
+									"key": "endDate",
+									"value": "{{endDate}}"
+								},
+								{
+									"key": "adfNewRowsCount",
+									"value": "100"
+								},
+								{
+									"key": "adfUpdatedRowsCount",
+									"value": "100"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Incr-STGE-RS",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://{{servername}}/api/IncrLoadTest?tableIdentifier=RS&enviroment=STGE&startDate={{initDate}}&endDate={{endDate}}&adfNewRowsCount=100&adfUpdatedRowsCount=100",
+							"protocol": "http",
+							"host": [
+								"{{servername}}"
+							],
+							"path": [
+								"api",
+								"IncrLoadTest"
+							],
+							"query": [
+								{
+									"key": "tableIdentifier",
+									"value": "RS"
+								},
+								{
+									"key": "enviroment",
+									"value": "STGE"
+								},
+								{
+									"key": "startDate",
+									"value": "{{initDate}}"
+								},
+								{
+									"key": "endDate",
+									"value": "{{endDate}}"
+								},
+								{
+									"key": "adfNewRowsCount",
+									"value": "100"
+								},
+								{
+									"key": "adfUpdatedRowsCount",
+									"value": "100"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Incr-STGE-UOM",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://{{servername}}/api/IncrLoadTest?tableIdentifier=UOM&enviroment=STGE&startDate={{initDate}}&endDate={{endDate}}&adfNewRowsCount=100&adfUpdatedRowsCount=100",
+							"protocol": "http",
+							"host": [
+								"{{servername}}"
+							],
+							"path": [
+								"api",
+								"IncrLoadTest"
+							],
+							"query": [
+								{
+									"key": "tableIdentifier",
+									"value": "UOM"
+								},
+								{
+									"key": "enviroment",
+									"value": "STGE"
+								},
+								{
+									"key": "startDate",
+									"value": "{{initDate}}"
+								},
+								{
+									"key": "endDate",
+									"value": "{{endDate}}"
+								},
+								{
+									"key": "adfNewRowsCount",
+									"value": "100"
+								},
+								{
+									"key": "adfUpdatedRowsCount",
+									"value": "100"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Initial Load Test - S0126154",
+			"item": [
+				{
+					"name": "Init-STGE-UOM",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://{{servername}}/api/InitLoadTest?tableIdentifier=UOM&enviroment=STGE",
+							"protocol": "http",
+							"host": [
+								"{{servername}}"
+							],
+							"path": [
+								"api",
+								"InitLoadTest"
+							],
+							"query": [
+								{
+									"key": "tableIdentifier",
+									"value": "UOM"
+								},
+								{
+									"key": "enviroment",
+									"value": "STGE"
+								},
+								{
+									"key": "",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "",
+									"value": "",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Init-STGE-FISCAL_CAL",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://{{servername}}/api/InitLoadTest?tableIdentifier=FISCAL_CAL&enviroment=STGE",
+							"protocol": "http",
+							"host": [
+								"{{servername}}"
+							],
+							"path": [
+								"api",
+								"InitLoadTest"
+							],
+							"query": [
+								{
+									"key": "tableIdentifier",
+									"value": "FISCAL_CAL"
+								},
+								{
+									"key": "enviroment",
+									"value": "STGE"
+								},
+								{
+									"key": "",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "",
+									"value": "",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Init-STGE-ACCT",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://{{servername}}/api/InitLoadTest?tableIdentifier=ACCT&enviroment=STGE",
+							"protocol": "http",
+							"host": [
+								"{{servername}}"
+							],
+							"path": [
+								"api",
+								"InitLoadTest"
+							],
+							"query": [
+								{
+									"key": "tableIdentifier",
+									"value": "ACCT"
+								},
+								{
+									"key": "enviroment",
+									"value": "STGE"
+								},
+								{
+									"key": "",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "",
+									"value": "",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Init-STGE-ADDR",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://{{servername}}/api/InitLoadTest?tableIdentifier=ADDR&enviroment=STGE",
+							"protocol": "http",
+							"host": [
+								"{{servername}}"
+							],
+							"path": [
+								"api",
+								"InitLoadTest"
+							],
+							"query": [
+								{
+									"key": "tableIdentifier",
+									"value": "ADDR"
+								},
+								{
+									"key": "enviroment",
+									"value": "STGE"
+								},
+								{
+									"key": "",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "",
+									"value": "",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Init-STGE-PREM",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://{{servername}}/api/InitLoadTest?tableIdentifier=PREM&enviroment=STGE",
+							"protocol": "http",
+							"host": [
+								"{{servername}}"
+							],
+							"path": [
+								"api",
+								"InitLoadTest"
+							],
+							"query": [
+								{
+									"key": "tableIdentifier",
+									"value": "PREM"
+								},
+								{
+									"key": "enviroment",
+									"value": "STGE"
+								},
+								{
+									"key": "",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "",
+									"value": "",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Init-STGE-RATE",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://{{servername}}/api/InitLoadTest?tableIdentifier=RATE&enviroment=STGE",
+							"protocol": "http",
+							"host": [
+								"{{servername}}"
+							],
+							"path": [
+								"api",
+								"InitLoadTest"
+							],
+							"query": [
+								{
+									"key": "tableIdentifier",
+									"value": "RATE"
+								},
+								{
+									"key": "enviroment",
+									"value": "STGE"
+								},
+								{
+									"key": "",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "",
+									"value": "",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Init-STGE-SA",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://{{servername}}/api/InitLoadTest?tableIdentifier=SQI&enviroment=STGE",
+							"protocol": "http",
+							"host": [
+								"{{servername}}"
+							],
+							"path": [
+								"api",
+								"InitLoadTest"
+							],
+							"query": [
+								{
+									"key": "tableIdentifier",
+									"value": "SQI"
+								},
+								{
+									"key": "enviroment",
+									"value": "STGE"
+								},
+								{
+									"key": "",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "",
+									"value": "",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Init-STGE-PER",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://{{servername}}/api/InitLoadTest?tableIdentifier=UOM&enviroment=STGE",
+							"protocol": "http",
+							"host": [
+								"{{servername}}"
+							],
+							"path": [
+								"api",
+								"InitLoadTest"
+							],
+							"query": [
+								{
+									"key": "tableIdentifier",
+									"value": "UOM"
+								},
+								{
+									"key": "enviroment",
+									"value": "STGE"
+								},
+								{
+									"key": "",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "",
+									"value": "",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Init-STGE-SQI",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://{{servername}}/api/InitLoadTest?tableIdentifier=UOM&enviroment=STGE",
+							"protocol": "http",
+							"host": [
+								"{{servername}}"
+							],
+							"path": [
+								"api",
+								"InitLoadTest"
+							],
+							"query": [
+								{
+									"key": "tableIdentifier",
+									"value": "UOM"
+								},
+								{
+									"key": "enviroment",
+									"value": "STGE"
+								},
+								{
+									"key": "",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "",
+									"value": "",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Init-PROD-UOM",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://{{servername}}/api/InitLoadTest?tableIdentifier=UOM&enviroment=PROD",
+							"protocol": "http",
+							"host": [
+								"{{servername}}"
+							],
+							"path": [
+								"api",
+								"InitLoadTest"
+							],
+							"query": [
+								{
+									"key": "tableIdentifier",
+									"value": "UOM"
+								},
+								{
+									"key": "enviroment",
+									"value": "PROD"
+								},
+								{
+									"key": "",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "",
+									"value": "",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Init-PROD-FISCAL_CAL",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://{{servername}}/api/InitLoadTest?tableIdentifier=FISCAL_CAL&enviroment=PROD",
+							"protocol": "http",
+							"host": [
+								"{{servername}}"
+							],
+							"path": [
+								"api",
+								"InitLoadTest"
+							],
+							"query": [
+								{
+									"key": "tableIdentifier",
+									"value": "FISCAL_CAL"
+								},
+								{
+									"key": "enviroment",
+									"value": "PROD"
+								},
+								{
+									"key": "",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "",
+									"value": "",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Init-PROD-ACCT",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://{{servername}}/api/InitLoadTest?tableIdentifier=ACCT&enviroment=PROD",
+							"protocol": "http",
+							"host": [
+								"{{servername}}"
+							],
+							"path": [
+								"api",
+								"InitLoadTest"
+							],
+							"query": [
+								{
+									"key": "tableIdentifier",
+									"value": "ACCT"
+								},
+								{
+									"key": "enviroment",
+									"value": "PROD"
+								},
+								{
+									"key": "",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "",
+									"value": "",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Init-PROD-ADDR",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://{{servername}}/api/InitLoadTest?tableIdentifier=ADDR&enviroment=PROD",
+							"protocol": "http",
+							"host": [
+								"{{servername}}"
+							],
+							"path": [
+								"api",
+								"InitLoadTest"
+							],
+							"query": [
+								{
+									"key": "tableIdentifier",
+									"value": "ADDR"
+								},
+								{
+									"key": "enviroment",
+									"value": "PROD"
+								},
+								{
+									"key": "",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "",
+									"value": "",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Init-PROD-PREM",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://{{servername}}/api/InitLoadTest?tableIdentifier=PREM&enviroment=PROD",
+							"protocol": "http",
+							"host": [
+								"{{servername}}"
+							],
+							"path": [
+								"api",
+								"InitLoadTest"
+							],
+							"query": [
+								{
+									"key": "tableIdentifier",
+									"value": "PREM"
+								},
+								{
+									"key": "enviroment",
+									"value": "PROD"
+								},
+								{
+									"key": "",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "",
+									"value": "",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Init-PROD-RATE",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://{{servername}}/api/InitLoadTest?tableIdentifier=RATE&enviroment=PROD",
+							"protocol": "http",
+							"host": [
+								"{{servername}}"
+							],
+							"path": [
+								"api",
+								"InitLoadTest"
+							],
+							"query": [
+								{
+									"key": "tableIdentifier",
+									"value": "RATE"
+								},
+								{
+									"key": "enviroment",
+									"value": "PROD"
+								},
+								{
+									"key": "",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "",
+									"value": "",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Init-PROD-SA",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://{{servername}}/api/InitLoadTest?tableIdentifier=SQI&enviroment=PROD",
+							"protocol": "http",
+							"host": [
+								"{{servername}}"
+							],
+							"path": [
+								"api",
+								"InitLoadTest"
+							],
+							"query": [
+								{
+									"key": "tableIdentifier",
+									"value": "SQI"
+								},
+								{
+									"key": "enviroment",
+									"value": "PROD"
+								},
+								{
+									"key": "",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "",
+									"value": "",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Init-PROD-PER",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://{{servername}}/api/InitLoadTest?tableIdentifier=UOM&enviroment=PROD",
+							"protocol": "http",
+							"host": [
+								"{{servername}}"
+							],
+							"path": [
+								"api",
+								"InitLoadTest"
+							],
+							"query": [
+								{
+									"key": "tableIdentifier",
+									"value": "UOM"
+								},
+								{
+									"key": "enviroment",
+									"value": "PROD"
+								},
+								{
+									"key": "",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "",
+									"value": "",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Init-PROD-SQI",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://{{servername}}/api/InitLoadTest?tableIdentifier=UOM&enviroment=PROD",
+							"protocol": "http",
+							"host": [
+								"{{servername}}"
+							],
+							"path": [
+								"api",
+								"InitLoadTest"
+							],
+							"query": [
+								{
+									"key": "tableIdentifier",
+									"value": "UOM"
+								},
+								{
+									"key": "enviroment",
+									"value": "PROD"
+								},
+								{
+									"key": "",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "",
+									"value": "",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Init-RPTS-UOM",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://{{servername}}/api/InitLoadTest?tableIdentifier=UOM&enviroment=RPTS",
+							"protocol": "http",
+							"host": [
+								"{{servername}}"
+							],
+							"path": [
+								"api",
+								"InitLoadTest"
+							],
+							"query": [
+								{
+									"key": "tableIdentifier",
+									"value": "UOM"
+								},
+								{
+									"key": "enviroment",
+									"value": "RPTS"
+								},
+								{
+									"key": "",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "",
+									"value": "",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Init-RPTS-RATE",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://{{servername}}/api/InitLoadTest?tableIdentifier=RATE&enviroment=RPTS",
+							"protocol": "http",
+							"host": [
+								"{{servername}}"
+							],
+							"path": [
+								"api",
+								"InitLoadTest"
+							],
+							"query": [
+								{
+									"key": "tableIdentifier",
+									"value": "RATE"
+								},
+								{
+									"key": "enviroment",
+									"value": "RPTS"
+								},
+								{
+									"key": "",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "",
+									"value": "",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Init-RPTS-PREM",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://{{servername}}/api/InitLoadTest?tableIdentifier=PREM&enviroment=RPTS",
+							"protocol": "http",
+							"host": [
+								"{{servername}}"
+							],
+							"path": [
+								"api",
+								"InitLoadTest"
+							],
+							"query": [
+								{
+									"key": "tableIdentifier",
+									"value": "PREM"
+								},
+								{
+									"key": "enviroment",
+									"value": "RPTS"
+								},
+								{
+									"key": "",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "",
+									"value": "",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Init-RPTS-SA",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://{{servername}}/api/InitLoadTest?tableIdentifier=SQI&enviroment=RPTS",
+							"protocol": "http",
+							"host": [
+								"{{servername}}"
+							],
+							"path": [
+								"api",
+								"InitLoadTest"
+							],
+							"query": [
+								{
+									"key": "tableIdentifier",
+									"value": "SQI"
+								},
+								{
+									"key": "enviroment",
+									"value": "RPTS"
+								},
+								{
+									"key": "",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "",
+									"value": "",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Init-RPTS-ADDR",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://{{servername}}/api/InitLoadTest?tableIdentifier=ADDR&enviroment=RPTS",
+							"protocol": "http",
+							"host": [
+								"{{servername}}"
+							],
+							"path": [
+								"api",
+								"InitLoadTest"
+							],
+							"query": [
+								{
+									"key": "tableIdentifier",
+									"value": "ADDR"
+								},
+								{
+									"key": "enviroment",
+									"value": "RPTS"
+								},
+								{
+									"key": "",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "",
+									"value": "",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Init-RPTS-PER",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://{{servername}}/api/InitLoadTest?tableIdentifier=UOM&enviroment=RPTS",
+							"protocol": "http",
+							"host": [
+								"{{servername}}"
+							],
+							"path": [
+								"api",
+								"InitLoadTest"
+							],
+							"query": [
+								{
+									"key": "tableIdentifier",
+									"value": "UOM"
+								},
+								{
+									"key": "enviroment",
+									"value": "RPTS"
+								},
+								{
+									"key": "",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "",
+									"value": "",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Init-RPTS-FISCAL_CAL",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://{{servername}}/api/InitLoadTest?tableIdentifier=FISCAL_CAL&enviroment=RPTS",
+							"protocol": "http",
+							"host": [
+								"{{servername}}"
+							],
+							"path": [
+								"api",
+								"InitLoadTest"
+							],
+							"query": [
+								{
+									"key": "tableIdentifier",
+									"value": "FISCAL_CAL"
+								},
+								{
+									"key": "enviroment",
+									"value": "RPTS"
+								},
+								{
+									"key": "",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "",
+									"value": "",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Init-RPTS-SQI",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://{{servername}}/api/InitLoadTest?tableIdentifier=UOM&enviroment=RPTS",
+							"protocol": "http",
+							"host": [
+								"{{servername}}"
+							],
+							"path": [
+								"api",
+								"InitLoadTest"
+							],
+							"query": [
+								{
+									"key": "tableIdentifier",
+									"value": "UOM"
+								},
+								{
+									"key": "enviroment",
+									"value": "RPTS"
+								},
+								{
+									"key": "",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "",
+									"value": "",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Init-RPTS-ACCT",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://{{servername}}/api/InitLoadTest?tableIdentifier=ACCT&enviroment=RPTS",
+							"protocol": "http",
+							"host": [
+								"{{servername}}"
+							],
+							"path": [
+								"api",
+								"InitLoadTest"
+							],
+							"query": [
+								{
+									"key": "tableIdentifier",
+									"value": "ACCT"
+								},
+								{
+									"key": "enviroment",
+									"value": "RPTS"
+								},
+								{
+									"key": "",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "",
+									"value": "",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

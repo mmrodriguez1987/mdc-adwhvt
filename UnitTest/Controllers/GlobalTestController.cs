@@ -21,6 +21,7 @@ namespace UnitTest.Controllers
         private readonly ILogger<GlobalTestController> _log;
         private DateTime _startDate, _endDate;
         private DataSet finalResultDS, dsResult;
+        private string testFileName;
 
         public GlobalTestController(IConfiguration conf, ILogger<GlobalTestController> log)
         {
@@ -29,27 +30,36 @@ namespace UnitTest.Controllers
             myDict = new DDictionary();
             finalResultDS  = new DataSet();
             dsResult = new DataSet();
+            testFileName = @"C:\ADW_UT\UT_BI_ADWH_" + DateTime.Today.ToString("yyyy_MM_dd");
         }
 
         [HttpGet]
         public async Task<IActionResult> Get()
         {          
-            _startDate = DateTime.Today;
+            _startDate = DateTime.Now;
             _endDate = _startDate.AddDays(1);
-            _log.LogInformation("Begin the Global Test");
+            _log.LogInformation("Begin the Global Test at: " + DateTime.Now.ToString() + " \nEvaluated Date Range: StartDate => " + _startDate + " EndDate => " + _endDate);
 
+            _log.LogInformation("DTW Con: " + _conf.GetConnectionString("DTWttdpConnection"));
+            _log.LogInformation("CDC Con: " + _conf.GetConnectionString("CDCProdConnection"));
 
-            BillUsage bu = new BillUsage(_conf.GetConnectionString("DTWttdpConnection"));
-            dsResult = bu.getResponseStructure("");
-            finalResultDS = bu.getResponseStructure("GlobalTestResult");
+            BillUsage bu = new BillUsage(_conf.GetConnectionString("DTWttdpConnection"),testFileName);
+            Account acct = new Account(_conf.GetConnectionString("DTWttdpConnection"), _conf.GetConnectionString("CDCProdConnection"),testFileName);
+
+            dsResult = Extensions.getResponseStructure("");
+            finalResultDS = Extensions.getResponseStructure("GlobalTestResult");
 
             dsResult = await bu.GetBillGeneratedOnWrongFiscalYear(_startDate, _endDate);    
             finalResultDS.Tables[0].ImportRow(dsResult.Tables[0].Rows[0]);
             
             dsResult = await bu.GetBillsGeneratedOnWeekend(_startDate, _endDate);
             finalResultDS.Tables[0].ImportRow(dsResult.Tables[0].Rows[0]);
+                     
 
+            dsResult = await acct.GetCountAccounts(_startDate, _endDate);
+            finalResultDS.Tables[0].ImportRow(dsResult.Tables[0].Rows[0]);
 
+            _log.LogInformation("End of the Global Test at: " + DateTime.Now.ToString());
             return base.Ok(Extensions.DataTableToJSONWithStringBuilder(finalResultDS.Tables[0]));
         }
     }

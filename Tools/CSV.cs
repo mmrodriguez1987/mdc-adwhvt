@@ -30,7 +30,7 @@ namespace Tools.Files
         {
             string path = Directory.GetCurrentDirectory();
 
-            if (!File.Exists(_path)) 
+            if (File.Exists(_path)) // if the file exist
             {
                 var config = new CsvConfiguration(CultureInfo.CurrentCulture)
                 {
@@ -41,13 +41,7 @@ namespace Tools.Files
                 using (var stream = File.Open(_path, FileMode.Append))
                 using (var writer = new StreamWriter(stream))
                 using (var csv = new CsvWriter(writer, config))
-                {
-                    foreach (DataColumn column in dataTable.Columns)
-                    {
-                        csv.WriteField(column.ColumnName);
-                    }
-
-                    csv.NextRecord();
+                {                    
 
                     foreach (DataRow row in dataTable.Rows)
                     {
@@ -67,6 +61,12 @@ namespace Tools.Files
                 using (var writer = new StreamWriter(_path))
                 using (var csv = new CsvWriter(writer, CultureInfo.CurrentCulture))
                 {
+                    foreach (DataColumn column in dataTable.Columns)
+                    {
+                        csv.WriteField(column.ColumnName);
+                    }
+                    csv.NextRecord();
+
                     foreach (DataRow row in dataTable.Rows)
                     {
                         for (var i = 0; i < dataTable.Columns.Count; i++)
@@ -78,11 +78,6 @@ namespace Tools.Files
                 }
 
             }
-
-
-
-
-
         }
             
     }
