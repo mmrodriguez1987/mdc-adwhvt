@@ -43,7 +43,8 @@ namespace UnitTest.Controllers
             _log.LogInformation("DTW Con: " + _conf.GetConnectionString("DTWttdpConnection"));
             _log.LogInformation("CDC Con: " + _conf.GetConnectionString("CDCProdConnection"));
 
-            BillUsage bu = new BillUsage(_conf.GetConnectionString("DTWttdpConnection"),testFileName);
+            BillUsage bu = new BillUsage(_conf.GetConnectionString("DTWttdpConnection"),testFileName);            
+            BillSegment bs = new BillSegment(_conf.GetConnectionString("DTWttdpConnection"), _conf.GetConnectionString("CDCProdConnection"), testFileName);
             Account acct = new Account(_conf.GetConnectionString("DTWttdpConnection"), _conf.GetConnectionString("CDCProdConnection"),testFileName);
 
             dsResult = Extensions.getResponseStructure("");
@@ -54,7 +55,9 @@ namespace UnitTest.Controllers
             
             dsResult = await bu.GetBillsGeneratedOnWeekend(_startDate, _endDate);
             finalResultDS.Tables[0].ImportRow(dsResult.Tables[0].Rows[0]);
-                     
+
+            dsResult = await bs.GetCountBillSegment(_startDate, _endDate);
+            finalResultDS.Tables[0].ImportRow(dsResult.Tables[0].Rows[0]);
 
             dsResult = await acct.GetCountAccounts(_startDate, _endDate);
             finalResultDS.Tables[0].ImportRow(dsResult.Tables[0].Rows[0]);
