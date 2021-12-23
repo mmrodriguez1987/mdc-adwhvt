@@ -23,8 +23,6 @@ namespace UnitTest.Model.DataWarehouse
             _testFileName = testFileName;
         }
 
-
-
         /// <summary>
         /// Check if there are any bills generated on weekend or Holiday
         /// </summary>
@@ -59,13 +57,13 @@ namespace UnitTest.Model.DataWarehouse
                     myResponse.Tables[0].Rows[0][2] = "BillUsage, BillDate";
                     myResponse.Tables[0].Rows[0][3] = (evaluatedData.Tables[0].Rows.Count > 0) ? "There are bills generated on weekend or holidays" : "No bills Generated on weekend or holidays were found";
                     myResponse.Tables[0].Rows[0][4] = startDate.ToString("yyyy-MM-dd HH:mm");
-                    myResponse.Tables[0].Rows[0][5] = endDate.ToString("yyyy-MM-dd HH:mm");
-                    //myResponse.Tables[0].Rows[0][6] = (evaluatedData.Tables[0].Select("1 = 1").Length > 0) ? ("BILLED_USAGE_KEY: " + Extensions.GetDelimitedString(evaluatedData.Tables[0], "1 = 1", "BILLED_USAGE_KEY", "|")) : "N/A";
+                    myResponse.Tables[0].Rows[0][5] = endDate.ToString("yyyy-MM-dd HH:mm");                    
                     myResponse.Tables[0].Rows[0][6] = -1;
                     myResponse.Tables[0].Rows[0][7] = -1;
                     myResponse.Tables[0].Rows[0][8] = "";
                     myResponse.Tables[0].Rows[0][9] = interpoledQuery;
                     myResponse.Tables[0].Rows[0][10] = endDate.ToString("yyyy-MM-dd HH:mm");
+                    myResponse.Tables[0].Rows[0][11] = "ADTWH - Validation: Test Name =>" + myResponse.Tables[0].Rows[0][1].ToString() + ", Test Result => " + myResponse.Tables[0].Rows[0][0].ToString();
 
                     CSV logFile = new CSV(_testFileName + ".csv");
                     logFile.writeNewOrExistingFile(myResponse.Tables[0]);
@@ -75,13 +73,12 @@ namespace UnitTest.Model.DataWarehouse
                         CSV DetaillogFile = new CSV(_testFileName + "_Detail_Bill_Generated_On_Weekend.csv");
                         DetaillogFile.writeNewOrExistingFile(evaluatedData.Tables[0]);
                     }
-
                     return myResponse;
-
                 }
                 catch (Exception e)
                 {
-                    myResponse.Tables[0].Rows[0][3] = ("Error: " + e.ToString());
+                    myResponse.Tables[0].Rows[0][3] = ("Error: " + e.ToString().Substring(0, 160));
+                    myResponse.Tables[0].Rows[0][11] = ("Error: " + e.ToString().Substring(0, 160));
                     return myResponse;
                 }
             });
@@ -100,8 +97,7 @@ namespace UnitTest.Model.DataWarehouse
             string query = "SELECT  B.BILL_DATE_KEY, B.BILLED_USAGE_KEY, B.UDDGEN1, B.FISCAL_CAL_KEY, C.StartDate, " +
                 "C.EndDate, CASE WHEN (B.UDDGEN1 BETWEEN C.StartDate AND C.EndDate) THEN 1 ELSE 0 END AS IsCorrectFiscalYear " + 
                 "FROM dwadm2.CF_BILLED_USAGE B INNER JOIN dwadm2.vw_CD_FISCAL_CAL C ON B.FISCAL_CAL_KEY=C.FISCAL_CAL_KEY "+
-                "WHERE (B.DATA_LOAD_DTTM BETWEEN @startDate AND @endDate) ";
-            
+                "WHERE (B.DATA_LOAD_DTTM BETWEEN @startDate AND @endDate) ";            
 
             return Task.Run(() =>
             {
@@ -131,6 +127,7 @@ namespace UnitTest.Model.DataWarehouse
                     myResponse.Tables[0].Rows[0][8] = "";
                     myResponse.Tables[0].Rows[0][9] = interpolatedQuery + "IsCorrectFiscalYear = 0";
                     myResponse.Tables[0].Rows[0][10] = endDate.ToString("yyyy-MM-dd HH:mm");
+                    myResponse.Tables[0].Rows[0][11] = "ADTWH - Validation: Test Name =>" + myResponse.Tables[0].Rows[0][1].ToString() + ", Test Result => " + myResponse.Tables[0].Rows[0][0].ToString();
 
                     CSV logFile = new CSV(_testFileName + ".csv");
                     logFile.writeNewOrExistingFile(myResponse.Tables[0]);
@@ -141,19 +138,23 @@ namespace UnitTest.Model.DataWarehouse
                         CSV DetaillogFile = new CSV(_testFileName + "_Detail_Bill_Generated_On_Wrong_Fiscal_Year.csv");
                         DetaillogFile.writeNewOrExistingFile(evaluatedData.Tables[0].Select("IsCorrectFiscalYear = 0").CopyToDataTable());
                     }
-
                     return myResponse;
-
                 }
                 catch (Exception e)
                 {
-                    myResponse.Tables[0].Rows[0][3] = ("Error: " + e.ToString());
+                    myResponse.Tables[0].Rows[0][3] = ("Error: " + e.ToString().Substring(0, 160));
+                    myResponse.Tables[0].Rows[0][11] = ("Error: " + e.ToString().Substring(0, 160));
                     return myResponse;
                 }
             });
         }
 
-
+        /// <summary>
+        /// Get Statistical Data and make a lineal regretion to compare data
+        /// </summary>
+        /// <param name="startDate">Initial Evaluated Data</param>
+        /// <param name="endDate">Final Evaluated Date</param>
+        /// <returns></returns>
         public Task<DataSet> GetStatisticalData(DateTime startDate, DateTime endDate)
         {
             myResponse = Extensions.getResponseStructure("BillGeneratedOnWrongFiscalYear");
@@ -161,7 +162,6 @@ namespace UnitTest.Model.DataWarehouse
                 "C.EndDate, CASE WHEN (B.UDDGEN1 BETWEEN C.StartDate AND C.EndDate) THEN 1 ELSE 0 END AS IsCorrectFiscalYear " +
                 "FROM dwadm2.CF_BILLED_USAGE B INNER JOIN dwadm2.vw_CD_FISCAL_CAL C ON B.FISCAL_CAL_KEY=C.FISCAL_CAL_KEY " +
                 "WHERE (B.DATA_LOAD_DTTM BETWEEN @startDate AND @endDate) ";
-
 
             return Task.Run(() =>
             {
@@ -184,13 +184,13 @@ namespace UnitTest.Model.DataWarehouse
                     myResponse.Tables[0].Rows[0][2] = "BillUsage, Fiscal Year";
                     myResponse.Tables[0].Rows[0][3] = (evaluatedData.Tables[0].Select("IsCorrectFiscalYear = 0").Length > 0) ? "There are bills generated on wrong fiscal year" : "No bills Generated on weekend or holidays were found";
                     myResponse.Tables[0].Rows[0][4] = startDate.ToString("yyyy-MM-dd HH:mm");
-                    myResponse.Tables[0].Rows[0][5] = endDate.ToString("yyyy-MM-dd HH:mm");
-                    //myResponse.Tables[0].Rows[0][6] = (evaluatedData.Tables[0].Select("IsCorrectFiscalYear = 0").Length > 0) ? ("BILLED_USAGE_KEY: " + Extensions.GetDelimitedString(evaluatedData.Tables[0], "IsCorrectFiscalYear = 0", "BILLED_USAGE_KEY", "|"))  : "N/A";
+                    myResponse.Tables[0].Rows[0][5] = endDate.ToString("yyyy-MM-dd HH:mm");                    
                     myResponse.Tables[0].Rows[0][6] = -1;
                     myResponse.Tables[0].Rows[0][7] = -1;
                     myResponse.Tables[0].Rows[0][8] = "";
                     myResponse.Tables[0].Rows[0][9] = interpolatedQuery + "IsCorrectFiscalYear = 0";
                     myResponse.Tables[0].Rows[0][10] = endDate.ToString("yyyy-MM-dd HH:mm");
+                    myResponse.Tables[0].Rows[0][11] = "ADTWH - Validation: Test Name =>" + myResponse.Tables[0].Rows[0][1].ToString() + ", Test Result => " + myResponse.Tables[0].Rows[0][0].ToString();
 
                     CSV logFile = new CSV(_testFileName + ".csv");
                     logFile.writeNewOrExistingFile(myResponse.Tables[0]);
@@ -201,13 +201,12 @@ namespace UnitTest.Model.DataWarehouse
                         CSV DetaillogFile = new CSV(_testFileName + "_Detail_Bill_Generated_On_Wrong_Fiscal_Year.csv");
                         DetaillogFile.writeNewOrExistingFile(evaluatedData.Tables[0].Select("IsCorrectFiscalYear = 0").CopyToDataTable());
                     }
-
                     return myResponse;
-
                 }
                 catch (Exception e)
                 {
-                    myResponse.Tables[0].Rows[0][3] = ("Error: " + e.ToString());
+                    myResponse.Tables[0].Rows[0][3] = ("Error: " + e.ToString().Substring(0, 160));
+                    myResponse.Tables[0].Rows[0][11] = ("Error: " + e.ToString().Substring(0, 160));
                     return myResponse;
                 }
             });

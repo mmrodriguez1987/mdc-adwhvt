@@ -26,7 +26,6 @@ C:\BIProjectUT\UnitTest\bin\Release\net5.0\runtimes\win-x64\native\sni.dll
 C:\BIProjectUT\UnitTest\bin\Release\net5.0\runtimes\win-x86\native\sni.dll
 C:\BIProjectUT\UnitTest\bin\Release\net5.0\runtimes\unix\lib\netcoreapp2.1\System.Data.SqlClient.dll
 C:\BIProjectUT\UnitTest\bin\Release\net5.0\runtimes\win\lib\netcoreapp2.1\System.Data.SqlClient.dll
-C:\BIProjectUT\UnitTest\bin\Release\net5.0\runtimes\win\lib\netcoreapp2.0\System.Diagnostics.PerformanceCounter.dll
 C:\BIProjectUT\UnitTest\bin\Release\net5.0\runtimes\win\lib\netcoreapp2.0\System.DirectoryServices.dll
 C:\BIProjectUT\UnitTest\bin\Release\net5.0\runtimes\win\lib\netcoreapp2.0\System.DirectoryServices.Protocols.dll
 C:\BIProjectUT\UnitTest\bin\Release\net5.0\runtimes\win\lib\netstandard2.0\System.Security.Cryptography.ProtectedData.dll
@@ -72,3 +71,18 @@ C:\BIProjectUT\UnitTest\bin\Release\net5.0\UnitTest BI.postman_collection.json
 C:\BIProjectUT\UnitTest\bin\Release\net5.0\CsvHelper.dll
 C:\BIProjectUT\UnitTest\bin\Release\net5.0\runtimes\linux\lib\netcoreapp2.0\System.DirectoryServices.Protocols.dll
 C:\BIProjectUT\UnitTest\bin\Release\net5.0\runtimes\osx\lib\netcoreapp2.0\System.DirectoryServices.Protocols.dll
+C:\BIProjectUT\UnitTest\bin\Release\net5.0\Azure.Communication.Sms.dll
+C:\BIProjectUT\UnitTest\bin\Release\net5.0\Azure.Core.dll
+C:\BIProjectUT\UnitTest\bin\Release\net5.0\Microsoft.Bcl.AsyncInterfaces.dll
+C:\BIProjectUT\UnitTest\bin\Release\net5.0\Microsoft.Win32.SystemEvents.dll
+C:\BIProjectUT\UnitTest\bin\Release\net5.0\System.Drawing.Common.dll
+C:\BIProjectUT\UnitTest\bin\Release\net5.0\System.Memory.Data.dll
+C:\BIProjectUT\UnitTest\bin\Release\net5.0\System.Security.AccessControl.dll
+C:\BIProjectUT\UnitTest\bin\Release\net5.0\System.Security.Permissions.dll
+C:\BIProjectUT\UnitTest\bin\Release\net5.0\System.Windows.Extensions.dll
+C:\BIProjectUT\UnitTest\bin\Release\net5.0\runtimes\win\lib\netcoreapp3.1\Microsoft.Win32.SystemEvents.dll
+C:\BIProjectUT\UnitTest\bin\Release\net5.0\runtimes\win\lib\netcoreapp3.1\System.Diagnostics.PerformanceCounter.dll
+C:\BIProjectUT\UnitTest\bin\Release\net5.0\runtimes\unix\lib\netcoreapp3.1\System.Drawing.Common.dll
+C:\BIProjectUT\UnitTest\bin\Release\net5.0\runtimes\win\lib\netcoreapp3.1\System.Drawing.Common.dll
+C:\BIProjectUT\UnitTest\bin\Release\net5.0\runtimes\win\lib\netstandard2.0\System.Security.AccessControl.dll
+C:\BIProjectUT\UnitTest\bin\Release\net5.0\runtimes\win\lib\netcoreapp3.1\System.Windows.Extensions.dll

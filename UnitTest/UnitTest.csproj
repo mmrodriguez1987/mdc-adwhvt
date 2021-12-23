@@ -5,6 +5,9 @@
     <UserSecretsId>d7821e21-e5de-4b4b-9343-c9b8f3b8f5f0</UserSecretsId>
     <Company>Miami Dade County</Company>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Copyright>Miamida Dade Count @ 2021-2022</Copyright>
+    <RepositoryUrl />
+    <Description>This Project is for make the data validation on the data warehouse project</Description>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -16,8 +19,8 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="NSwag.AspNetCore" Version="13.13.2" />
-    <PackageReference Include="Oracle.ManagedDataAccess.Core" Version="3.21.3" />
+    <PackageReference Include="NSwag.AspNetCore" Version="13.15.5" />
+    <PackageReference Include="Oracle.ManagedDataAccess.Core" Version="3.21.41" />
     <PackageReference Include="Serilog.Extensions.Logging.File" Version="2.0.0" />
     <PackageReference Include="System.Data.SqlClient" Version="4.8.3" />
   </ItemGroup>
@@ -36,6 +39,12 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Logs\" />
+  </ItemGroup>
+
+  <ProjectExtensions><VisualStudio><UserProperties /></VisualStudio></ProjectExtensions>
 
 
 </Project>

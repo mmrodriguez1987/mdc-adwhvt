@@ -121,7 +121,8 @@ namespace Tools.DataConversion
             TestResult.Columns.Add("query_CDC");
             TestResult.Columns.Add("query_DTW");
             TestResult.Columns.Add("Effectuated Date");
-            TestResult.Rows.Add(0, 0, "", "", "", "", 0, 0,"","","");
+            TestResult.Columns.Add("SMS Text");
+            TestResult.Rows.Add(0, 0, "", "", "", "", 0, 0,"","","","");
 
             dsResult.Tables.Add(TestResult);
             return dsResult;

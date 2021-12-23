@@ -13,10 +13,7 @@
       "commandName": "IISExpress",
       "workingDirectory": "C:\\BIProjectUT\\UnitTest",
       "launchBrowser": true,
-      "launchUrl": "api/",
-      "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
-      }
+      "launchUrl": "api/"
     },
     "UnitTest": {
       "commandName": "Project",

@@ -14,6 +14,8 @@ using System.Reflection;
 [assembly: Microsoft.Extensions.Configuration.UserSecrets.UserSecretsIdAttribute("d7821e21-e5de-4b4b-9343-c9b8f3b8f5f0")]
 [assembly: System.Reflection.AssemblyCompanyAttribute("Miami Dade County")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Release")]
+[assembly: System.Reflection.AssemblyCopyrightAttribute("Miamida Dade Count @ 2021-2022")]
+[assembly: System.Reflection.AssemblyDescriptionAttribute("This Project is for make the data validation on the data warehouse project")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
 [assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
 [assembly: System.Reflection.AssemblyProductAttribute("UnitTest")]

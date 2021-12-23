@@ -6,7 +6,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-
+using System.IO;
 
 
 namespace UnitTest
@@ -27,7 +27,7 @@ namespace UnitTest
             services.AddControllers();
             services.AddSwaggerDocument(settings =>
             {
-                settings.Title = "Unit Test for Datawarehouse";
+                settings.Title = "Data Validations for Datawarehouse";
             });
         }
 
@@ -36,7 +36,8 @@ namespace UnitTest
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory)
         {
-            loggerFactory.AddFile("Logs/adf-unittest-{Date}.log");
+            var path = Directory.GetCurrentDirectory();
+            loggerFactory.AddFile($"{path}\\Logs\\ValidationTestLogFile.log");
             if (env.IsDevelopment())           
                 app.UseDeveloperExceptionPage();           
 
@@ -48,6 +49,7 @@ namespace UnitTest
 
             app.UseOpenApi();
             app.UseSwaggerUi3();
+
 
             app.UseEndpoints(endpoints =>
             {

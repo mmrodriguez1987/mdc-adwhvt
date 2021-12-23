@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using DBHelper.SqlHelper;
 using Tools.Files;
 using Tools.DataConversion;
-
+using Tools.Communication; 
 
 namespace UnitTest.Model.DataWarehouse
 {
@@ -14,7 +14,6 @@ namespace UnitTest.Model.DataWarehouse
     {
         private string _ccnDTW, _ccnCDC, _testFileName, queryCDC, queryDTW;      
         private DataSet myResponse, evalDataDTW, evalDataCDC = new DataSet();
-
 
         /// <summary>
         /// Initialize the account class with params required
@@ -28,9 +27,7 @@ namespace UnitTest.Model.DataWarehouse
             _ccnCDC = ccnCDC;
             _testFileName = testFileName;
             queryDTW = "SELECT  COUNT (DISTINCT SRC_ACCT_ID) as DTW_Count " +
-               " from [dwadm2].[CD_ACCT] where DATA_LOAD_DTTM BETWEEN  @startDate AND @endDate";
-              
-
+               " from [dwadm2].[CD_ACCT] where DATA_LOAD_DTTM BETWEEN  @startDate AND @endDate";          
             queryCDC = "cdc.sp_ci_acct_ct";
         }
 
@@ -72,16 +69,17 @@ namespace UnitTest.Model.DataWarehouse
                     myResponse.Tables[0].Rows[0][8] = "EXEC " + queryCDC + " @startDate='" + startDate.ToString("yyyy-MM-dd HH:mm") + "', @endDate= '" + endDate.ToString("yyyy-MM-dd HH:mm") + "'";
                     myResponse.Tables[0].Rows[0][9] = interpoledQueryDTW;
                     myResponse.Tables[0].Rows[0][10] = endDate.ToString("yyyy-MM-dd HH:mm");
+                    myResponse.Tables[0].Rows[0][11] = "ADTWH - Validation: Test Name =>" + myResponse.Tables[0].Rows[0][1].ToString() + ", Test Result => " + myResponse.Tables[0].Rows[0][0].ToString();
 
                     CSV logFile = new CSV(_testFileName + ".csv");
                     logFile.writeNewOrExistingFile(myResponse.Tables[0]);                  
 
                     return myResponse;
-
                 }
                 catch (Exception e)
                 {
-                    myResponse.Tables[0].Rows[0][3] = ("Error: " + e.ToString());
+                    myResponse.Tables[0].Rows[0][3] = ("Error: " + e.ToString().Substring(0, 160));
+                    myResponse.Tables[0].Rows[0][11] = ("Error: " + e.ToString().Substring(0, 160));
                     return myResponse;
                 }
             });
