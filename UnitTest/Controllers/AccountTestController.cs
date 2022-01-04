@@ -45,11 +45,31 @@ namespace UnitTest.Controllers
             finalResultDS = Extensions.getResponseStructure("GlobalTestResult");
           
             //Validation: Get Accounts Count
-            dsResult = await acct.GetCountAccounts(gbl.startDate, gbl.endDate);
+            dsResult = await acct.DistinctAccountCounts(gbl.startDate, gbl.endDate);
             finalResultDS.Tables[0].ImportRow(dsResult.Tables[0].Rows[0]);
+            mySMS.SendSMS(gbl.PH_FROM, gbl.PH_BITEAM[0], dsResult.Tables[0].Rows[0][11].ToString());
+            mySMS.SendSMS(gbl.PH_FROM, gbl.PH_BITEAM[1], dsResult.Tables[0].Rows[0][11].ToString());
+            mySMS.SendSMS(gbl.PH_FROM, gbl.PH_BITEAM[2], dsResult.Tables[0].Rows[0][11].ToString());
 
-            //Send SMS notify
-            mySMS.SendSMS(gbl.PH_FROM, gbl.PH_BITEAM[0] , dsResult.Tables[0].Rows[0][11].ToString());
+
+            //Validation: Get Distinct Account On load Over the Maximun Historic Count
+            dsResult = await acct.DistinctAcctCountOnDataLoadOverTheMaxHistricCount(gbl.startDate, gbl.endDate, gbl.DTVAL_BU_MAX_COUNT_DISTINCT_ACCT_IDs);
+            finalResultDS.Tables[0].ImportRow(dsResult.Tables[0].Rows[0]);
+            mySMS.SendSMS(gbl.PH_FROM, gbl.PH_BITEAM[0], dsResult.Tables[0].Rows[0][11].ToString());
+            mySMS.SendSMS(gbl.PH_FROM, gbl.PH_BITEAM[1], dsResult.Tables[0].Rows[0][11].ToString());
+            mySMS.SendSMS(gbl.PH_FROM, gbl.PH_BITEAM[2], dsResult.Tables[0].Rows[0][11].ToString());
+
+            //Validation: Get comparision of new records
+            dsResult = await acct.NewAccountCounts(gbl.startDate, gbl.endDate);
+            finalResultDS.Tables[0].ImportRow(dsResult.Tables[0].Rows[0]);
+            mySMS.SendSMS(gbl.PH_FROM, gbl.PH_BITEAM[0], dsResult.Tables[0].Rows[0][11].ToString());
+            mySMS.SendSMS(gbl.PH_FROM, gbl.PH_BITEAM[1], dsResult.Tables[0].Rows[0][11].ToString());
+            mySMS.SendSMS(gbl.PH_FROM, gbl.PH_BITEAM[2], dsResult.Tables[0].Rows[0][11].ToString());
+
+            //Validation: Get comparision of updated records
+            dsResult = await acct.UpdatedAccountCounts(gbl.startDate, gbl.endDate);
+            finalResultDS.Tables[0].ImportRow(dsResult.Tables[0].Rows[0]);
+            mySMS.SendSMS(gbl.PH_FROM, gbl.PH_BITEAM[0], dsResult.Tables[0].Rows[0][11].ToString());
             mySMS.SendSMS(gbl.PH_FROM, gbl.PH_BITEAM[1], dsResult.Tables[0].Rows[0][11].ToString());
             mySMS.SendSMS(gbl.PH_FROM, gbl.PH_BITEAM[2], dsResult.Tables[0].Rows[0][11].ToString());
 

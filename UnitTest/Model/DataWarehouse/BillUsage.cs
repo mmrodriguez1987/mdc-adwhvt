@@ -150,18 +150,17 @@ namespace UnitTest.Model.DataWarehouse
         }
 
         /// <summary>
-        /// Get Statistical Data and make a lineal regretion to compare data
+        /// Comparing the Daily BILL_ID Distinct Count with the Historical ILL_ID Distinct Count.       
         /// </summary>
         /// <param name="startDate">Initial Evaluated Data</param>
         /// <param name="endDate">Final Evaluated Date</param>
+        /// <param name="BU_MAX_COUNT_DISTINCT_BILL_IDs">Maximun Histic Count of Discint bill_id </param>
         /// <returns></returns>
-        public Task<DataSet> GetStatisticalData(DateTime startDate, DateTime endDate)
+        public Task<DataSet> GetCountDistinctBillOnDataLoadOverTheMaxHistric(DateTime startDate, DateTime endDate, Int32 BU_MAX_COUNT_DISTINCT_BILL_IDs)
         {
-            myResponse = Extensions.getResponseStructure("BillGeneratedOnWrongFiscalYear");
-            string query = "SELECT  B.BILL_DATE_KEY, B.BILLED_USAGE_KEY, B.UDDGEN1, B.FISCAL_CAL_KEY, C.StartDate, " +
-                "C.EndDate, CASE WHEN (B.UDDGEN1 BETWEEN C.StartDate AND C.EndDate) THEN 1 ELSE 0 END AS IsCorrectFiscalYear " +
-                "FROM dwadm2.CF_BILLED_USAGE B INNER JOIN dwadm2.vw_CD_FISCAL_CAL C ON B.FISCAL_CAL_KEY=C.FISCAL_CAL_KEY " +
-                "WHERE (B.DATA_LOAD_DTTM BETWEEN @startDate AND @endDate) ";
+            myResponse = Extensions.getResponseStructure("GetCountDistinctBillOnDataLoad");
+            string query = "SELECT COUNT(DISTINCT SRC_BILL_ID) DwCount, CONVERT(VARCHAR,DATA_LOAD_DTTM,1) DATA_LOAD_DTTM, FORMAT(DATA_LOAD_DTTM,'dddd') DayofWeek " + 
+                "FROM dwadm2.CF_BILLED_USAGE WHERE DATA_LOAD_DTTM BETWEEN @startDate AND @endDate GROUP BY CONVERT(VARCHAR, DATA_LOAD_DTTM,1), FORMAT(DATA_LOAD_DTTM,'dddd') ORDER BY DATA_LOAD_DTTM DESC";
 
             return Task.Run(() =>
             {
@@ -174,33 +173,28 @@ namespace UnitTest.Model.DataWarehouse
 
                     evaluatedData = SqlHelper.ExecuteDataset(_conexion, CommandType.Text, query, parameters.ToArray());
 
-                    string interpolatedQuery = "SELECT  B.BILL_DATE_KEY, B.BILLED_USAGE_KEY, B.UDDGEN1, B.FISCAL_CAL_KEY, C.StartDate, " +
-                        "C.EndDate, CASE WHEN (B.UDDGEN1 BETWEEN C.StartDate AND C.EndDate) THEN 1 ELSE 0 END AS IsCorrectFiscalYear " +
-                        "FROM dwadm2.CF_BILLED_USAGE B INNER JOIN dwadm2.vw_CD_FISCAL_CAL C ON B.FISCAL_CAL_KEY=C.FISCAL_CAL_KEY " +
-                        "WHERE (B.DATA_LOAD_DTTM BETWEEN '" + startDate.ToString("yyyy-MM-dd HH:mm") + "' AND '" + endDate.ToString("yyyy-MM-dd HH:mm") + "') ";
+                    int dtwCount = Convert.ToInt32(evaluatedData.Tables[0].Rows[0][0]);
 
-                    myResponse.Tables[0].Rows[0][0] = (evaluatedData.Tables[0].Select("IsCorrectFiscalYear = 0").Length > 0) ? "Warning" : "Test Passed";
-                    myResponse.Tables[0].Rows[0][1] = "Get-Bill-Generated-On-Wrong-Fiscal-Year";
-                    myResponse.Tables[0].Rows[0][2] = "BillUsage, Fiscal Year";
-                    myResponse.Tables[0].Rows[0][3] = (evaluatedData.Tables[0].Select("IsCorrectFiscalYear = 0").Length > 0) ? "There are bills generated on wrong fiscal year" : "No bills Generated on weekend or holidays were found";
+
+                    string interpolatedQuery = " SELECT COUNT(DISTINCT SRC_BILL_ID) DwCount, CONVERT(VARCHAR,DATA_LOAD_DTTM,1) DATA_LOAD_DTTM, FORMAT(DATA_LOAD_DTTM,'dddd') DayofWeek FROM dwadm2.CF_BILLED_USAGE WHERE DATA_LOAD_DTTM BETWEEN '"
+                    + startDate.ToString("yyyy-MM-dd HH:mm") + "' AND '" + endDate.ToString("yyyy-MM-dd HH:mm") + "' GROUP BY CONVERT(VARCHAR, DATA_LOAD_DTTM,1), FORMAT(DATA_LOAD_DTTM,'dddd') ORDER BY DATA_LOAD_DTTM DESC";
+                    
+                    myResponse.Tables[0].Rows[0][0] = dtwCount > BU_MAX_COUNT_DISTINCT_BILL_IDs ? "Warning" : "Test Passed";
+                    myResponse.Tables[0].Rows[0][1] = "Get-Count-Distinct-Bill-On-Data-Load-Over-The-Max-Historic";
+                    myResponse.Tables[0].Rows[0][2] = "SRC_BILL_ID";
+                    myResponse.Tables[0].Rows[0][3] = dtwCount > BU_MAX_COUNT_DISTINCT_BILL_IDs ? "Quantity of Distinct Bill_ID on this Day surpassed the historical maximum." : "Ok!";
                     myResponse.Tables[0].Rows[0][4] = startDate.ToString("yyyy-MM-dd HH:mm");
                     myResponse.Tables[0].Rows[0][5] = endDate.ToString("yyyy-MM-dd HH:mm");                    
                     myResponse.Tables[0].Rows[0][6] = -1;
-                    myResponse.Tables[0].Rows[0][7] = -1;
+                    myResponse.Tables[0].Rows[0][7] = dtwCount;
                     myResponse.Tables[0].Rows[0][8] = "";
-                    myResponse.Tables[0].Rows[0][9] = interpolatedQuery + "IsCorrectFiscalYear = 0";
+                    myResponse.Tables[0].Rows[0][9] = interpolatedQuery;
                     myResponse.Tables[0].Rows[0][10] = endDate.ToString("yyyy-MM-dd HH:mm");
                     myResponse.Tables[0].Rows[0][11] = "ADTWH - Validation: Test Name =>" + myResponse.Tables[0].Rows[0][1].ToString() + ", Test Result => " + myResponse.Tables[0].Rows[0][0].ToString();
 
                     CSV logFile = new CSV(_testFileName + ".csv");
                     logFile.writeNewOrExistingFile(myResponse.Tables[0]);
-
-                    //if the Test Fail write other file with the failed_data
-                    if ((evaluatedData.Tables[0].Select("IsCorrectFiscalYear = 0").Length > 0))
-                    {
-                        CSV DetaillogFile = new CSV(_testFileName + "_Detail_Bill_Generated_On_Wrong_Fiscal_Year.csv");
-                        DetaillogFile.writeNewOrExistingFile(evaluatedData.Tables[0].Select("IsCorrectFiscalYear = 0").CopyToDataTable());
-                    }
+                   
                     return myResponse;
                 }
                 catch (Exception e)

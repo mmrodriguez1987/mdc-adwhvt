@@ -51,10 +51,17 @@ namespace UnitTest.Controllers
             mySMS.SendSMS(gbl.PH_FROM, gbl.PH_BITEAM[1], dsResult.Tables[0].Rows[0][11].ToString());
             mySMS.SendSMS(gbl.PH_FROM, gbl.PH_BITEAM[2], dsResult.Tables[0].Rows[0][11].ToString());
 
+
             //Validation: Get Bills Generated on weekend
             dsResult = await bug.GetBillsGeneratedOnWeekend(gbl.startDate, gbl.endDate);
+            finalResultDS.Tables[0].ImportRow(dsResult.Tables[0].Rows[0]);            
+            mySMS.SendSMS(gbl.PH_FROM, gbl.PH_BITEAM[0], dsResult.Tables[0].Rows[0][11].ToString());
+            mySMS.SendSMS(gbl.PH_FROM, gbl.PH_BITEAM[1], dsResult.Tables[0].Rows[0][11].ToString());
+            mySMS.SendSMS(gbl.PH_FROM, gbl.PH_BITEAM[2], dsResult.Tables[0].Rows[0][11].ToString());
+
+            //Validation: Get Bills Generated on weekend
+            dsResult = await bug.GetCountDistinctBillOnDataLoadOverTheMaxHistric(gbl.startDate, gbl.endDate, gbl.DTVAL_BU_MAX_COUNT_DISTINCT_BILL_IDs);
             finalResultDS.Tables[0].ImportRow(dsResult.Tables[0].Rows[0]);
-            //Send SMS Notification
             mySMS.SendSMS(gbl.PH_FROM, gbl.PH_BITEAM[0], dsResult.Tables[0].Rows[0][11].ToString());
             mySMS.SendSMS(gbl.PH_FROM, gbl.PH_BITEAM[1], dsResult.Tables[0].Rows[0][11].ToString());
             mySMS.SendSMS(gbl.PH_FROM, gbl.PH_BITEAM[2], dsResult.Tables[0].Rows[0][11].ToString());

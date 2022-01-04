@@ -9,6 +9,7 @@ namespace UnitTest
     {    
         private string[] _BITEAM;
         private DateTime _startDate, _endDate;
+        private Int32 _DTVAL_BU_MAX_COUNT_DISTINCT_BILL_IDs, _DTVAL_BU_MAX_COUNT_DISTINCT_ACCT_IDs;
         private int _evaluatedDatesRange;
         private string _dataWarehouseCCN, _CdcCCN, _AzureCCN, _fromSMS, _defaulFileRoot ;
         public string[] PH_BITEAM { get => _BITEAM; set => _BITEAM = value; }
@@ -20,6 +21,8 @@ namespace UnitTest
         public int EvaluatedDatesRange { get => _evaluatedDatesRange; set => _evaluatedDatesRange = value; }
         public DateTime startDate { get => _startDate; set => _startDate = value; }
         public DateTime endDate { get => _endDate; set => _endDate = value; }
+        public int DTVAL_BU_MAX_COUNT_DISTINCT_BILL_IDs { get => _DTVAL_BU_MAX_COUNT_DISTINCT_BILL_IDs; set => _DTVAL_BU_MAX_COUNT_DISTINCT_BILL_IDs = value; }
+        public int DTVAL_BU_MAX_COUNT_DISTINCT_ACCT_IDs { get => _DTVAL_BU_MAX_COUNT_DISTINCT_ACCT_IDs; set => _DTVAL_BU_MAX_COUNT_DISTINCT_ACCT_IDs = value; }
 
         public Global(IConfiguration conf)
         {
@@ -34,6 +37,8 @@ namespace UnitTest
             _fromSMS = conf.GetValue<string>("PrjVar:FROM_PHONE_NUMBER");
             _defaulFileRoot = conf.GetValue<string>("PrjVar:FILE_ROOT");
             _evaluatedDatesRange = conf.GetValue<int>("PrjVar:QTY_DAYS_TO_EVALUATE");
+            _DTVAL_BU_MAX_COUNT_DISTINCT_BILL_IDs = conf.GetValue<Int32>("DTVAL_BU_MAX_COUNT_DISTINCT_BILL_IDs");
+            _DTVAL_BU_MAX_COUNT_DISTINCT_ACCT_IDs = conf.GetValue<Int32>("DTVAL_BU_MAX_COUNT_DISTINCT_ACCT_IDs");
             _endDate = DateTime.UtcNow;
             _startDate = _endDate.AddDays(-_evaluatedDatesRange);
         }        

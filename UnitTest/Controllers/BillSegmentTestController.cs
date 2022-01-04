@@ -35,28 +35,26 @@ namespace UnitTest.Controllers
 
         [HttpGet]
         public async Task<IActionResult> Get()
-        {          
-         
-          
-                mySMS = new SMS(gbl.CCN_ACS);
+        {
+            mySMS = new SMS(gbl.CCN_ACS);
 
-                BillSegment bst = new BillSegment(gbl.CCN_DTWH, gbl.CCN_CDC, testFileName);
+            BillSegment bst = new BillSegment(gbl.CCN_DTWH, gbl.CCN_CDC, testFileName);
 
-                dsResult = Extensions.getResponseStructure("");
-                finalResultDS = Extensions.getResponseStructure("GlobalTestResult");
+            dsResult = Extensions.getResponseStructure("");
+            finalResultDS = Extensions.getResponseStructure("GlobalTestResult");
 
-                //Validation: Get Count of Bill Segment and comparei
-                dsResult = await bst.GetCountBillSegment(gbl.startDate, gbl.endDate);
-                finalResultDS.Tables[0].ImportRow(dsResult.Tables[0].Rows[0]);
-
+            //Validation: Get Count of Bill Segment and comparei
+            dsResult = await bst.GetCountBillSegment(gbl.startDate, gbl.endDate);
+            finalResultDS.Tables[0].ImportRow(dsResult.Tables[0].Rows[0]);
             mySMS.SendSMS(gbl.PH_FROM, gbl.PH_BITEAM[0], dsResult.Tables[0].Rows[0][11].ToString());
             mySMS.SendSMS(gbl.PH_FROM, gbl.PH_BITEAM[1], dsResult.Tables[0].Rows[0][11].ToString());
             mySMS.SendSMS(gbl.PH_FROM, gbl.PH_BITEAM[2], dsResult.Tables[0].Rows[0][11].ToString());
+                    
+
 
             _log.LogInformation("End of the Global Test at: " + DateTime.Now.ToString());
 
-                return base.Ok(Extensions.DataTableToJSONWithStringBuilder(finalResultDS.Tables[0]));
-            
+            return base.Ok(Extensions.DataTableToJSONWithStringBuilder(finalResultDS.Tables[0]));           
             
         }
     }
