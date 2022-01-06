@@ -47,24 +47,24 @@ namespace UnitTest.Controllers
             //Validation: Get Bills Generated on wrong Fiscal Year
             dsResult = await bug.GetBillGeneratedOnWrongFiscalYear(gbl.startDate, gbl.endDate);   
             finalResultDS.Tables[0].ImportRow(dsResult.Tables[0].Rows[0]);
-            mySMS.SendSMS(gbl.PH_FROM, gbl.PH_BITEAM[0], dsResult.Tables[0].Rows[0][11].ToString());
-            mySMS.SendSMS(gbl.PH_FROM, gbl.PH_BITEAM[1], dsResult.Tables[0].Rows[0][11].ToString());
-            mySMS.SendSMS(gbl.PH_FROM, gbl.PH_BITEAM[2], dsResult.Tables[0].Rows[0][11].ToString());
+            if (dsResult.Tables[0].Rows[0][0].ToString() == "Warning" || dsResult.Tables[0].Rows[0][0].ToString() == "Failed")
+                mySMS.SendSMS(gbl.PH_FROM, gbl.PH_BITEAM, dsResult.Tables[0].Rows[0][11].ToString());
+
 
 
             //Validation: Get Bills Generated on weekend
             dsResult = await bug.GetBillsGeneratedOnWeekend(gbl.startDate, gbl.endDate);
-            finalResultDS.Tables[0].ImportRow(dsResult.Tables[0].Rows[0]);            
-            mySMS.SendSMS(gbl.PH_FROM, gbl.PH_BITEAM[0], dsResult.Tables[0].Rows[0][11].ToString());
-            mySMS.SendSMS(gbl.PH_FROM, gbl.PH_BITEAM[1], dsResult.Tables[0].Rows[0][11].ToString());
-            mySMS.SendSMS(gbl.PH_FROM, gbl.PH_BITEAM[2], dsResult.Tables[0].Rows[0][11].ToString());
+            finalResultDS.Tables[0].ImportRow(dsResult.Tables[0].Rows[0]);
+            if (dsResult.Tables[0].Rows[0][0].ToString() == "Warning" || dsResult.Tables[0].Rows[0][0].ToString() == "Failed")
+                mySMS.SendSMS(gbl.PH_FROM, gbl.PH_BITEAM, dsResult.Tables[0].Rows[0][11].ToString());
+
 
             //Validation: Get Bills Generated on weekend
             dsResult = await bug.GetCountDistinctBillOnDataLoadOverTheMaxHistric(gbl.startDate, gbl.endDate, gbl.DTVAL_BU_MAX_COUNT_DISTINCT_BILL_IDs);
             finalResultDS.Tables[0].ImportRow(dsResult.Tables[0].Rows[0]);
-            mySMS.SendSMS(gbl.PH_FROM, gbl.PH_BITEAM[0], dsResult.Tables[0].Rows[0][11].ToString());
-            mySMS.SendSMS(gbl.PH_FROM, gbl.PH_BITEAM[1], dsResult.Tables[0].Rows[0][11].ToString());
-            mySMS.SendSMS(gbl.PH_FROM, gbl.PH_BITEAM[2], dsResult.Tables[0].Rows[0][11].ToString());
+            if (dsResult.Tables[0].Rows[0][0].ToString() == "Warning" || dsResult.Tables[0].Rows[0][0].ToString() == "Failed")
+                mySMS.SendSMS(gbl.PH_FROM, gbl.PH_BITEAM, dsResult.Tables[0].Rows[0][11].ToString());
+
 
             _log.LogInformation("End of the Global Test at: " + DateTime.Now.ToString());
 

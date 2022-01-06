@@ -26,9 +26,6 @@ namespace UnitTest.Model.DataWarehouse
             _ccnDTW = cnnDTW;
             _ccnCDC = ccnCDC;
             _testFileName = testFileName;
-            queryDTW = "SELECT COUNT(DISTINCT SRC_BSEG_ID) AS DTW_Count " +
-               " from dwadm2.CF_BILLED_USAGE WHERE DATA_LOAD_DTTM BETWEEN @startDate AND @endDate";
-
             queryCDC = "cdc.sp_ci_bseg_ct";
         }
 
@@ -46,11 +43,13 @@ namespace UnitTest.Model.DataWarehouse
             {
                 try
                 {
+                    queryDTW = "SELECT COUNT(DISTINCT SRC_BSEG_ID) DTW_Count FROM dwadm2.CF_BILLED_USAGE WHERE DATA_LOAD_DTTM BETWEEN @startDate AND @endDate";
+
                     List<SqlParameter> parameters = new List<SqlParameter>();
 
                     parameters.Add(new SqlParameter("@startDate", startDate.ToString("yyyy-MM-dd HH:mm")));
                     parameters.Add(new SqlParameter("@endDate", endDate.ToString("yyyy-MM-dd HH:mm")));
-                    string interpoledQueryDTW = "SELECT COUNT(DISTINCT SRC_BSEG_ID) as DTW_Count from dwadm2.CF_BILLED_USAGE WHERE DATA_LOAD_DTTM BETWEEN '" + startDate.ToString("yyyy-MM-dd HH:mm") + "' AND '" + endDate.ToString("yyyy-MM-dd HH:mm") + "'";
+                    string interpoledQueryDTW = "SELECT COUNT(DISTINCT SRC_BSEG_ID) DTW_Count from dwadm2.CF_BILLED_USAGE WHERE DATA_LOAD_DTTM BETWEEN '" + startDate.ToString("yyyy-MM-dd HH:mm") + "' AND '" + endDate.ToString("yyyy-MM-dd HH:mm") + "'";
 
                     evalDataDTW = SqlHelper.ExecuteDataset(_ccnDTW, CommandType.Text, queryDTW, parameters.ToArray());
                     evalDataCDC = SqlHelper.ExecuteDataset(_ccnCDC, CommandType.StoredProcedure, queryCDC, parameters.ToArray());
@@ -58,7 +57,7 @@ namespace UnitTest.Model.DataWarehouse
                     int cdcCount = evalDataCDC.Tables[0].DefaultView.ToTable(true, "BSEG_ID").Rows.Count;
                     int dtwCount = Convert.ToInt32(evalDataDTW.Tables[0].Rows[0][0]);
 
-                    myResponse.Tables[0].Rows[0][0] = (cdcCount != dtwCount) ? "Warning" : "Test Passed";
+                    myResponse.Tables[0].Rows[0][0] = (cdcCount != dtwCount) ? "Warning" : "OK!";
                     myResponse.Tables[0].Rows[0][1] = "Count Distinct BSEG_ID on DTW and CDC";
                     myResponse.Tables[0].Rows[0][2] = "dw-ttdp: dwadm2.CF_BILLED_USAGE | cdcProdcc: cdc.sp_ci_bseg_ct";
                     myResponse.Tables[0].Rows[0][3] = (cdcCount != dtwCount) ? "Distinct BSEG_ID counts on both sides are different" : "Distinct BSEG_ID counts on both sides are congruent";
@@ -83,5 +82,6 @@ namespace UnitTest.Model.DataWarehouse
                 }
             });
         }
+
     }
 }

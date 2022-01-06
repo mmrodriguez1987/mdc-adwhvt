@@ -58,7 +58,7 @@ namespace UnitTest.Model.DataWarehouse
                     int cdcCount = evalDataCDC.Tables[0].DefaultView.ToTable(true, "PER_ID").Rows.Count;
                     int dtwCount = Convert.ToInt32(evalDataDTW.Tables[0].Rows[0][0]);
 
-                    myResponse.Tables[0].Rows[0][0] = (cdcCount != dtwCount) ? "Warning" : "Test Passed";
+                    myResponse.Tables[0].Rows[0][0] = (cdcCount != dtwCount) ? "Warning" : "OK!";
                     myResponse.Tables[0].Rows[0][1] = "Count Distinct PER_ID on DTW and CDC";
                     myResponse.Tables[0].Rows[0][2] = "dw-ttdp: dwadm2.CD_PER | cdcProd: cdc.sp_ci_per_ct";
                     myResponse.Tables[0].Rows[0][3] = (cdcCount != dtwCount) ? "Distinct PER_ID counts on both sides are different" : "Distinct PER_ID counts on both sides are congruent";

@@ -52,7 +52,7 @@ namespace UnitTest.Model.DataWarehouse
 
                     evaluatedData = SqlHelper.ExecuteDataset(_conexion, CommandType.Text, query, parameters.ToArray());
 
-                    myResponse.Tables[0].Rows[0][0] = (evaluatedData.Tables[0].Rows.Count > 0) ? "Test Failed" : "Test Passed"; 
+                    myResponse.Tables[0].Rows[0][0] = (evaluatedData.Tables[0].Rows.Count > 0) ? "Failed" : "OK!"; 
                     myResponse.Tables[0].Rows[0][1] = "Check-New-Bills-On-Weekend";
                     myResponse.Tables[0].Rows[0][2] = "BillUsage, BillDate";
                     myResponse.Tables[0].Rows[0][3] = (evaluatedData.Tables[0].Rows.Count > 0) ? "There are bills generated on weekend or holidays" : "No bills Generated on weekend or holidays were found";
@@ -115,13 +115,12 @@ namespace UnitTest.Model.DataWarehouse
                         "FROM dwadm2.CF_BILLED_USAGE B INNER JOIN dwadm2.vw_CD_FISCAL_CAL C ON B.FISCAL_CAL_KEY=C.FISCAL_CAL_KEY " +
                         "WHERE (B.DATA_LOAD_DTTM BETWEEN '" + startDate.ToString("yyyy-MM-dd HH:mm") + "' AND '"+ endDate.ToString("yyyy-MM-dd HH:mm") + "') ";
 
-                    myResponse.Tables[0].Rows[0][0] = (evaluatedData.Tables[0].Select("IsCorrectFiscalYear = 0").Length > 0) ? "Warning" : "Test Passed";
+                    myResponse.Tables[0].Rows[0][0] = (evaluatedData.Tables[0].Select("IsCorrectFiscalYear = 0").Length > 0) ? "Warning" : "OK!";
                     myResponse.Tables[0].Rows[0][1] = "Get-Bill-Generated-On-Wrong-Fiscal-Year";
                     myResponse.Tables[0].Rows[0][2] = "BillUsage, Fiscal Year";
                     myResponse.Tables[0].Rows[0][3] = (evaluatedData.Tables[0].Select("IsCorrectFiscalYear = 0").Length > 0) ? "There are bills generated on wrong fiscal year" : "No bills Generated on weekend or holidays were found";
                     myResponse.Tables[0].Rows[0][4] = startDate.ToString("yyyy-MM-dd HH:mm");
-                    myResponse.Tables[0].Rows[0][5] = endDate.ToString("yyyy-MM-dd HH:mm");
-                    //myResponse.Tables[0].Rows[0][6] = (evaluatedData.Tables[0].Select("IsCorrectFiscalYear = 0").Length > 0) ? ("BILLED_USAGE_KEY: " + Extensions.GetDelimitedString(evaluatedData.Tables[0], "IsCorrectFiscalYear = 0", "BILLED_USAGE_KEY", "|"))  : "N/A";
+                    myResponse.Tables[0].Rows[0][5] = endDate.ToString("yyyy-MM-dd HH:mm");                   
                     myResponse.Tables[0].Rows[0][6] = -1;
                     myResponse.Tables[0].Rows[0][7] = -1;
                     myResponse.Tables[0].Rows[0][8] = "";
@@ -179,7 +178,7 @@ namespace UnitTest.Model.DataWarehouse
                     string interpolatedQuery = " SELECT COUNT(DISTINCT SRC_BILL_ID) DwCount, CONVERT(VARCHAR,DATA_LOAD_DTTM,1) DATA_LOAD_DTTM, FORMAT(DATA_LOAD_DTTM,'dddd') DayofWeek FROM dwadm2.CF_BILLED_USAGE WHERE DATA_LOAD_DTTM BETWEEN '"
                     + startDate.ToString("yyyy-MM-dd HH:mm") + "' AND '" + endDate.ToString("yyyy-MM-dd HH:mm") + "' GROUP BY CONVERT(VARCHAR, DATA_LOAD_DTTM,1), FORMAT(DATA_LOAD_DTTM,'dddd') ORDER BY DATA_LOAD_DTTM DESC";
                     
-                    myResponse.Tables[0].Rows[0][0] = dtwCount > BU_MAX_COUNT_DISTINCT_BILL_IDs ? "Warning" : "Test Passed";
+                    myResponse.Tables[0].Rows[0][0] = dtwCount > BU_MAX_COUNT_DISTINCT_BILL_IDs ? "Warning" : "OK!";
                     myResponse.Tables[0].Rows[0][1] = "Get-Count-Distinct-Bill-On-Data-Load-Over-The-Max-Historic";
                     myResponse.Tables[0].Rows[0][2] = "SRC_BILL_ID";
                     myResponse.Tables[0].Rows[0][3] = dtwCount > BU_MAX_COUNT_DISTINCT_BILL_IDs ? "Quantity of Distinct Bill_ID on this Day surpassed the historical maximum." : "Ok!";
@@ -205,6 +204,5 @@ namespace UnitTest.Model.DataWarehouse
                 }
             });
         }
-
     }
 }
