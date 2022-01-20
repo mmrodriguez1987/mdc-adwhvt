@@ -38,32 +38,31 @@ namespace UnitTest.Controllers
         {
            
             mySMS = new SMS(gbl.CCN_ACS);            
-            Account acct = new Account(gbl.CCN_DTWH, gbl.CCN_CDC, testFileName);
+            Account acct = new Account(gbl.CCN_DTWH, gbl.CCN_CDC, gbl.CCN_ValDB, testFileName);
+
             dsResult = Extensions.getResponseStructure("");
             finalResultDS = Extensions.getResponseStructure("GlobalTestResult");
           
+
             //Validation: Get Distinct Accounts Count between the CCB and DTW
-            dsResult = await acct.DistinctAccountCounts(gbl.startDate, gbl.endDate);
+            dsResult = await acct.DistinctAccountCount(gbl.startDate, gbl.endDate);
             finalResultDS.Tables[0].ImportRow(dsResult.Tables[0].Rows[0]);
             if (dsResult.Tables[0].Rows[0][0].ToString() == "Warning" || dsResult.Tables[0].Rows[0][0].ToString() == "Failed")            
-                mySMS.SendSMS(gbl.PH_FROM, gbl.PH_BITEAM, dsResult.Tables[0].Rows[0][11].ToString());
-            
+                mySMS.SendSMS(gbl.PH_FROM, gbl.PH_BITEAM, dsResult.Tables[0].Rows[0][11].ToString());            
            
 
             //Validation: Get Distinct Account On load Over the Maximun Historic Count
             dsResult = await acct.DistinctAcctCountOnDataLoadOverTheMaxHistricCount(gbl.startDate, gbl.endDate, gbl.DTVAL_BU_MAX_COUNT_DISTINCT_ACCT_IDs);
             finalResultDS.Tables[0].ImportRow(dsResult.Tables[0].Rows[0]);
             if (dsResult.Tables[0].Rows[0][0].ToString() == "Warning" || dsResult.Tables[0].Rows[0][0].ToString() == "Failed")
-                mySMS.SendSMS(gbl.PH_FROM, gbl.PH_BITEAM, dsResult.Tables[0].Rows[0][11].ToString());
-
+                mySMS.SendSMS(gbl.PH_FROM, gbl.PH_BITEAM, dsResult.Tables[0].Rows[0][11].ToString());        
 
 
             //Validation: Get comparision of new records between CCB and DWT
             dsResult = await acct.NewAccountCounts(gbl.startDate, gbl.endDate);
             finalResultDS.Tables[0].ImportRow(dsResult.Tables[0].Rows[0]);
             if (dsResult.Tables[0].Rows[0][0].ToString() == "Warning" || dsResult.Tables[0].Rows[0][0].ToString() == "Failed")
-                mySMS.SendSMS(gbl.PH_FROM, gbl.PH_BITEAM, dsResult.Tables[0].Rows[0][11].ToString());
-
+               mySMS.SendSMS(gbl.PH_FROM, gbl.PH_BITEAM, dsResult.Tables[0].Rows[0][11].ToString());
 
 
             //Validation: Get comparision of updated records between CCB and DTW
@@ -71,6 +70,16 @@ namespace UnitTest.Controllers
             finalResultDS.Tables[0].ImportRow(dsResult.Tables[0].Rows[0]);
             if (dsResult.Tables[0].Rows[0][0].ToString() == "Warning" || dsResult.Tables[0].Rows[0][0].ToString() == "Failed")
                 mySMS.SendSMS(gbl.PH_FROM, gbl.PH_BITEAM, dsResult.Tables[0].Rows[0][11].ToString());
+
+
+            //Validation: Get a 5 Days statistical comparision of account
+            dsResult = await acct.StatisticalComparison(gbl.startDate, gbl.EvaluatedDatesRange, gbl.TOL_NUM_ON_VAR_ACCOUNT_AVER);            
+            finalResultDS.Tables[0].ImportRow(dsResult.Tables[0].Rows[0]);
+            if (dsResult.Tables[0].Rows[0][0].ToString() == "Warning" || dsResult.Tables[0].Rows[0][0].ToString() == "Failed")
+                mySMS.SendSMS(gbl.PH_FROM, gbl.PH_BITEAM, dsResult.Tables[0].Rows[0][11].ToString());
+
+            dsResult = await acct.recordIndicators();
+            finalResultDS.Tables[0].ImportRow(dsResult.Tables[0].Rows[0]);         
 
             return base.Ok(Extensions.DataTableToJSONWithStringBuilder(finalResultDS.Tables[0]));
         }

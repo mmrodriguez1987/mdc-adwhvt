@@ -42,7 +42,7 @@ namespace UnitTest.Controllers
             finalResultDS = Extensions.getResponseStructure("PremiseTestResult");
           
             //Validation: Get Premise Count
-            dsResult = await prem.GetCountPremises(gbl.startDate, gbl.endDate);
+            dsResult = await prem.UniquePremisesCount(gbl.startDate, gbl.endDate);
             finalResultDS.Tables[0].ImportRow(dsResult.Tables[0].Rows[0]);
             if (dsResult.Tables[0].Rows[0][0].ToString() == "Warning" || dsResult.Tables[0].Rows[0][0].ToString() == "Failed")
                 mySMS.SendSMS(gbl.PH_FROM, gbl.PH_BITEAM, dsResult.Tables[0].Rows[0][11].ToString());

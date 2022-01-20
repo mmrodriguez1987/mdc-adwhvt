@@ -43,7 +43,7 @@ namespace UnitTest.Controllers
             finalResultDS = Extensions.getResponseStructure("GlobalTestResult");
 
             //Validation: Get Count of Bill Segment and comparei
-            dsResult = await bst.GetCountBillSegment(gbl.startDate, gbl.endDate);
+            dsResult = await bst.UniqueBillSegmentCount(gbl.startDate, gbl.endDate);
             finalResultDS.Tables[0].ImportRow(dsResult.Tables[0].Rows[0]);
             if (dsResult.Tables[0].Rows[0][0].ToString() == "Warning" || dsResult.Tables[0].Rows[0][0].ToString() == "Failed")
                 mySMS.SendSMS(gbl.PH_FROM, gbl.PH_BITEAM, dsResult.Tables[0].Rows[0][11].ToString());

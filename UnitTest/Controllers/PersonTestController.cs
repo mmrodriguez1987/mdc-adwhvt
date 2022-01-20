@@ -42,8 +42,20 @@ namespace UnitTest.Controllers
             dsResult = Extensions.getResponseStructure("");
             finalResultDS = Extensions.getResponseStructure("PremiseTestResult");
           
-            //Validation: Get Accounts Count
-            dsResult = await per.GetCountPerson(gbl.startDate, gbl.endDate);
+            //Validation: Unique Persons Count on both sides
+            dsResult = await per.UniquePersonsCount(gbl.startDate, gbl.endDate);
+            finalResultDS.Tables[0].ImportRow(dsResult.Tables[0].Rows[0]);
+            if (dsResult.Tables[0].Rows[0][0].ToString() == "Warning" || dsResult.Tables[0].Rows[0][0].ToString() == "Failed")
+                mySMS.SendSMS(gbl.PH_FROM, gbl.PH_BITEAM, dsResult.Tables[0].Rows[0][11].ToString());
+
+            //Validation: New Persons Count on both sides
+            dsResult = await per.NewPersonsCount(gbl.startDate, gbl.endDate);
+            finalResultDS.Tables[0].ImportRow(dsResult.Tables[0].Rows[0]);
+            if (dsResult.Tables[0].Rows[0][0].ToString() == "Warning" || dsResult.Tables[0].Rows[0][0].ToString() == "Failed")
+                mySMS.SendSMS(gbl.PH_FROM, gbl.PH_BITEAM, dsResult.Tables[0].Rows[0][11].ToString());
+
+            //Validation: Updated Persons Count on both sides
+            dsResult = await per.UpdatedPersonsCount(gbl.startDate, gbl.endDate);
             finalResultDS.Tables[0].ImportRow(dsResult.Tables[0].Rows[0]);
             if (dsResult.Tables[0].Rows[0][0].ToString() == "Warning" || dsResult.Tables[0].Rows[0][0].ToString() == "Failed")
                 mySMS.SendSMS(gbl.PH_FROM, gbl.PH_BITEAM, dsResult.Tables[0].Rows[0][11].ToString());

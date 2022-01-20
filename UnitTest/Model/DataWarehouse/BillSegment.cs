@@ -35,7 +35,7 @@ namespace UnitTest.Model.DataWarehouse
         /// <param name="startDate">Start Evaluated Date</param>
         /// <param name="endDate">End Evaluated Date</param>
         /// <returns></returns>
-        public Task<DataSet> GetCountBillSegment(DateTime startDate, DateTime endDate)
+        public Task<DataSet> UniqueBillSegmentCount(DateTime startDate, DateTime endDate)
         {
             myResponse = Extensions.getResponseStructure("BilledSegmentCount");
 
@@ -45,14 +45,20 @@ namespace UnitTest.Model.DataWarehouse
                 {
                     queryDTW = "SELECT COUNT(DISTINCT SRC_BSEG_ID) DTW_Count FROM dwadm2.CF_BILLED_USAGE WHERE DATA_LOAD_DTTM BETWEEN @startDate AND @endDate";
 
-                    List<SqlParameter> parameters = new List<SqlParameter>();
+                    List<SqlParameter> cdcParameters = new List<SqlParameter>();
+                    List<SqlParameter> dtwParameters = new List<SqlParameter>();
 
-                    parameters.Add(new SqlParameter("@startDate", startDate.ToString("yyyy-MM-dd HH:mm")));
-                    parameters.Add(new SqlParameter("@endDate", endDate.ToString("yyyy-MM-dd HH:mm")));
-                    string interpoledQueryDTW = "SELECT COUNT(DISTINCT SRC_BSEG_ID) DTW_Count from dwadm2.CF_BILLED_USAGE WHERE DATA_LOAD_DTTM BETWEEN '" + startDate.ToString("yyyy-MM-dd HH:mm") + "' AND '" + endDate.ToString("yyyy-MM-dd HH:mm") + "'";
+                    cdcParameters.Add(new SqlParameter("@startDate", startDate.ToString("yyyy-MM-dd HH:mm")));
+                    cdcParameters.Add(new SqlParameter("@endDate", endDate.ToString("yyyy-MM-dd HH:mm")));
 
-                    evalDataDTW = SqlHelper.ExecuteDataset(_ccnDTW, CommandType.Text, queryDTW, parameters.ToArray());
-                    evalDataCDC = SqlHelper.ExecuteDataset(_ccnCDC, CommandType.StoredProcedure, queryCDC, parameters.ToArray());
+                    dtwParameters.Add(new SqlParameter("@startDate", endDate.ToString("yyyy-MM-dd HH:mm")));
+                    dtwParameters.Add(new SqlParameter("@endDate", endDate.AddHours(5).ToString("yyyy-MM-dd HH:mm")));
+
+
+                    string interpoledQueryDTW = "SELECT COUNT(DISTINCT SRC_BSEG_ID) DTW_Count from dwadm2.CF_BILLED_USAGE WHERE DATA_LOAD_DTTM BETWEEN '" + endDate.ToString("yyyy-MM-dd HH:mm") + "' AND '" + endDate.AddHours(5).ToString("yyyy-MM-dd HH:mm") + "'";
+
+                    evalDataDTW = SqlHelper.ExecuteDataset(_ccnDTW, CommandType.Text, queryDTW, dtwParameters.ToArray());
+                    evalDataCDC = SqlHelper.ExecuteDataset(_ccnCDC, CommandType.StoredProcedure, queryCDC, cdcParameters.ToArray());
 
                     int cdcCount = evalDataCDC.Tables[0].DefaultView.ToTable(true, "BSEG_ID").Rows.Count;
                     int dtwCount = Convert.ToInt32(evalDataDTW.Tables[0].Rows[0][0]);

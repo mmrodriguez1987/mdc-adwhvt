@@ -67,9 +67,7 @@ namespace Tools.Communication
                     from: fromPhone,
                     to:  toPhone,
                     message: message
-                );
-
-                Console.WriteLine(sendResult.MessageId.ToString());
+                );                
                 return "";
             }
             catch (Exception e)

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Tools
+namespace Tools.MathOperations
 {
     /// <summary>
     /// Clase que Administra la libreria de Matematicas propia de la compania
