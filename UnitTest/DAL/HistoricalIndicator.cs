@@ -55,13 +55,13 @@ namespace UnitTest.DAL
             string sCommand = "INSERT INTO HistoricalIndicators(" +
                 "entityName, columnName, distinctCountVal, newCountVal, updatedCountVal, maxVal, minVal, calculatedDate, isActive) VALUES " +
                 "(@entityName, @columnName, @distinctCountVal, @newCountVal, @updatedCountVal, @maxVal, @minVal, @calculatedDate, @isActive) " +
-                "SELECT @nID = nID FROM HistoricalIndicators WHERE ID=@ID";
+                "SELECT @ID = ID FROM HistoricalIndicators WHERE ID=@ID";
             
             SqlParameter[] param = new SqlParameter[10];
 
             try
             {
-                param[0] = new SqlParameter("@nID", SqlDbType.BigInt);
+                param[0] = new SqlParameter("@ID", SqlDbType.BigInt);
                 param[0].Direction = ParameterDirection.Output;
 
                 param[1] = new SqlParameter("@entityName", SqlDbType.VarChar);
@@ -70,11 +70,11 @@ namespace UnitTest.DAL
 
                 param[2] = new SqlParameter("@columnName", SqlDbType.VarChar);
                 param[2].Direction = ParameterDirection.Input;
-                param[3].Value = Convert.ToInt64(_columnName);
+                param[2].Value = Convert.ToString(_columnName);
 
                 param[3] = new SqlParameter("@distinctCountVal", SqlDbType.BigInt);
                 param[3].Direction = ParameterDirection.Input;
-                param[3].Value = Convert.ToInt64(_columnName);
+                param[3].Value = Convert.ToInt64(_distinctCountVal);
 
                 param[4] = new SqlParameter("@newCountVal", SqlDbType.BigInt);
                 param[4].Direction = ParameterDirection.Input;
@@ -98,10 +98,10 @@ namespace UnitTest.DAL
 
                 param[9] = new SqlParameter("@isActive", SqlDbType.Bit);
                 param[9].Direction = ParameterDirection.Input;
-                param[9].Value = Convert.ToInt16(_isActive);
+                param[9].Value = Convert.ToBoolean(_isActive);
 
                 int ReturnValue = SqlHelper.ExecuteNonQuery(_ccn, CommandType.Text, sCommand, param);
-                _ID = Convert.ToInt64(param[0].Value);
+                
             }
             catch (Exception ex)
             {

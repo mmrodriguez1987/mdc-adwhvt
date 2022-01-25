@@ -35,7 +35,7 @@ namespace UnitTest.DAL
                 "@testResultID, @affected_keys_array, @affected_key_name, @dbName)" +
                 "SELECT @nID = nID FROM TestResultsDetail WHERE ID=@ID";
 
-            SqlParameter[] param = new SqlParameter[4];
+            SqlParameter[] param = new SqlParameter[5];
 
             try
             {

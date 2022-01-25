@@ -38,8 +38,8 @@ namespace UnitTest
             //conexions
             _BITEAM = new string[] {
                 conf.GetValue<string>("PrjVar:TO_DEV1_PHONE_NUMBER").ToString(),
-                conf.GetValue<string>("PrjVar:TO_DEV2_PHONE_NUMBER").ToString(),
-                conf.GetValue<string>("PrjVar:TO_DEV3_PHONE_NUMBER").ToString()
+                //conf.GetValue<string>("PrjVar:TO_DEV2_PHONE_NUMBER").ToString(),
+                //conf.GetValue<string>("PrjVar:TO_DEV3_PHONE_NUMBER").ToString()
              };
             _dataWarehouseCCN = conf.GetConnectionString("DTWttdpConnection");
             _CdcCCN = conf.GetConnectionString("CDCProdConnection");

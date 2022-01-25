@@ -112,6 +112,7 @@ namespace UnitTest.Model.DataWarehouse
                     _test.IniEvalDate = startDate;
                     _test.EndEvalDate = endDate;
                     _test.EffectDate = endDate;
+                    _test.IsActive = true;
                     _test.insert();
 
                     // if there re any error on recording db
@@ -206,6 +207,7 @@ namespace UnitTest.Model.DataWarehouse
                     _test.IniEvalDate = startDate;
                     _test.EndEvalDate = endDate;
                     _test.EffectDate = endDate;
+                    _test.IsActive = true;
                     _test.insert();
 
                     // if there re any error on recording db
@@ -302,6 +304,7 @@ namespace UnitTest.Model.DataWarehouse
                     _test.IniEvalDate = startDate;
                     _test.EndEvalDate = endDate;
                     _test.EffectDate = endDate;
+                    _test.IsActive = true;
                     _test.insert();
 
                     // if there re any error on recording db
@@ -381,6 +384,7 @@ namespace UnitTest.Model.DataWarehouse
                     _test.IniEvalDate = startDate;
                     _test.EndEvalDate = endDate;
                     _test.EffectDate = endDate;
+                    _test.IsActive = true;
                     _test.insert();
 
                     // if there re any error on recording db
@@ -490,6 +494,7 @@ namespace UnitTest.Model.DataWarehouse
                     _test.IniEvalDate = evalDate;
                     _test.EndEvalDate = evalDate;
                     _test.EffectDate = evalDate;
+                    _test.IsActive = true;  
                     _test.insert();
 
                     // if there re any error on recording db
@@ -511,7 +516,10 @@ namespace UnitTest.Model.DataWarehouse
             });
         }
 
-
+        /// <summary>
+        /// Record the indicators
+        /// </summary>
+        /// <returns></returns>
         public Task<DataSet> recordIndicators()
         {
             myResponse = Extensions.getResponseStructure("RecordingIndicators");

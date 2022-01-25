@@ -22,7 +22,7 @@ namespace UnitTest.DAL
             _countCDC = -1;
             _countDTW = -1;
             _error = String.Empty;
-            _ccnValTest = String.Empty;
+            _ccnValTest = ccnValTest;
             _entity = String.Empty;
             _result = String.Empty;
             _queryCDC = String.Empty;
@@ -52,14 +52,14 @@ namespace UnitTest.DAL
         public void insert()
         {
             string sCommand = "INSERT INTO TestResults (stateID, infoID, entity, result, iniEvalDate ,endEvalDate, countCDC, countDTW, queryCDC, queryDTW, effectDate, isActive) VALUES (" +
-                "@stateID, @infoID, @entity, @result, @iniEvalDate ,@endEvalDate, @countCDC, @countDTW, @queryCDC, @queryDTW, @effectDate, @isActive)" +
-                "SELECT @nID = nID FROM TestResults WHERE ID=@ID";
+                "@stateID, @infoID, @entity, @result, @iniEvalDate, @endEvalDate, @countCDC, @countDTW, @queryCDC, @queryDTW, @effectDate, @isActive) " +
+                "SELECT @ID = ID FROM TestResults WHERE ID=@ID";
 
-            SqlParameter[] param = new SqlParameter[11];
+            SqlParameter[] param = new SqlParameter[13];
 
             try
             {
-                param[0] = new SqlParameter("@nID", SqlDbType.BigInt);
+                param[0] = new SqlParameter("@ID", SqlDbType.BigInt);
                 param[0].Direction = ParameterDirection.Output;
 
                 param[1] = new SqlParameter("@stateID", SqlDbType.BigInt);
@@ -98,16 +98,20 @@ namespace UnitTest.DAL
                 param[9].Direction = ParameterDirection.Input;
                 param[9].Value = Convert.ToString(_queryCDC);
 
-                param[10] = new SqlParameter("@effectDate", SqlDbType.DateTime);
+                param[10] = new SqlParameter("@queryDTW", SqlDbType.VarChar);
                 param[10].Direction = ParameterDirection.Input;
-                param[10].Value = Convert.ToDateTime(_effectDate);
+                param[10].Value = Convert.ToString(_queryDTW);
 
-                param[11] = new SqlParameter("@isActive", SqlDbType.Bit);
+                param[11] = new SqlParameter("@effectDate", SqlDbType.DateTime);
                 param[11].Direction = ParameterDirection.Input;
-                param[11].Value = Convert.ToInt16(_isActive);
+                param[11].Value = Convert.ToDateTime(_effectDate);
+
+                param[12] = new SqlParameter("@isActive", SqlDbType.Bit);
+                param[12].Direction = ParameterDirection.Input;
+                param[12].Value = Convert.ToInt16(_isActive);
 
                 int ReturnValue = SqlHelper.ExecuteNonQuery(_ccnValTest, CommandType.Text, sCommand, param);
-                _ID = Convert.ToInt64(param[0].Value);
+                
             }
             catch (Exception ex)
             {
