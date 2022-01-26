@@ -19,7 +19,7 @@ namespace UnitTest.Model.DataWarehouse
         private DataSet myResponse, evalDataDTW, evalDataCDC = new DataSet();
         private CBDate ttime;
         private HistoricalIndicator _historicIndicators;
-        private TestResults _test;
+        private Result _test;
 
         /// <summary>
         /// Initialize the account class with params required
@@ -37,11 +37,10 @@ namespace UnitTest.Model.DataWarehouse
 
             //Initializa Historical Indicators Computing
             _historicIndicators = new HistoricalIndicator(_ccnValTest);
-            _historicIndicators.EntityName = "ACCT";
-            _historicIndicators.ColumnName = "ID";
-
-            _test = new TestResults(_ccnValTest);
-
+            //_historicIndicators.EntityName = "ACCT";
+            //_historicIndicators.ColumnName = "ID";
+            _historicIndicators.ColumnID = 3;
+            _test = new Result(_ccnValTest);
             queryCDC = "cdc.sp_ci_acct_ct";
             ttime = new CBDate();
 
@@ -100,13 +99,12 @@ namespace UnitTest.Model.DataWarehouse
                     logFile.writeNewOrExistingFile(myResponse.Tables[0]);
 
                     //recording on DB
-                    _test = new TestResults(_ccnValTest);
-                    _test.InfoID = 5;
+                    _test = new Result(_ccnValTest);
+                    _test.TestID = 4;
                     _test.StateID = (cdcCount != dtwCount) ? 1 : 3;
                     _test.CountCDC = cdcCount;
-                    _test.CountDTW = dtwCount;
-                    _test.Entity = "ACCT";
-                    _test.Result = (cdcCount != dtwCount) ? "Unique ACCT_ID counts on both sides are different" : "Distinct ACCT_ID counts on both sides are congruent";
+                    _test.CountDTW = dtwCount;                   
+                    _test.Description = (cdcCount != dtwCount) ? "Unique ACCT_ID counts on both sides are different" : "Distinct ACCT_ID counts on both sides are congruent";
                     _test.QueryCDC = "EXEC " + queryCDC + " @startDate='" + startDate.ToString("yyyy-MM-dd HH:mm") + "', @endDate= '" + endDate.ToString("yyyy-MM-dd HH:mm") + "'";
                     _test.QueryDTW = interpoledQueryDTW;
                     _test.IniEvalDate = startDate;
@@ -195,13 +193,12 @@ namespace UnitTest.Model.DataWarehouse
                     logFile.writeNewOrExistingFile(myResponse.Tables[0]);
 
                     //recording on DB
-                    _test = new TestResults(_ccnValTest);
-                    _test.InfoID = 6;
+                    _test = new Result(_ccnValTest);
+                    _test.TestID = 5;
                     _test.StateID = (cdcCount != dtwCount) ? 2 : 3;
                     _test.CountCDC = cdcCount;
-                    _test.CountDTW = dtwCount;
-                    _test.Entity = "ACCT";
-                    _test.Result = (cdcCount != dtwCount) ? "New Records Counts on ACCT are different on CDC and DTWH" : "New Records Count on ACCT are congruents on CDC and DTWH";
+                    _test.CountDTW = dtwCount;                    
+                    _test.Description = (cdcCount != dtwCount) ? "New Records Counts on ACCT are different on CDC and DTWH" : "New Records Count on ACCT are congruents on CDC and DTWH";
                     _test.QueryCDC = "EXEC " + queryCDC + " @startDate='" + startDate.ToString("yyyy-MM-dd HH:mm") + "', @endDate= '" + endDate.ToString("yyyy-MM-dd HH:mm") + "'";
                     _test.QueryDTW = interpoledQueryDTW;
                     _test.IniEvalDate = startDate;
@@ -292,13 +289,12 @@ namespace UnitTest.Model.DataWarehouse
                     logFile.writeNewOrExistingFile(myResponse.Tables[0]);
 
                     //recording on DB
-                    _test = new TestResults(_ccnValTest);
-                    _test.InfoID = 7;
+                    _test = new Result(_ccnValTest);
+                    _test.TestID = 7;
                     _test.StateID = (cdcCount != dtwCount) ? 2 : 3;
                     _test.CountCDC = cdcCount;
-                    _test.CountDTW = dtwCount;
-                    _test.Entity = "ACCT";
-                    _test.Result = (cdcCount != dtwCount) ? "Updated Records Counts on ACCT are different on CDC and DTWH" : "Updated Records Count on ACCT are congruents on CDC and DTWH";
+                    _test.CountDTW = dtwCount;                   
+                    _test.Description = (cdcCount != dtwCount) ? "Updated Records Counts on ACCT are different on CDC and DTWH" : "Updated Records Count on ACCT are congruents on CDC and DTWH";
                     _test.QueryCDC = "EXEC " + queryCDC + " @startDate='" + startDate.ToString("yyyy-MM-dd HH:mm") + "', @endDate= '" + endDate.ToString("yyyy-MM-dd HH:mm") + "'";
                     _test.QueryDTW = interpoledQueryDTW;
                     _test.IniEvalDate = startDate;
@@ -374,12 +370,12 @@ namespace UnitTest.Model.DataWarehouse
                     logFile.writeNewOrExistingFile(myResponse.Tables[0]);
 
                     //recording on DB
-                    _test = new TestResults(_ccnValTest);
-                    _test.InfoID = 8;
+                    _test = new Result(_ccnValTest);
+                    _test.TestID = 8;
                     _test.StateID = (dtwCount > BU_MAX_COUNT_DISTINCT_ACCT_IDs) ? 1 : 3;                   
                     _test.CountDTW = dtwCount;
                     _test.Entity = "ACCT";
-                    _test.Result = dtwCount > BU_MAX_COUNT_DISTINCT_ACCT_IDs ? "Quantity of Distinct ACCT_ID on this Day surpassed the historical maximum." : "Ok!";                    
+                    _test.Description = dtwCount > BU_MAX_COUNT_DISTINCT_ACCT_IDs ? "Quantity of Distinct ACCT_ID on this Day surpassed the historical maximum." : "Ok!";                    
                     _test.QueryDTW = interpolatedQuery;
                     _test.IniEvalDate = startDate;
                     _test.EndEvalDate = endDate;
@@ -484,13 +480,13 @@ namespace UnitTest.Model.DataWarehouse
                     logFile.writeNewOrExistingFile(myResponse.Tables[0]);
 
                     // recording on DB
-                    _test = new TestResults(_ccnValTest);
-                    _test.InfoID = 9;
+                    _test = new Result(_ccnValTest);
+                    _test.TestID = 9;
                     _test.StateID = (Math.Abs(incremIndicator) > TOL_NUM_ON_VAR_ACCOUNT_AVER) ? 1 : 3;
                     _test.CountCDC = Convert.ToInt64(Math.Round(averCountAccount));
                     _test.CountDTW = countAccount;
                     _test.Entity = "ACCT";
-                    _test.Result = (Math.Abs(incremIndicator) > TOL_NUM_ON_VAR_ACCOUNT_AVER) ? "The Acount Count is out of Teen Days Average Range " : "The Acount Count is into the Teen Days Average Range ";                   
+                    _test.Description = (Math.Abs(incremIndicator) > TOL_NUM_ON_VAR_ACCOUNT_AVER) ? "The Acount Count is out of Teen Days Average Range " : "The Acount Count is into the Teen Days Average Range ";                   
                     _test.IniEvalDate = evalDate;
                     _test.EndEvalDate = evalDate;
                     _test.EffectDate = evalDate;
