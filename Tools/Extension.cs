@@ -127,5 +127,18 @@ namespace Tools.DataConversion
             dsResult.Tables.Add(TestResult);
             return dsResult;
         }
+
+        public static DataSet getResponseEnviromentInfoStructure(String dataTableName)
+        {
+            DataSet dsResult = new DataSet("dsResults");
+            DataTable rs = new DataTable(dataTableName);
+
+            rs.Columns.Add("State");
+            rs.Columns.Add("Variable");
+            rs.Columns.Add("Description");
+            rs.Columns.Add("Value"); 
+            dsResult.Tables.Add(rs);
+            return dsResult;
+        }
     }
 }

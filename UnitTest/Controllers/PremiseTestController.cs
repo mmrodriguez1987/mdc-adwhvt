@@ -34,18 +34,18 @@ namespace UnitTest.Controllers
         [HttpGet]
         public async Task<IActionResult> Get()
         {
-            mySMS = new SMS(gbl.CCN_ACS);
+            mySMS = new SMS(gbl.CcnAzureCommunicSrvs);
 
-            Premise prem = new Premise(gbl.CCN_DTWH, gbl.CCN_CDC, testFileName);
+            Premise prem = new Premise(gbl.CcnDatawareHouse, gbl.CcnCDC, testFileName);
 
             dsResult = Extensions.getResponseStructure("");
             finalResultDS = Extensions.getResponseStructure("PremiseTestResult");
           
             //Validation: Get Premise Count
-            dsResult = await prem.UniquePremisesCount(gbl.startDate, gbl.endDate);
+            dsResult = await prem.UniquePremisesCount(gbl.StartDate, gbl.EndDate);
             finalResultDS.Tables[0].ImportRow(dsResult.Tables[0].Rows[0]);
             if (dsResult.Tables[0].Rows[0][0].ToString() == "Warning" || dsResult.Tables[0].Rows[0][0].ToString() == "Failed")
-                mySMS.SendSMS(gbl.PH_FROM, gbl.PH_BITEAM, dsResult.Tables[0].Rows[0][11].ToString());
+                mySMS.SendSMS(gbl.FromPhNumbAlert, gbl.BiTeamPhoneNumbers, dsResult.Tables[0].Rows[0][11].ToString());
 
 
             _log.LogInformation("End of the Premise Count Test at: " + DateTime.Now.ToString());

@@ -36,17 +36,17 @@ namespace UnitTest.Controllers
         [HttpGet]
         public async Task<IActionResult> Get()
         {
-            mySMS = new SMS(gbl.CCN_ACS);
-            BillSegment bst = new BillSegment(gbl.CCN_DTWH, gbl.CCN_CDC, testFileName);
+            mySMS = new SMS(gbl.CcnAzureCommunicSrvs);
+            BillSegment bst = new BillSegment(gbl.CcnDatawareHouse, gbl.CcnCDC, testFileName);
 
             dsResult = Extensions.getResponseStructure("");
             finalResultDS = Extensions.getResponseStructure("GlobalTestResult");
 
             //Validation: Get Count of Bill Segment and comparei
-            dsResult = await bst.UniqueBillSegmentCount(gbl.startDate, gbl.endDate);
+            dsResult = await bst.UniqueBillSegmentCount(gbl.StartDate, gbl.EndDate);
             finalResultDS.Tables[0].ImportRow(dsResult.Tables[0].Rows[0]);
             if (dsResult.Tables[0].Rows[0][0].ToString() == "Warning" || dsResult.Tables[0].Rows[0][0].ToString() == "Failed")
-                mySMS.SendSMS(gbl.PH_FROM, gbl.PH_BITEAM, dsResult.Tables[0].Rows[0][11].ToString());
+                mySMS.SendSMS(gbl.FromPhNumbAlert, gbl.BiTeamPhoneNumbers, dsResult.Tables[0].Rows[0][11].ToString());
 
 
 

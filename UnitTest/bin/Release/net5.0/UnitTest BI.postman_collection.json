@@ -10,6 +10,20 @@
 			"item": [
 				{
 					"name": "Incr-PROD-ACCT",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status test\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"    pm.response.to.not.have.jsonBody(\"error\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "GET",
 						"header": [],
@@ -55,6 +69,20 @@
 				},
 				{
 					"name": "Incr-PROD-BSEG",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status test\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"    pm.response.to.not.have.jsonBody(\"error\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "GET",
 						"header": [],
@@ -100,6 +128,20 @@
 				},
 				{
 					"name": "Incr-PROD-BSEG_CALC",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status test\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"    pm.response.to.not.have.jsonBody(\"error\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "GET",
 						"header": [],
@@ -145,6 +187,20 @@
 				},
 				{
 					"name": "Incr-PROD-BSEG_CALC_LN",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status test\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"    pm.response.to.not.have.jsonBody(\"error\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "GET",
 						"header": [],
@@ -190,6 +246,20 @@
 				},
 				{
 					"name": "Incr-PROD-BSEG_SQ",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status test\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"    pm.response.to.not.have.jsonBody(\"error\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "GET",
 						"header": [],
@@ -235,11 +305,25 @@
 				},
 				{
 					"name": "Incr-PROD-CAL_PERIOD",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status test\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"    pm.response.to.not.have.jsonBody(\"error\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://{{servername}}/api/IncrLoadTest?tableIdentifier=CAL_PERIOD&enviroment=PROD&startDate={{initDate}}&endDate={{endDate}}&adfNewRowsCount=100&adfUpdatedRowsCount=100",
+							"raw": "http://{{servername}}/api/IncrLoadTest?tableIdentifier=CAL_PERIOD&enviroment=PROD&startDate={{initialDate}}&endDate={{endDate}}&adfNewRowsCount=100&adfUpdatedRowsCount=100",
 							"protocol": "http",
 							"host": [
 								"{{servername}}"
@@ -259,7 +343,7 @@
 								},
 								{
 									"key": "startDate",
-									"value": "{{initDate}}"
+									"value": "{{initialDate}}"
 								},
 								{
 									"key": "endDate",
@@ -280,11 +364,25 @@
 				},
 				{
 					"name": "Incr-PROD-FT",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status test\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"    pm.response.to.not.have.jsonBody(\"error\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://{{servername}}/api/IncrLoadTest?tableIdentifier=FT&enviroment=PROD&startDate={{initDate}}&endDate={{endDate}}&adfNewRowsCount=100&adfUpdatedRowsCount=100",
+							"raw": "http://{{servername}}/api/IncrLoadTest?tableIdentifier=FT&enviroment=PROD&startDate={{initialDate}}&endDate={{endDate}}&adfNewRowsCount=100&adfUpdatedRowsCount=100",
 							"protocol": "http",
 							"host": [
 								"{{servername}}"
@@ -304,7 +402,7 @@
 								},
 								{
 									"key": "startDate",
-									"value": "{{initDate}}"
+									"value": "{{initialDate}}"
 								},
 								{
 									"key": "endDate",
@@ -325,11 +423,25 @@
 				},
 				{
 					"name": "Incr-PROD-PER",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status test\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"    pm.response.to.not.have.jsonBody(\"error\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://{{servername}}/api/IncrLoadTest?tableIdentifier=PER&enviroment=PROD&startDate={{initDate}}&endDate={{endDate}}&adfNewRowsCount=100&adfUpdatedRowsCount=100",
+							"raw": "http://{{servername}}/api/IncrLoadTest?tableIdentifier=PER&enviroment=PROD&startDate={{initialDate}}&endDate={{endDate}}&adfNewRowsCount=100&adfUpdatedRowsCount=100",
 							"protocol": "http",
 							"host": [
 								"{{servername}}"
@@ -349,7 +461,7 @@
 								},
 								{
 									"key": "startDate",
-									"value": "{{initDate}}"
+									"value": "{{initialDate}}"
 								},
 								{
 									"key": "endDate",
@@ -370,11 +482,25 @@
 				},
 				{
 					"name": "Incr-PROD-UOM",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status test\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"    pm.response.to.not.have.jsonBody(\"error\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://{{servername}}/api/IncrLoadTest?tableIdentifier=UOM&enviroment=PROD&startDate={{initDate}}&endDate={{endDate}}&adfNewRowsCount=100&adfUpdatedRowsCount=100",
+							"raw": "http://{{servername}}/api/IncrLoadTest?tableIdentifier=UOM&enviroment=PROD&startDate={{initialDate}}&endDate={{endDate}}&adfNewRowsCount=100&adfUpdatedRowsCount=100",
 							"protocol": "http",
 							"host": [
 								"{{servername}}"
@@ -394,7 +520,7 @@
 								},
 								{
 									"key": "startDate",
-									"value": "{{initDate}}"
+									"value": "{{initialDate}}"
 								},
 								{
 									"key": "endDate",
@@ -415,11 +541,25 @@
 				},
 				{
 					"name": "Incr-PROD-PREM",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status test\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"    pm.response.to.not.have.jsonBody(\"error\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://{{servername}}/api/IncrLoadTest?tableIdentifier=PREM&enviroment=PROD&startDate={{initDate}}&endDate={{endDate}}&adfNewRowsCount=100&adfUpdatedRowsCount=100",
+							"raw": "http://{{servername}}/api/IncrLoadTest?tableIdentifier=PREM&enviroment=PROD&startDate={{initialDate}}&endDate={{endDate}}&adfNewRowsCount=100&adfUpdatedRowsCount=100",
 							"protocol": "http",
 							"host": [
 								"{{servername}}"
@@ -439,7 +579,7 @@
 								},
 								{
 									"key": "startDate",
-									"value": "{{initDate}}"
+									"value": "{{initialDate}}"
 								},
 								{
 									"key": "endDate",
@@ -460,11 +600,25 @@
 				},
 				{
 					"name": "Incr-PROD-RS",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status test\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"    pm.response.to.not.have.jsonBody(\"error\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://{{servername}}/api/IncrLoadTest?tableIdentifier=RS&enviroment=PROD&startDate={{initDate}}&endDate={{endDate}}&adfNewRowsCount=100&adfUpdatedRowsCount=100",
+							"raw": "http://{{servername}}/api/IncrLoadTest?tableIdentifier=RS&enviroment=PROD&startDate={{initialDate}}&endDate={{endDate}}&adfNewRowsCount=100&adfUpdatedRowsCount=100",
 							"protocol": "http",
 							"host": [
 								"{{servername}}"
@@ -484,7 +638,7 @@
 								},
 								{
 									"key": "startDate",
-									"value": "{{initDate}}"
+									"value": "{{initialDate}}"
 								},
 								{
 									"key": "endDate",
@@ -505,11 +659,25 @@
 				},
 				{
 					"name": "Incr-PROD-SA",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status test\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"    pm.response.to.not.have.jsonBody(\"error\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://{{servername}}/api/IncrLoadTest?tableIdentifier=SA&enviroment=PROD&startDate={{initDate}}&endDate={{endDate}}&adfNewRowsCount=100&adfUpdatedRowsCount=100",
+							"raw": "http://{{servername}}/api/IncrLoadTest?tableIdentifier=SA&enviroment=PROD&startDate={{initialDate}}&endDate={{endDate}}&adfNewRowsCount=100&adfUpdatedRowsCount=100",
 							"protocol": "http",
 							"host": [
 								"{{servername}}"
@@ -529,7 +697,7 @@
 								},
 								{
 									"key": "startDate",
-									"value": "{{initDate}}"
+									"value": "{{initialDate}}"
 								},
 								{
 									"key": "endDate",
@@ -550,11 +718,25 @@
 				},
 				{
 					"name": "Incr-PROD-SQI",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status test\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"    pm.response.to.not.have.jsonBody(\"error\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://{{servername}}/api/IncrLoadTest?tableIdentifier=SQI&enviroment=PROD&startDate={{initDate}}&endDate={{endDate}}&adfNewRowsCount=100&adfUpdatedRowsCount=100",
+							"raw": "http://{{servername}}/api/IncrLoadTest?tableIdentifier=SQI&enviroment=PROD&startDate={{initialDate}}&endDate={{endDate}}&adfNewRowsCount=100&adfUpdatedRowsCount=100",
 							"protocol": "http",
 							"host": [
 								"{{servername}}"
@@ -574,7 +756,7 @@
 								},
 								{
 									"key": "startDate",
-									"value": "{{initDate}}"
+									"value": "{{initialDate}}"
 								},
 								{
 									"key": "endDate",
@@ -595,11 +777,25 @@
 				},
 				{
 					"name": "Incr-STGE-ACCT",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status test\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"    pm.response.to.not.have.jsonBody(\"error\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://{{servername}}/api/IncrLoadTest?tableIdentifier=ACCT&enviroment=STGE&startDate={{initDate}}&endDate={{endDate}}&adfNewRowsCount=100&adfUpdatedRowsCount=100",
+							"raw": "http://{{servername}}/api/IncrLoadTest?tableIdentifier=ACCT&enviroment=STGE&startDate={{initialDate}}&endDate={{endDate}}&adfNewRowsCount=100&adfUpdatedRowsCount=100",
 							"protocol": "http",
 							"host": [
 								"{{servername}}"
@@ -619,7 +815,7 @@
 								},
 								{
 									"key": "startDate",
-									"value": "{{initDate}}"
+									"value": "{{initialDate}}"
 								},
 								{
 									"key": "endDate",
@@ -640,11 +836,25 @@
 				},
 				{
 					"name": "Incr-STGE-BSEG",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status test\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"    pm.response.to.not.have.jsonBody(\"error\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://{{servername}}/api/IncrLoadTest?tableIdentifier=BSEG&enviroment=STGE&startDate={{initDate}}&endDate={{endDate}}&adfNewRowsCount=100&adfUpdatedRowsCount=100",
+							"raw": "http://{{servername}}/api/IncrLoadTest?tableIdentifier=BSEG&enviroment=STGE&startDate={{initialDate}}&endDate={{endDate}}&adfNewRowsCount=100&adfUpdatedRowsCount=100",
 							"protocol": "http",
 							"host": [
 								"{{servername}}"
@@ -664,7 +874,7 @@
 								},
 								{
 									"key": "startDate",
-									"value": "{{initDate}}"
+									"value": "{{initialDate}}"
 								},
 								{
 									"key": "endDate",
@@ -685,11 +895,25 @@
 				},
 				{
 					"name": "Incr-STGE-BSEG_CALC",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status test\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"    pm.response.to.not.have.jsonBody(\"error\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://{{servername}}/api/IncrLoadTest?tableIdentifier=BSEG_CALC&enviroment=STGE&startDate={{initDate}}&endDate={{endDate}}&adfNewRowsCount=100&adfUpdatedRowsCount=100",
+							"raw": "http://{{servername}}/api/IncrLoadTest?tableIdentifier=BSEG_CALC&enviroment=STGE&startDate={{initialDate}}&endDate={{endDate}}&adfNewRowsCount=100&adfUpdatedRowsCount=100",
 							"protocol": "http",
 							"host": [
 								"{{servername}}"
@@ -709,7 +933,7 @@
 								},
 								{
 									"key": "startDate",
-									"value": "{{initDate}}"
+									"value": "{{initialDate}}"
 								},
 								{
 									"key": "endDate",
@@ -730,11 +954,25 @@
 				},
 				{
 					"name": "Incr-STGE-BSEG_CALC_LN",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status test\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"    pm.response.to.not.have.jsonBody(\"error\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://{{servername}}/api/IncrLoadTest?tableIdentifier=BSEG_CALC_LN&enviroment=STGE&startDate={{initDate}}&endDate={{endDate}}&adfNewRowsCount=100&adfUpdatedRowsCount=100",
+							"raw": "http://{{servername}}/api/IncrLoadTest?tableIdentifier=BSEG_CALC_LN&enviroment=STGE&startDate={{initialDate}}&endDate={{endDate}}&adfNewRowsCount=100&adfUpdatedRowsCount=100",
 							"protocol": "http",
 							"host": [
 								"{{servername}}"
@@ -754,7 +992,7 @@
 								},
 								{
 									"key": "startDate",
-									"value": "{{initDate}}"
+									"value": "{{initialDate}}"
 								},
 								{
 									"key": "endDate",
@@ -775,11 +1013,25 @@
 				},
 				{
 					"name": "Incr-STGE-BSEG_SQ",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status test\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"    pm.response.to.not.have.jsonBody(\"error\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://{{servername}}/api/IncrLoadTest?tableIdentifier=BSEG_SQ&enviroment=STGE&startDate={{initDate}}&endDate={{endDate}}&adfNewRowsCount=100&adfUpdatedRowsCount=100",
+							"raw": "http://{{servername}}/api/IncrLoadTest?tableIdentifier=BSEG_SQ&enviroment=STGE&startDate={{initialDate}}&endDate={{endDate}}&adfNewRowsCount=100&adfUpdatedRowsCount=100",
 							"protocol": "http",
 							"host": [
 								"{{servername}}"
@@ -799,7 +1051,7 @@
 								},
 								{
 									"key": "startDate",
-									"value": "{{initDate}}"
+									"value": "{{initialDate}}"
 								},
 								{
 									"key": "endDate",
@@ -820,11 +1072,25 @@
 				},
 				{
 					"name": "Incr-STGE-CAL_PERIOD",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status test\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"    pm.response.to.not.have.jsonBody(\"error\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://{{servername}}/api/IncrLoadTest?tableIdentifier=CAL_PERIOD&enviroment=STGE&startDate={{initDate}}&endDate={{endDate}}&adfNewRowsCount=100&adfUpdatedRowsCount=100",
+							"raw": "http://{{servername}}/api/IncrLoadTest?tableIdentifier=CAL_PERIOD&enviroment=STGE&startDate={{initialDate}}&endDate={{endDate}}&adfNewRowsCount=100&adfUpdatedRowsCount=100",
 							"protocol": "http",
 							"host": [
 								"{{servername}}"
@@ -844,7 +1110,7 @@
 								},
 								{
 									"key": "startDate",
-									"value": "{{initDate}}"
+									"value": "{{initialDate}}"
 								},
 								{
 									"key": "endDate",
@@ -865,11 +1131,25 @@
 				},
 				{
 					"name": "Incr-STGE-FT",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status test\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"    pm.response.to.not.have.jsonBody(\"error\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://{{servername}}/api/IncrLoadTest?tableIdentifier=FT&enviroment=STGE&startDate={{initDate}}&endDate={{endDate}}&adfNewRowsCount=100&adfUpdatedRowsCount=100",
+							"raw": "http://{{servername}}/api/IncrLoadTest?tableIdentifier=FT&enviroment=STGE&startDate={{initialDate}}&endDate={{endDate}}&adfNewRowsCount=100&adfUpdatedRowsCount=100",
 							"protocol": "http",
 							"host": [
 								"{{servername}}"
@@ -889,7 +1169,7 @@
 								},
 								{
 									"key": "startDate",
-									"value": "{{initDate}}"
+									"value": "{{initialDate}}"
 								},
 								{
 									"key": "endDate",
@@ -910,11 +1190,25 @@
 				},
 				{
 					"name": "Incr-STGE-PER",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status test\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"    pm.response.to.not.have.jsonBody(\"error\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://{{servername}}/api/IncrLoadTest?tableIdentifier=PER&enviroment=STGE&startDate={{initDate}}&endDate={{endDate}}&adfNewRowsCount=100&adfUpdatedRowsCount=100",
+							"raw": "http://{{servername}}/api/IncrLoadTest?tableIdentifier=PER&enviroment=STGE&startDate={{initialDate}}&endDate={{endDate}}&adfNewRowsCount=100&adfUpdatedRowsCount=100",
 							"protocol": "http",
 							"host": [
 								"{{servername}}"
@@ -934,7 +1228,7 @@
 								},
 								{
 									"key": "startDate",
-									"value": "{{initDate}}"
+									"value": "{{initialDate}}"
 								},
 								{
 									"key": "endDate",
@@ -955,11 +1249,25 @@
 				},
 				{
 					"name": "Incr-STGE-SA",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status test\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"    pm.response.to.not.have.jsonBody(\"error\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://{{servername}}/api/IncrLoadTest?tableIdentifier=SA&enviroment=STGE&startDate={{initDate}}&endDate={{endDate}}&adfNewRowsCount=100&adfUpdatedRowsCount=100",
+							"raw": "http://{{servername}}/api/IncrLoadTest?tableIdentifier=SA&enviroment=STGE&startDate={{initialDate}}&endDate={{endDate}}&adfNewRowsCount=100&adfUpdatedRowsCount=100",
 							"protocol": "http",
 							"host": [
 								"{{servername}}"
@@ -979,7 +1287,7 @@
 								},
 								{
 									"key": "startDate",
-									"value": "{{initDate}}"
+									"value": "{{initialDate}}"
 								},
 								{
 									"key": "endDate",
@@ -1000,11 +1308,25 @@
 				},
 				{
 					"name": "Incr-STGE-SQI",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status test\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"    pm.response.to.not.have.jsonBody(\"error\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://{{servername}}/api/IncrLoadTest?tableIdentifier=SQI&enviroment=STGE&startDate={{initDate}}&endDate={{endDate}}&adfNewRowsCount=100&adfUpdatedRowsCount=100",
+							"raw": "http://{{servername}}/api/IncrLoadTest?tableIdentifier=SQI&enviroment=STGE&startDate={{initialDate}}&endDate={{endDate}}&adfNewRowsCount=100&adfUpdatedRowsCount=100",
 							"protocol": "http",
 							"host": [
 								"{{servername}}"
@@ -1024,7 +1346,7 @@
 								},
 								{
 									"key": "startDate",
-									"value": "{{initDate}}"
+									"value": "{{initialDate}}"
 								},
 								{
 									"key": "endDate",
@@ -1045,11 +1367,25 @@
 				},
 				{
 					"name": "Incr-STGE-PREM",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status test\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"    pm.response.to.not.have.jsonBody(\"error\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://{{servername}}/api/IncrLoadTest?tableIdentifier=PREM&enviroment=STGE&startDate={{initDate}}&endDate={{endDate}}&adfNewRowsCount=100&adfUpdatedRowsCount=100",
+							"raw": "http://{{servername}}/api/IncrLoadTest?tableIdentifier=PREM&enviroment=STGE&startDate={{initialDate}}&endDate={{endDate}}&adfNewRowsCount=100&adfUpdatedRowsCount=100",
 							"protocol": "http",
 							"host": [
 								"{{servername}}"
@@ -1069,7 +1405,7 @@
 								},
 								{
 									"key": "startDate",
-									"value": "{{initDate}}"
+									"value": "{{initialDate}}"
 								},
 								{
 									"key": "endDate",
@@ -1090,11 +1426,25 @@
 				},
 				{
 					"name": "Incr-STGE-RS",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status test\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"    pm.response.to.not.have.jsonBody(\"error\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://{{servername}}/api/IncrLoadTest?tableIdentifier=RS&enviroment=STGE&startDate={{initDate}}&endDate={{endDate}}&adfNewRowsCount=100&adfUpdatedRowsCount=100",
+							"raw": "http://{{servername}}/api/IncrLoadTest?tableIdentifier=RS&enviroment=STGE&startDate={{initialDate}}&endDate={{endDate}}&adfNewRowsCount=100&adfUpdatedRowsCount=100",
 							"protocol": "http",
 							"host": [
 								"{{servername}}"
@@ -1114,7 +1464,7 @@
 								},
 								{
 									"key": "startDate",
-									"value": "{{initDate}}"
+									"value": "{{initialDate}}"
 								},
 								{
 									"key": "endDate",
@@ -1135,11 +1485,25 @@
 				},
 				{
 					"name": "Incr-STGE-UOM",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status test\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"    pm.response.to.not.have.jsonBody(\"error\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://{{servername}}/api/IncrLoadTest?tableIdentifier=UOM&enviroment=STGE&startDate={{initDate}}&endDate={{endDate}}&adfNewRowsCount=100&adfUpdatedRowsCount=100",
+							"raw": "http://{{servername}}/api/IncrLoadTest?tableIdentifier=UOM&enviroment=STGE&startDate={{initialDate}}&endDate={{endDate}}&adfNewRowsCount=100&adfUpdatedRowsCount=100",
 							"protocol": "http",
 							"host": [
 								"{{servername}}"
@@ -1159,7 +1523,7 @@
 								},
 								{
 									"key": "startDate",
-									"value": "{{initDate}}"
+									"value": "{{initialDate}}"
 								},
 								{
 									"key": "endDate",
@@ -1185,6 +1549,20 @@
 			"item": [
 				{
 					"name": "Init-STGE-UOM",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status test\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"    pm.response.to.not.have.jsonBody(\"error\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "GET",
 						"header": [],
@@ -1224,6 +1602,20 @@
 				},
 				{
 					"name": "Init-STGE-FISCAL_CAL",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status test\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"    pm.response.to.not.have.jsonBody(\"error\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "GET",
 						"header": [],
@@ -1263,6 +1655,20 @@
 				},
 				{
 					"name": "Init-STGE-ACCT",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status test\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"    pm.response.to.not.have.jsonBody(\"error\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "GET",
 						"header": [],
@@ -1302,6 +1708,20 @@
 				},
 				{
 					"name": "Init-STGE-ADDR",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status test\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"    pm.response.to.not.have.jsonBody(\"error\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "GET",
 						"header": [],
@@ -1341,6 +1761,20 @@
 				},
 				{
 					"name": "Init-STGE-PREM",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status test\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"    pm.response.to.not.have.jsonBody(\"error\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "GET",
 						"header": [],
@@ -1380,6 +1814,20 @@
 				},
 				{
 					"name": "Init-STGE-RATE",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status test\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"    pm.response.to.not.have.jsonBody(\"error\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "GET",
 						"header": [],
@@ -1419,6 +1867,20 @@
 				},
 				{
 					"name": "Init-STGE-SA",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status test\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"    pm.response.to.not.have.jsonBody(\"error\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "GET",
 						"header": [],
@@ -1458,6 +1920,20 @@
 				},
 				{
 					"name": "Init-STGE-PER",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status test\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"    pm.response.to.not.have.jsonBody(\"error\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "GET",
 						"header": [],
@@ -1497,6 +1973,20 @@
 				},
 				{
 					"name": "Init-STGE-SQI",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status test\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"    pm.response.to.not.have.jsonBody(\"error\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "GET",
 						"header": [],
@@ -1536,6 +2026,20 @@
 				},
 				{
 					"name": "Init-PROD-UOM",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status test\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"    pm.response.to.not.have.jsonBody(\"error\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "GET",
 						"header": [],
@@ -1575,6 +2079,20 @@
 				},
 				{
 					"name": "Init-PROD-FISCAL_CAL",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status test\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"    pm.response.to.not.have.jsonBody(\"error\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "GET",
 						"header": [],
@@ -1614,6 +2132,20 @@
 				},
 				{
 					"name": "Init-PROD-ACCT",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status test\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"    pm.response.to.not.have.jsonBody(\"error\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "GET",
 						"header": [],
@@ -1653,6 +2185,20 @@
 				},
 				{
 					"name": "Init-PROD-ADDR",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status test\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"    pm.response.to.not.have.jsonBody(\"error\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "GET",
 						"header": [],
@@ -1692,6 +2238,20 @@
 				},
 				{
 					"name": "Init-PROD-PREM",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status test\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"    pm.response.to.not.have.jsonBody(\"error\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "GET",
 						"header": [],
@@ -1731,6 +2291,20 @@
 				},
 				{
 					"name": "Init-PROD-RATE",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status test\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"    pm.response.to.not.have.jsonBody(\"error\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "GET",
 						"header": [],
@@ -1770,6 +2344,20 @@
 				},
 				{
 					"name": "Init-PROD-SA",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status test\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"    pm.response.to.not.have.jsonBody(\"error\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "GET",
 						"header": [],
@@ -1809,6 +2397,20 @@
 				},
 				{
 					"name": "Init-PROD-PER",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status test\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"    pm.response.to.not.have.jsonBody(\"error\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "GET",
 						"header": [],
@@ -1848,6 +2450,20 @@
 				},
 				{
 					"name": "Init-PROD-SQI",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status test\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"    pm.response.to.not.have.jsonBody(\"error\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "GET",
 						"header": [],
@@ -1887,6 +2503,20 @@
 				},
 				{
 					"name": "Init-RPTS-UOM",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status test\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"    pm.response.to.not.have.jsonBody(\"error\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "GET",
 						"header": [],
@@ -1926,6 +2556,20 @@
 				},
 				{
 					"name": "Init-RPTS-RATE",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status test\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"    pm.response.to.not.have.jsonBody(\"error\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "GET",
 						"header": [],
@@ -1965,6 +2609,20 @@
 				},
 				{
 					"name": "Init-RPTS-PREM",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status test\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"    pm.response.to.not.have.jsonBody(\"error\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "GET",
 						"header": [],
@@ -2004,6 +2662,20 @@
 				},
 				{
 					"name": "Init-RPTS-SA",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status test\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"    pm.response.to.not.have.jsonBody(\"error\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "GET",
 						"header": [],
@@ -2043,6 +2715,20 @@
 				},
 				{
 					"name": "Init-RPTS-ADDR",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status test\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"    pm.response.to.not.have.jsonBody(\"error\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "GET",
 						"header": [],
@@ -2082,6 +2768,20 @@
 				},
 				{
 					"name": "Init-RPTS-PER",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status test\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"    pm.response.to.not.have.jsonBody(\"error\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "GET",
 						"header": [],
@@ -2121,6 +2821,20 @@
 				},
 				{
 					"name": "Init-RPTS-FISCAL_CAL",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status test\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"    pm.response.to.not.have.jsonBody(\"error\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "GET",
 						"header": [],
@@ -2160,6 +2874,20 @@
 				},
 				{
 					"name": "Init-RPTS-SQI",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status test\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"    pm.response.to.not.have.jsonBody(\"error\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "GET",
 						"header": [],
@@ -2199,6 +2927,20 @@
 				},
 				{
 					"name": "Init-RPTS-ACCT",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status test\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"    pm.response.to.not.have.jsonBody(\"error\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "GET",
 						"header": [],
@@ -2231,6 +2973,125 @@
 									"value": "",
 									"disabled": true
 								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Data Validation Test",
+			"item": [
+				{
+					"name": "Bill Segment",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://{{servername}}/api/BillSegmentTest",
+							"protocol": "http",
+							"host": [
+								"{{servername}}"
+							],
+							"path": [
+								"api",
+								"BillSegmentTest"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Bill Usage",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://{{servername}}/api/BillUsageTest",
+							"protocol": "http",
+							"host": [
+								"{{servername}}"
+							],
+							"path": [
+								"api",
+								"BillUsageTest"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Account",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://{{servername}}/api/AccountTest",
+							"protocol": "http",
+							"host": [
+								"{{servername}}"
+							],
+							"path": [
+								"api",
+								"AccountTest"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Service Agreement",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://{{servername}}/api/ServiceAgreementTest",
+							"protocol": "http",
+							"host": [
+								"{{servername}}"
+							],
+							"path": [
+								"api",
+								"ServiceAgreementTest"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Person",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://{{servername}}/api/PersonTest",
+							"protocol": "http",
+							"host": [
+								"{{servername}}"
+							],
+							"path": [
+								"api",
+								"PersonTest"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Premise",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://{{servername}}/api/PremiseTest",
+							"protocol": "http",
+							"host": [
+								"{{servername}}"
+							],
+							"path": [
+								"api",
+								"PremiseTest"
 							]
 						}
 					},

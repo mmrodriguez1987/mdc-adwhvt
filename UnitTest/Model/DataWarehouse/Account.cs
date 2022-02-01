@@ -9,7 +9,8 @@ using Tools.DataConversion;
 using System.Linq;
 using Tools;
 using Tools.Statistics;
-using UnitTest.DAL;
+using UnitTest.Model.ValidationTest;
+using System.Threading;
 
 namespace UnitTest.Model.DataWarehouse
 {
@@ -17,9 +18,9 @@ namespace UnitTest.Model.DataWarehouse
     {
         private string _ccnDTW, _ccnCDC, _ccnValTest, _testFileName, queryCDC, queryDTW;
         private DataSet myResponse, evalDataDTW, evalDataCDC = new DataSet();
-        private CBDate ttime;
-        private HistoricalIndicator _historicIndicators;
-        private Result _test;
+        private CBDate tTime;
+        private Historical historical;
+        private TestResult results;
 
         /// <summary>
         /// Initialize the account class with params required
@@ -34,15 +35,11 @@ namespace UnitTest.Model.DataWarehouse
             _ccnCDC = ccnCDC;
             _ccnValTest = ccnValTest;
             _testFileName = testFileName;
-
             //Initializa Historical Indicators Computing
-            _historicIndicators = new HistoricalIndicator(_ccnValTest);
-            //_historicIndicators.EntityName = "ACCT";
-            //_historicIndicators.ColumnName = "ID";
-            _historicIndicators.ColumnID = 3;
-            _test = new Result(_ccnValTest);
+            historical = new Historical(ccnValTest);
+            results = new TestResult(ccnValTest);           
             queryCDC = "cdc.sp_ci_acct_ct";
-            ttime = new CBDate();
+            tTime = new CBDate();
 
         }
 
@@ -68,7 +65,7 @@ namespace UnitTest.Model.DataWarehouse
                     cdcParameters.Add(new SqlParameter("@startDate", startDate.ToString("yyyy-MM-dd HH:mm")));
                     cdcParameters.Add(new SqlParameter("@endDate", endDate.ToString("yyyy-MM-dd HH:mm")));
 
-                    dtwParameters.Add(new SqlParameter("@startDate", endDate.ToString("yyyy-MM-dd HH:mm")));
+                    dtwParameters.Add(new SqlParameter("@startDate", startDate.ToString("yyyy-MM-dd HH:mm")));
                     dtwParameters.Add(new SqlParameter("@endDate", endDate.AddHours(5).ToString("yyyy-MM-dd HH:mm")));
 
                     string interpoledQueryDTW = "SELECT COUNT(DISTINCT SRC_ACCT_ID) DTW_Count FROM dwadm2.CD_ACCT WHERE DATA_LOAD_DTTM BETWEEN '" + endDate.ToString("yyyy-MM-dd HH:mm") + "' AND '" + endDate.AddHours(5).ToString("yyyy-MM-dd HH:mm") + "'";
@@ -92,34 +89,27 @@ namespace UnitTest.Model.DataWarehouse
                     myResponse.Tables[0].Rows[0][10] = endDate.ToString("yyyy-MM-dd HH:mm");
                     myResponse.Tables[0].Rows[0][11] = "ADTWH-Validation => Test Name: " + myResponse.Tables[0].Rows[0][1].ToString() + ", Test Result: " + myResponse.Tables[0].Rows[0][0].ToString();
 
-                    _historicIndicators.CalculatedDate = startDate;
-                    _historicIndicators.DistinctCountVal = cdcCount;
+                    // 2 -SRC_ACCT_ID, 1- Distinct
+                    historical.recordHistorical(2, 1, dtwCount, endDate);
 
                     CSV logFile = new CSV(_testFileName + ".csv");
                     logFile.writeNewOrExistingFile(myResponse.Tables[0]);
 
                     //recording on DB
-                    _test = new Result(_ccnValTest);
-                    _test.TestID = 4;
-                    _test.StateID = (cdcCount != dtwCount) ? 1 : 3;
-                    _test.CountCDC = cdcCount;
-                    _test.CountDTW = dtwCount;                   
-                    _test.Description = (cdcCount != dtwCount) ? "Unique ACCT_ID counts on both sides are different" : "Distinct ACCT_ID counts on both sides are congruent";
-                    _test.QueryCDC = "EXEC " + queryCDC + " @startDate='" + startDate.ToString("yyyy-MM-dd HH:mm") + "', @endDate= '" + endDate.ToString("yyyy-MM-dd HH:mm") + "'";
-                    _test.QueryDTW = interpoledQueryDTW;
-                    _test.IniEvalDate = startDate;
-                    _test.EndEvalDate = endDate;
-                    _test.EffectDate = endDate;
-                    _test.IsActive = true;
-                    _test.insert();
+                    results.Description = (cdcCount != dtwCount) ? "Unique ACCT_ID counts on both sides are different" : "Distinct ACCT_ID counts on both sides are congruent";
+                    results.StartDate = startDate;
+                    results.EndDate = endDate;
+                    results.StateID = (short)((cdcCount != dtwCount) ? 2 : 3);
+                    results.TestDate = endDate;
+                    results.TestID = 4; // Compare Dsitinct ACCT
+                    results.recordUntitValidationTest(cdcCount, dtwCount);
 
                     // if there re any error on recording db
-                    if (!String.IsNullOrEmpty(_test.Error))
+                    if (!String.IsNullOrEmpty(results.Error))
                     {
-                        myResponse.Tables[0].Rows[0][3] = ("Error: " + _test.Error.Substring(0, 160));
-                        myResponse.Tables[0].Rows[0][11] = ("Error: " + _test.Error.Substring(0, 160));
+                        myResponse.Tables[0].Rows[0][3] = ("Error: " + results.Error.Substring(0, 160));
+                        myResponse.Tables[0].Rows[0][11] = ("Error: " + results.Error.Substring(0, 160));
                     }
-
                     return myResponse;
                 }
                 catch (Exception e)
@@ -154,7 +144,7 @@ namespace UnitTest.Model.DataWarehouse
                     cdcParameters.Add(new SqlParameter("@startDate", startDate.ToString("yyyy-MM-dd HH:mm")));
                     cdcParameters.Add(new SqlParameter("@endDate", endDate.ToString("yyyy-MM-dd HH:mm")));
 
-                    dtwParameters.Add(new SqlParameter("@startDate", endDate.ToString("yyyy-MM-dd HH:mm")));
+                    dtwParameters.Add(new SqlParameter("@startDate", startDate.ToString("yyyy-MM-dd HH:mm")));
                     dtwParameters.Add(new SqlParameter("@endDate", endDate.AddHours(5).ToString("yyyy-MM-dd HH:mm")));
 
                     string interpoledQueryDTW = "SELECT D.SRC_ACCT_ID, D.DATA_LOAD_DTTM, D.EFF_START_DTTM, D.EFF_END_DTTM FROM (SELECT SRC_ACCT_ID FROM dwadm2.CD_ACCT WHERE DATA_LOAD_DTTM BETWEEN '" + endDate.ToString("yyyy-MM-dd HH:mm") + "' AND '" + endDate.AddHours(5).ToString("yyyy-MM-dd HH:mm") + ") AS T INNER JOIN dwadm2.CD_ACCT D ON D.SRC_ACCT_ID=T.SRC_ACCT_ID";
@@ -174,7 +164,8 @@ namespace UnitTest.Model.DataWarehouse
                     int cdcCount = evalDataCDC.Tables[0].Select("toInsert=1 AND ([__$operation]=2 OR [__$operation]=4)").Length;
                     int dtwCount = NewAccountsOnDTW.Count();
 
-                    _historicIndicators.NewCountVal = cdcCount;
+                    // 2 -SRC_ACCT_ID, 1- Distinct
+                    historical.recordHistorical(2, 2, dtwCount, endDate);
 
                     myResponse.Tables[0].Rows[0][0] = (cdcCount != dtwCount) ? "Failed" : "OK!";
                     myResponse.Tables[0].Rows[0][1] = "Count of New Accounts";
@@ -192,26 +183,20 @@ namespace UnitTest.Model.DataWarehouse
                     CSV logFile = new CSV(_testFileName + ".csv");
                     logFile.writeNewOrExistingFile(myResponse.Tables[0]);
 
-                    //recording on DB
-                    _test = new Result(_ccnValTest);
-                    _test.TestID = 5;
-                    _test.StateID = (cdcCount != dtwCount) ? 2 : 3;
-                    _test.CountCDC = cdcCount;
-                    _test.CountDTW = dtwCount;                    
-                    _test.Description = (cdcCount != dtwCount) ? "New Records Counts on ACCT are different on CDC and DTWH" : "New Records Count on ACCT are congruents on CDC and DTWH";
-                    _test.QueryCDC = "EXEC " + queryCDC + " @startDate='" + startDate.ToString("yyyy-MM-dd HH:mm") + "', @endDate= '" + endDate.ToString("yyyy-MM-dd HH:mm") + "'";
-                    _test.QueryDTW = interpoledQueryDTW;
-                    _test.IniEvalDate = startDate;
-                    _test.EndEvalDate = endDate;
-                    _test.EffectDate = endDate;
-                    _test.IsActive = true;
-                    _test.insert();
+                    //recording on DB 
+                    results.Description = (cdcCount != dtwCount) ? "New Records Counts on ACCT are different on CDC and DTWH" : "New Records Count on ACCT are congruents on CDC and DTWH";
+                    results.StartDate = startDate;
+                    results.EndDate = endDate;
+                    results.StateID = (short)((cdcCount != dtwCount) ? 2 : 3);
+                    results.TestDate = endDate;
+                    results.TestID = 5; // Compare Dsitinct ACCT
+                    results.recordUntitValidationTest(cdcCount, dtwCount);
 
                     // if there re any error on recording db
-                    if (!String.IsNullOrEmpty(_test.Error))
+                    if (!String.IsNullOrEmpty(results.Error))
                     {
-                        myResponse.Tables[0].Rows[0][3] = ("Error: " + _test.Error.Substring(0, 160));
-                        myResponse.Tables[0].Rows[0][11] = ("Error: " + _test.Error.Substring(0, 160));
+                        myResponse.Tables[0].Rows[0][3] = ("Error: " + results.Error.Substring(0, 160));
+                        myResponse.Tables[0].Rows[0][11] = ("Error: " + results.Error.Substring(0, 160));
                     }
 
                     return myResponse;
@@ -248,7 +233,7 @@ namespace UnitTest.Model.DataWarehouse
                     cdcParameters.Add(new SqlParameter("@startDate", startDate.ToString("yyyy-MM-dd HH:mm")));
                     cdcParameters.Add(new SqlParameter("@endDate", endDate.ToString("yyyy-MM-dd HH:mm")));
 
-                    dtwParameters.Add(new SqlParameter("@startDate", endDate.ToString("yyyy-MM-dd HH:mm")));
+                    dtwParameters.Add(new SqlParameter("@startDate", startDate.ToString("yyyy-MM-dd HH:mm")));
                     dtwParameters.Add(new SqlParameter("@endDate", endDate.AddHours(5).ToString("yyyy-MM-dd HH:mm")));
 
                     string interpoledQueryDTW = "SELECT  D.SRC_ACCT_ID, D.DATA_LOAD_DTTM, D.EFF_START_DTTM, D.EFF_END_DTTM FROM (SELECT SRC_ACCT_ID FROM dwadm2.CD_ACCT WHERE DATA_LOAD_DTTM BETWEEN '" + endDate.ToString("yyyy-MM-dd HH:mm") + "' AND '" + endDate.AddHours(5).ToString("yyyy-MM-dd HH:mm") + ") AS T INNER JOIN dwadm2.CD_ACCT D ON D.SRC_ACCT_ID=T.SRC_ACCT_ID";
@@ -270,7 +255,8 @@ namespace UnitTest.Model.DataWarehouse
                     int cdcCount = evalDataCDC.Tables[0].Select("toInsert=0 AND [__$operation]=4").Length;
                     int dtwCount = UpdatedAccountsOnDTW.Count();
 
-                    _historicIndicators.UpdatedCountVal = cdcCount; 
+                    // 2 -SRC_ACCT_ID, 3-Updated
+                    historical.recordHistorical(2, 3, dtwCount, endDate);
 
                     myResponse.Tables[0].Rows[0][0] = (cdcCount != dtwCount) ? "Failed" : "OK!";
                     myResponse.Tables[0].Rows[0][1] = "Count of Updated Accounts";
@@ -286,31 +272,23 @@ namespace UnitTest.Model.DataWarehouse
                     myResponse.Tables[0].Rows[0][11] = "ADTWH-Validation => Test Name: " + myResponse.Tables[0].Rows[0][1].ToString() + ", Test Result: " + myResponse.Tables[0].Rows[0][0].ToString();
 
                     CSV logFile = new CSV(_testFileName + ".csv");
-                    logFile.writeNewOrExistingFile(myResponse.Tables[0]);
+                    logFile.writeNewOrExistingFile(myResponse.Tables[0]);              
 
-                    //recording on DB
-                    _test = new Result(_ccnValTest);
-                    _test.TestID = 7;
-                    _test.StateID = (cdcCount != dtwCount) ? 2 : 3;
-                    _test.CountCDC = cdcCount;
-                    _test.CountDTW = dtwCount;                   
-                    _test.Description = (cdcCount != dtwCount) ? "Updated Records Counts on ACCT are different on CDC and DTWH" : "Updated Records Count on ACCT are congruents on CDC and DTWH";
-                    _test.QueryCDC = "EXEC " + queryCDC + " @startDate='" + startDate.ToString("yyyy-MM-dd HH:mm") + "', @endDate= '" + endDate.ToString("yyyy-MM-dd HH:mm") + "'";
-                    _test.QueryDTW = interpoledQueryDTW;
-                    _test.IniEvalDate = startDate;
-                    _test.EndEvalDate = endDate;
-                    _test.EffectDate = endDate;
-                    _test.IsActive = true;
-                    _test.insert();
+                    
+                    results.Description = (cdcCount != dtwCount) ? "Updated Records Counts on ACCT are different on CDC and DTWH" : "Updated Records Count on ACCT are congruents on CDC and DTWH";
+                    results.StartDate = startDate;
+                    results.EndDate = endDate;
+                    results.StateID = (short)((cdcCount != dtwCount) ? 2 : 3);
+                    results.TestDate = endDate;
+                    results.TestID = 6; // Compare Dsitinct ACCT
+                    results.recordUntitValidationTest(cdcCount, dtwCount);
 
                     // if there re any error on recording db
-                    if (!String.IsNullOrEmpty(_test.Error))
+                    if (!String.IsNullOrEmpty(results.Error))
                     {
-                        myResponse.Tables[0].Rows[0][3] = ("Error: " + _test.Error.Substring(0, 160));
-                        myResponse.Tables[0].Rows[0][11] = ("Error: " + _test.Error.Substring(0, 160));
+                        myResponse.Tables[0].Rows[0][3] = ("Error: " + results.Error.Substring(0, 160));
+                        myResponse.Tables[0].Rows[0][11] = ("Error: " + results.Error.Substring(0, 160));
                     }
-
-
                     return myResponse;
                 }
                 catch (Exception e)
@@ -332,8 +310,8 @@ namespace UnitTest.Model.DataWarehouse
         /// <returns></returns>
         public Task<DataSet> DistinctAcctCountOnDataLoadOverTheMaxHistricCount(DateTime startDate, DateTime endDate, Int32 BU_MAX_COUNT_DISTINCT_ACCT_IDs)
         {
-            myResponse = Extensions.getResponseStructure("GetCountDistinctAcctOnDataLoad");           
-
+            myResponse = Extensions.getResponseStructure("GetCountDistinctAcctOnDataLoad");
+            int dtwCount;
             return Task.Run(() =>
             {
                 try
@@ -343,12 +321,14 @@ namespace UnitTest.Model.DataWarehouse
 
                     List<SqlParameter> dtwParameters = new List<SqlParameter>();                    
 
-                    dtwParameters.Add(new SqlParameter("@startDate", endDate.ToString("yyyy-MM-dd HH:mm")));
+                    dtwParameters.Add(new SqlParameter("@startDate", startDate.ToString("yyyy-MM-dd HH:mm")));
                     dtwParameters.Add(new SqlParameter("@endDate", endDate.AddHours(5).ToString("yyyy-MM-dd HH:mm")));
 
                     evalDataDTW = SqlHelper.ExecuteDataset(_ccnDTW, CommandType.Text, query, dtwParameters.ToArray());
-
-                    int dtwCount = Convert.ToInt32(evalDataDTW.Tables[0].Rows[0][0]);
+                    
+                    dtwCount = (evalDataDTW.Tables[0].Rows.Count > 0) ? Convert.ToInt32(evalDataDTW.Tables[0].Rows[0][0]) : 0;
+                    
+                    
 
                     string interpolatedQuery = " SELECT COUNT(DISTINCT SRC_ACCT_ID) DwCount, CONVERT(VARCHAR,DATA_LOAD_DTTM,1) DATA_LOAD_DTTM, FORMAT(DATA_LOAD_DTTM,'dddd') DayofWeek FROM dwadm2.CD_ACCT WHERE DATA_LOAD_DTTM BETWEEN '"
                     + endDate.ToString("yyyy-MM-dd HH:mm") + "' AND '" + endDate.AddHours(5).ToString("yyyy-MM-dd HH:mm") + "' GROUP BY CONVERT(VARCHAR, DATA_LOAD_DTTM,1), FORMAT(DATA_LOAD_DTTM,'dddd') ORDER BY DATA_LOAD_DTTM DESC";
@@ -369,25 +349,20 @@ namespace UnitTest.Model.DataWarehouse
                     CSV logFile = new CSV(_testFileName + ".csv");
                     logFile.writeNewOrExistingFile(myResponse.Tables[0]);
 
-                    //recording on DB
-                    _test = new Result(_ccnValTest);
-                    _test.TestID = 8;
-                    _test.StateID = (dtwCount > BU_MAX_COUNT_DISTINCT_ACCT_IDs) ? 1 : 3;                   
-                    _test.CountDTW = dtwCount;
-                    _test.Entity = "ACCT";
-                    _test.Description = dtwCount > BU_MAX_COUNT_DISTINCT_ACCT_IDs ? "Quantity of Distinct ACCT_ID on this Day surpassed the historical maximum." : "Ok!";                    
-                    _test.QueryDTW = interpolatedQuery;
-                    _test.IniEvalDate = startDate;
-                    _test.EndEvalDate = endDate;
-                    _test.EffectDate = endDate;
-                    _test.IsActive = true;
-                    _test.insert();
+                    //recording on DB                                     
+                    results.Description = (dtwCount > BU_MAX_COUNT_DISTINCT_ACCT_IDs) ? "Quantity of Distinct ACCT_ID on this Day surpassed the historical maximum." : "Ok!";
+                    results.StartDate = startDate;
+                    results.EndDate = endDate;
+                    results.StateID = (short)((dtwCount > BU_MAX_COUNT_DISTINCT_ACCT_IDs) ? 1 : 3);
+                    results.TestDate = endDate;
+                    results.TestID = 7; // Compare Dsitinct ACCT Over the maximun
+                    results.recordHistoricalValidationTest(dtwCount);
 
                     // if there re any error on recording db
-                    if (!String.IsNullOrEmpty(_test.Error))
+                    if (!String.IsNullOrEmpty(results.Error))
                     {
-                        myResponse.Tables[0].Rows[0][3] = ("Error: " + _test.Error.Substring(0, 160));
-                        myResponse.Tables[0].Rows[0][11] = ("Error: " + _test.Error.Substring(0, 160));
+                        myResponse.Tables[0].Rows[0][3] = ("Error: " + results.Error.Substring(0, 160));
+                        myResponse.Tables[0].Rows[0][11] = ("Error: " + results.Error.Substring(0, 160));
                     }
 
                     return myResponse;
@@ -404,12 +379,12 @@ namespace UnitTest.Model.DataWarehouse
         
         /// <summary>
         /// This method take the evaDate and and compare with the average of the Daily Distinct Count of account,
-        /// taking a <paramref name="BU_ACCT_EVAL_DAY_FOR_AVERAGE"/> Days sample.
+        /// taking a <paramref name="DAY_RANGE_TO_BE_EVALUATED"/> Days sample.
         /// </summary>
-        /// <param name="evalDate">Evaluated Date</param>
-        /// <param name="BU_ACCT_EVAL_DAY_FOR_AVERAGE">Days ago to be evaluated in the Sample Average</param>
+        /// <param name="evalDate">Evaluated Date</param> 
+        /// <param name="DAY_RANGE_TO_BE_EVALUATED">Quantity of Days to be evaluated in the Sample Average(days are counted to the past)</param>
         /// <returns></returns>
-        public Task<DataSet> StatisticalComparison(DateTime evalDate, Int32 BU_ACCT_EVAL_DAY_FOR_AVERAGE, Double TOL_NUM_ON_VAR_ACCOUNT_AVER)
+        public Task<DataSet> StatisticalAcountEvaluation(DateTime evalDate, Int32 DAY_RANGE_TO_BE_EVALUATED, Double TOLERANCE_PERCENTAGE_IN_AVERAGE_VARIATION)
         {
             myResponse = Extensions.getResponseStructure("StatisticalComparison");
             
@@ -421,29 +396,30 @@ namespace UnitTest.Model.DataWarehouse
                     List<SqlParameter> cdcParameters;
                   
                     // get the List with the Dates to evaluate
-                    List<DateTime> evalrange = ttime.GetEvalRangeDate(evalDate, BU_ACCT_EVAL_DAY_FOR_AVERAGE,  false);  
+                    List<DateTime> evalrange = tTime.GetEvalRangeDate(evalDate, DAY_RANGE_TO_BE_EVALUATED,  false);  
                     List<StatisticalEvaluation> AccountEvaluation = new List<StatisticalEvaluation>();
-                    StatisticalEvaluation se;
+                    StatisticalEvaluation statisticalEvaluation;
 
                     //Iterate the List to add the Hour to the Dates, and the Distinct Count of account
                     for (var i = 0; i < evalrange.Count; i++)
                     {
                         //adding the hour and minutes: 12:30
-                        se = new StatisticalEvaluation();
-                        se.IntialDate = evalrange[i].AddDays(-1).AddHours(12).AddMinutes(30);
-                        se.EndDate = evalrange[i].AddDays(-1).AddHours(12).AddMinutes(30);
-                        se.EvalDateIndex = i + 1;
+                        statisticalEvaluation = new StatisticalEvaluation();
+                        statisticalEvaluation.IntialDate = evalrange[i].Date.AddDays(-1).AddHours(12).AddMinutes(30);
+                        statisticalEvaluation.EndDate = evalrange[i].Date.AddHours(12).AddMinutes(30);
+                        statisticalEvaluation.EvalDateIndex = i + 1;
 
                         cdcParameters = new List<SqlParameter>();
 
-                        cdcParameters.Add(new SqlParameter("@startDate", se.IntialDate.ToString("yyyy-MM-dd HH:mm")));
-                        cdcParameters.Add(new SqlParameter("@endDate", se.EndDate.ToString("yyyy-MM-dd HH:mm")));
+                        cdcParameters.Add(new SqlParameter("@startDate", statisticalEvaluation.IntialDate.ToString("yyyy-MM-dd HH:mm")));
+                        cdcParameters.Add(new SqlParameter("@endDate", statisticalEvaluation.EndDate.ToString("yyyy-MM-dd HH:mm")));
 
                         //Distinct Acount Count
                         evalDataCDC = SqlHelper.ExecuteDataset(_ccnCDC, CommandType.StoredProcedure, queryCDC, cdcParameters.ToArray());
 
-                        se.Val = evalDataCDC.Tables[0].DefaultView.ToTable(true, "ACCT_ID").Rows.Count;
-                        AccountEvaluation.Add(se);                        
+                        statisticalEvaluation.Val = evalDataCDC.Tables[0].DefaultView.ToTable(true, "ACCT_ID").Rows.Count;
+                        AccountEvaluation.Add(statisticalEvaluation);
+                        Thread.Sleep(3000);
                     }
 
                     //Computing the average of the Days
@@ -452,25 +428,25 @@ namespace UnitTest.Model.DataWarehouse
                     //Computing the Distinct Count of Accounts of the Evaluated Day
 
                     cdcParameters = new List<SqlParameter>();
-                    cdcParameters.Add(new SqlParameter("@startDate", evalDate.AddDays(-1).AddHours(12).AddMinutes(30).ToString("yyyy-MM-dd HH:mm")));
-                    cdcParameters.Add(new SqlParameter("@endDate", evalDate.AddHours(12).AddMinutes(30).ToString("yyyy-MM-dd HH:mm")));
+                    cdcParameters.Add(new SqlParameter("@startDate", evalDate.Date.AddDays(-1).AddHours(12).AddMinutes(30).ToString("yyyy-MM-dd HH:mm")));
+                    cdcParameters.Add(new SqlParameter("@endDate", evalDate.Date.AddHours(12).AddMinutes(30).ToString("yyyy-MM-dd HH:mm")));
 
                     evalDataCDC = SqlHelper.ExecuteDataset(_ccnCDC, CommandType.StoredProcedure, queryCDC, cdcParameters.ToArray());
 
                     //Distinct Acount count of Evaluated Day
-                    int countAccount = evalDataCDC.Tables[0].DefaultView.ToTable(true, "ACCT_ID").Rows.Count;
+                    int evaluatedCount = evalDataCDC.Tables[0].DefaultView.ToTable(true, "ACCT_ID").Rows.Count;
 
                     //Incremental
-                    double incremIndicator = (countAccount - averCountAccount) / averCountAccount;                
+                    double incremIndicator = (evaluatedCount - averCountAccount) / averCountAccount;                
 
-                    myResponse.Tables[0].Rows[0][0] = (Math.Abs(incremIndicator) > TOL_NUM_ON_VAR_ACCOUNT_AVER) ? "Warning" : "OK!";
+                    myResponse.Tables[0].Rows[0][0] = (Math.Abs(incremIndicator) > TOLERANCE_PERCENTAGE_IN_AVERAGE_VARIATION) ? "Warning" : "OK!";
                     myResponse.Tables[0].Rows[0][1] = "Statistical Average Accounts";
                     myResponse.Tables[0].Rows[0][2] = "cdcProdcc: cdc.sp_ci_acct_ct";
-                    myResponse.Tables[0].Rows[0][3] = (Math.Abs(incremIndicator) > TOL_NUM_ON_VAR_ACCOUNT_AVER) ? "The Acount Count is out of Teen Days Average Range " : "The Acount Count is into the Teen Days Average Range ";
+                    myResponse.Tables[0].Rows[0][3] = (Math.Abs(incremIndicator) > TOLERANCE_PERCENTAGE_IN_AVERAGE_VARIATION) ? "The Acount Count is out of Teen Days Average Range " : "The Acount Count is into the Teen Days Average Range ";
                     myResponse.Tables[0].Rows[0][4] = evalDate.ToString("yyyy-MM-dd HH:mm");
                     myResponse.Tables[0].Rows[0][5] = evalDate.ToString("yyyy-MM-dd HH:mm");
                     myResponse.Tables[0].Rows[0][6] = averCountAccount;
-                    myResponse.Tables[0].Rows[0][7] = countAccount;
+                    myResponse.Tables[0].Rows[0][7] = evaluatedCount;
                     myResponse.Tables[0].Rows[0][8] = "";
                     myResponse.Tables[0].Rows[0][9] = "";
                     myResponse.Tables[0].Rows[0][10] = evalDate.ToString("yyyy-MM-dd HH:mm");
@@ -479,28 +455,24 @@ namespace UnitTest.Model.DataWarehouse
                     CSV logFile = new CSV(_testFileName + ".csv");
                     logFile.writeNewOrExistingFile(myResponse.Tables[0]);
 
-                    // recording on DB
-                    _test = new Result(_ccnValTest);
-                    _test.TestID = 9;
-                    _test.StateID = (Math.Abs(incremIndicator) > TOL_NUM_ON_VAR_ACCOUNT_AVER) ? 1 : 3;
-                    _test.CountCDC = Convert.ToInt64(Math.Round(averCountAccount));
-                    _test.CountDTW = countAccount;
-                    _test.Entity = "ACCT";
-                    _test.Description = (Math.Abs(incremIndicator) > TOL_NUM_ON_VAR_ACCOUNT_AVER) ? "The Acount Count is out of Teen Days Average Range " : "The Acount Count is into the Teen Days Average Range ";                   
-                    _test.IniEvalDate = evalDate;
-                    _test.EndEvalDate = evalDate;
-                    _test.EffectDate = evalDate;
-                    _test.IsActive = true;  
-                    _test.insert();
+                    //columnID: 2-SRC_ACCT_ID, indicatorType: 6-Average Weekly
+                    historical.recordHistorical(2, 6, averCountAccount, evalDate);
+
+                    //recording on DB                  
+                    results.Description = (Math.Abs(incremIndicator) > TOLERANCE_PERCENTAGE_IN_AVERAGE_VARIATION) ? "The Acount Count is out of Teen Days Average Range " : "The Acount Count is into the Teen Days Average Range ";
+                    results.StartDate = evalDate;
+                    results.EndDate = evalDate;
+                    results.StateID = (short)((Math.Abs(incremIndicator) > TOLERANCE_PERCENTAGE_IN_AVERAGE_VARIATION) ? 1 : 3);
+                    results.TestDate = evalDate;
+                    results.TestID = 8; 
+                    results.recordStatisticalValidationTest(averCountAccount, evaluatedCount);
 
                     // if there re any error on recording db
-                    if (!String.IsNullOrEmpty(_test.Error))
+                    if (!String.IsNullOrEmpty(results.Error))
                     {
-                        myResponse.Tables[0].Rows[0][3] = ("Error: " + _test.Error.Substring(0, 160));
-                        myResponse.Tables[0].Rows[0][11] = ("Error: " + _test.Error.Substring(0, 160));
+                        myResponse.Tables[0].Rows[0][3] = ("Error: " + results.Error.Substring(0, 160));
+                        myResponse.Tables[0].Rows[0][11] = ("Error: " + results.Error.Substring(0, 160));
                     }
-
-
                     return myResponse;
                 }
                 catch (Exception e)
@@ -510,37 +482,6 @@ namespace UnitTest.Model.DataWarehouse
                     return myResponse;
                 }
             });
-        }
-
-        /// <summary>
-        /// Record the indicators
-        /// </summary>
-        /// <returns></returns>
-        public Task<DataSet> recordIndicators()
-        {
-            myResponse = Extensions.getResponseStructure("RecordingIndicators");
-
-            return Task.Run(() =>
-            {
-                try
-                {
-                    myResponse.Tables[0].Rows[0][1] = "Recording Indicators";
-                    _historicIndicators.insert();
-                    if (!String.IsNullOrEmpty(_historicIndicators.Error))
-                    {
-                        myResponse.Tables[0].Rows[0][3] = ("Error: " + _historicIndicators.Error.Substring(0, 160));
-                        myResponse.Tables[0].Rows[0][11] = ("Error: " + _historicIndicators.Error.Substring(0, 160));
-                    }
-                    return myResponse;
-                }
-                catch (Exception e)
-                {
-                    myResponse.Tables[0].Rows[0][3] = ("Error: " + e.ToString().Substring(0, 160));
-                    myResponse.Tables[0].Rows[0][11] = ("Error: " + e.ToString().Substring(0, 160));
-                    return myResponse;
-
-                }
-            });
-        }
+        }       
     }
 }

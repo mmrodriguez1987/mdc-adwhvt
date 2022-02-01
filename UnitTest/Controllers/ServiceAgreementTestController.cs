@@ -37,18 +37,18 @@ namespace UnitTest.Controllers
         public async Task<IActionResult> Get()
         {
 
-            mySMS = new SMS(gbl.CCN_ACS);
+            mySMS = new SMS(gbl.CcnAzureCommunicSrvs);
 
-            ServiceAgreement sa = new ServiceAgreement(gbl.CCN_DTWH, gbl.CCN_CDC, testFileName);
+            ServiceAgreement sa = new ServiceAgreement(gbl.CcnDatawareHouse, gbl.CcnCDC, testFileName);
 
             dsResult = Extensions.getResponseStructure("");
             finalResultDS = Extensions.getResponseStructure("PremiseTestResult");
           
             //Validation: Get Accounts Count
-            dsResult = await sa.GetCountServiceAgreement(gbl.startDate, gbl.endDate);
+            dsResult = await sa.GetCountServiceAgreement(gbl.StartDate, gbl.EndDate);
             finalResultDS.Tables[0].ImportRow(dsResult.Tables[0].Rows[0]);
             if (dsResult.Tables[0].Rows[0][0].ToString() == "Warning" || dsResult.Tables[0].Rows[0][0].ToString() == "Failed")
-                mySMS.SendSMS(gbl.PH_FROM, gbl.PH_BITEAM, dsResult.Tables[0].Rows[0][11].ToString());
+                mySMS.SendSMS(gbl.FromPhNumbAlert, gbl.BiTeamPhoneNumbers, dsResult.Tables[0].Rows[0][11].ToString());
 
 
             _log.LogInformation("End of the Service Agreement Count Test at: " + DateTime.Now.ToString());

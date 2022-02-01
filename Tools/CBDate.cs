@@ -13,16 +13,15 @@ namespace Tools
         }
 
         public List<DateTime> GetEvalRangeDate(DateTime evalDate, Int32 DaysToEvaluate, Boolean IncludeWeekend)
-        {
-           
-
-            DateTime DayOfRangeDate = evalDate;
-            for (int i=0;  i < DaysToEvaluate; i++)
+        {         
+            DateTime DayOfRangeDate = evalDate.AddDays(-1);
+            int i = 0;
+            /*for (int i=0;  i < DaysToEvaluate; i++)
             {
                 //Si No Incluye fines de semana                
                 if (!IncludeWeekend)
                 {
-                    // Si el Dia es diferente de Sabado Y Diferente de Domingo
+                    // Si el dia es diferente de sabado
                     if (DayOfRangeDate.DayOfWeek != DayOfWeek.Saturday && DayOfRangeDate.DayOfWeek != DayOfWeek.Sunday)
                     {
                         evalRange.Add(DayOfRangeDate);
@@ -36,7 +35,28 @@ namespace Tools
                 }
                 //Pasar al dia anterior
                 DayOfRangeDate = DayOfRangeDate.AddDays(-1);
-            }
+            }*/
+            
+            do
+            {
+                //Si No Incluye fines de semana                
+                if (!IncludeWeekend)
+                {
+                    // Si el dia es diferente de sabado y domingo
+                    if (DayOfRangeDate.DayOfWeek != DayOfWeek.Saturday && DayOfRangeDate.DayOfWeek != DayOfWeek.Sunday)
+                    {
+                        evalRange.Add(DayOfRangeDate);
+                        i++;
+                    }
+                }
+                else
+                {
+                    evalRange.Add(DayOfRangeDate);
+                    i++;
+                }
+                //Pasar al dia anterior
+                DayOfRangeDate = DayOfRangeDate.AddDays(-1);
+            } while (i < DaysToEvaluate);
 
             return evalRange;
         }

@@ -36,34 +36,34 @@ namespace UnitTest.Controllers
         public async Task<IActionResult> Get()
         {
           
-            mySMS = new SMS(gbl.CCN_ACS);
+            mySMS = new SMS(gbl.CcnAzureCommunicSrvs);
 
             //Instance the BillUsage Model
-            BillUsage bug = new BillUsage(gbl.CCN_DTWH, testFileName);            
+            BillUsage bug = new BillUsage(gbl.CcnDatawareHouse, testFileName);            
            
             dsResult = Extensions.getResponseStructure("");
             finalResultDS = Extensions.getResponseStructure("GlobalTestResult");
             
             //Validation: Get Bills Generated on wrong Fiscal Year
-            dsResult = await bug.GetBillGeneratedOnWrongFiscalYear(gbl.startDate, gbl.endDate);   
+            dsResult = await bug.GetBillGeneratedOnWrongFiscalYear(gbl.StartDate, gbl.EndDate);   
             finalResultDS.Tables[0].ImportRow(dsResult.Tables[0].Rows[0]);
             if (dsResult.Tables[0].Rows[0][0].ToString() == "Warning" || dsResult.Tables[0].Rows[0][0].ToString() == "Failed")
-                mySMS.SendSMS(gbl.PH_FROM, gbl.PH_BITEAM, dsResult.Tables[0].Rows[0][11].ToString());
+                mySMS.SendSMS(gbl.FromPhNumbAlert, gbl.BiTeamPhoneNumbers, dsResult.Tables[0].Rows[0][11].ToString());
 
 
 
             //Validation: Get Bills Generated on weekend
-            dsResult = await bug.GetBillsGeneratedOnWeekend(gbl.startDate, gbl.endDate);
+            dsResult = await bug.GetBillsGeneratedOnWeekend(gbl.StartDate, gbl.EndDate);
             finalResultDS.Tables[0].ImportRow(dsResult.Tables[0].Rows[0]);
             if (dsResult.Tables[0].Rows[0][0].ToString() == "Warning" || dsResult.Tables[0].Rows[0][0].ToString() == "Failed")
-                mySMS.SendSMS(gbl.PH_FROM, gbl.PH_BITEAM, dsResult.Tables[0].Rows[0][11].ToString());
+                mySMS.SendSMS(gbl.FromPhNumbAlert, gbl.BiTeamPhoneNumbers, dsResult.Tables[0].Rows[0][11].ToString());
 
 
             //Validation: Get Bills Generated on weekend
-            dsResult = await bug.GetCountDistinctBillOnDataLoadOverTheMaxHistric(gbl.startDate, gbl.endDate, gbl.DTVAL_BU_MAX_COUNT_DISTINCT_BILL_IDs);
+            dsResult = await bug.GetCountDistinctBillOnDataLoadOverTheMaxHistric(gbl.StartDate, gbl.EndDate, gbl.DTVAL_BU_MAX_COUNT_DISTINCT_BILL_IDs);
             finalResultDS.Tables[0].ImportRow(dsResult.Tables[0].Rows[0]);
             if (dsResult.Tables[0].Rows[0][0].ToString() == "Warning" || dsResult.Tables[0].Rows[0][0].ToString() == "Failed")
-                mySMS.SendSMS(gbl.PH_FROM, gbl.PH_BITEAM, dsResult.Tables[0].Rows[0][11].ToString());
+                mySMS.SendSMS(gbl.FromPhNumbAlert, gbl.BiTeamPhoneNumbers, dsResult.Tables[0].Rows[0][11].ToString());
 
 
             _log.LogInformation("End of the Global Test at: " + DateTime.Now.ToString());

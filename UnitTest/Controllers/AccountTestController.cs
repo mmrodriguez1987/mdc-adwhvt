@@ -37,48 +37,47 @@ namespace UnitTest.Controllers
         public async Task<IActionResult> Get()
         {
            
-            mySMS = new SMS(gbl.CCN_ACS);            
-            Account acct = new Account(gbl.CCN_DTWH, gbl.CCN_CDC, gbl.CCN_ValDB, testFileName);
+            mySMS = new SMS(gbl.CcnAzureCommunicSrvs);            
+            Account acct = new Account(gbl.CcnDatawareHouse, gbl.CcnCDC, gbl.CcnValidationDB, testFileName);
 
             dsResult = Extensions.getResponseStructure("");
             finalResultDS = Extensions.getResponseStructure("GlobalTestResult");
           
 
             //Validation: Get Distinct Accounts Count between the CCB and DTW
-            dsResult = await acct.DistinctAccountCount(gbl.startDate, gbl.endDate);
+            dsResult = await acct.DistinctAccountCount(gbl.StartDate, gbl.EndDate.AddHours(3));
             finalResultDS.Tables[0].ImportRow(dsResult.Tables[0].Rows[0]);
             if (dsResult.Tables[0].Rows[0][0].ToString() == "Warning" || dsResult.Tables[0].Rows[0][0].ToString() == "Failed")            
-                mySMS.SendSMS(gbl.PH_FROM, gbl.PH_BITEAM, dsResult.Tables[0].Rows[0][11].ToString());            
+                mySMS.SendSMS(gbl.FromPhNumbAlert, gbl.BiTeamPhoneNumbers, dsResult.Tables[0].Rows[0][11].ToString());            
            
 
             //Validation: Get Distinct Account On load Over the Maximun Historic Count
-            dsResult = await acct.DistinctAcctCountOnDataLoadOverTheMaxHistricCount(gbl.startDate, gbl.endDate, gbl.DTVAL_BU_MAX_COUNT_DISTINCT_ACCT_IDs);
+            dsResult = await acct.DistinctAcctCountOnDataLoadOverTheMaxHistricCount(gbl.StartDate, gbl.EndDate.AddHours(3), gbl.DTVAL_BU_MAX_COUNT_DISTINCT_ACCT_IDs);
             finalResultDS.Tables[0].ImportRow(dsResult.Tables[0].Rows[0]);
             if (dsResult.Tables[0].Rows[0][0].ToString() == "Warning" || dsResult.Tables[0].Rows[0][0].ToString() == "Failed")
-                mySMS.SendSMS(gbl.PH_FROM, gbl.PH_BITEAM, dsResult.Tables[0].Rows[0][11].ToString());        
+                mySMS.SendSMS(gbl.FromPhNumbAlert, gbl.BiTeamPhoneNumbers, dsResult.Tables[0].Rows[0][11].ToString());        
 
 
             //Validation: Get comparision of new records between CCB and DWT
-            dsResult = await acct.NewAccountCounts(gbl.startDate, gbl.endDate);
+            dsResult = await acct.NewAccountCounts(gbl.StartDate, gbl.EndDate.AddHours(3));
             finalResultDS.Tables[0].ImportRow(dsResult.Tables[0].Rows[0]);
             if (dsResult.Tables[0].Rows[0][0].ToString() == "Warning" || dsResult.Tables[0].Rows[0][0].ToString() == "Failed")
-               mySMS.SendSMS(gbl.PH_FROM, gbl.PH_BITEAM, dsResult.Tables[0].Rows[0][11].ToString());
+               mySMS.SendSMS(gbl.FromPhNumbAlert, gbl.BiTeamPhoneNumbers, dsResult.Tables[0].Rows[0][11].ToString());
 
 
             //Validation: Get comparision of updated records between CCB and DTW
-            dsResult = await acct.UpdatedAccountCounts(gbl.startDate, gbl.endDate);
+            dsResult = await acct.UpdatedAccountCounts(gbl.StartDate, gbl.EndDate.AddHours(3));
             finalResultDS.Tables[0].ImportRow(dsResult.Tables[0].Rows[0]);
             if (dsResult.Tables[0].Rows[0][0].ToString() == "Warning" || dsResult.Tables[0].Rows[0][0].ToString() == "Failed")
-                mySMS.SendSMS(gbl.PH_FROM, gbl.PH_BITEAM, dsResult.Tables[0].Rows[0][11].ToString());
+                mySMS.SendSMS(gbl.FromPhNumbAlert, gbl.BiTeamPhoneNumbers, dsResult.Tables[0].Rows[0][11].ToString());
 
 
             //Validation: Get a 5 Days statistical comparision of account
-            dsResult = await acct.StatisticalComparison(gbl.startDate, gbl.EvaluatedDatesRange, gbl.TOL_NUM_ON_VAR_ACCOUNT_AVER);            
+            dsResult = await acct.StatisticalAcountEvaluation(gbl.StartDate, gbl.EvaluatedDatesRangeOnAverageTest, gbl.ToleranceVariatonNumber);            
             finalResultDS.Tables[0].ImportRow(dsResult.Tables[0].Rows[0]);
             if (dsResult.Tables[0].Rows[0][0].ToString() == "Warning" || dsResult.Tables[0].Rows[0][0].ToString() == "Failed")
-                mySMS.SendSMS(gbl.PH_FROM, gbl.PH_BITEAM, dsResult.Tables[0].Rows[0][11].ToString());
-
-            dsResult = await acct.recordIndicators();
+                mySMS.SendSMS(gbl.FromPhNumbAlert, gbl.BiTeamPhoneNumbers, dsResult.Tables[0].Rows[0][11].ToString());
+           
             finalResultDS.Tables[0].ImportRow(dsResult.Tables[0].Rows[0]);         
 
             return base.Ok(Extensions.DataTableToJSONWithStringBuilder(finalResultDS.Tables[0]));
