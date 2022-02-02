@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data;
 using UnitTest.DAL;
 
 namespace UnitTest.Model.ValidationTest
@@ -24,10 +25,7 @@ namespace UnitTest.Model.ValidationTest
         public string CcnValTest { get => _ccnValTest; set => _ccnValTest = value; }
         public string CcnCDC { get => _ccnCDC; set => _ccnCDC = value; }
 
-        public void calculateDistinctAccountID(DateTime startDate, DateTime endDate)
-        {
-
-        }
+        
         /// <summary>
         /// Record a Historical Indicator
         /// </summary>
@@ -43,9 +41,16 @@ namespace UnitTest.Model.ValidationTest
             _historicalIndicator.IndicatorTypeID = indicatorType;
             _historicalIndicator.Count = count;
             _historicalIndicator.Insert();
+            _error = (!String.IsNullOrEmpty(_historicalIndicator.Error)) ? _historicalIndicator.Error : _error;           
+        }
 
-            _error = (!String.IsNullOrEmpty(_historicalIndicator.Error)) ? _historicalIndicator.Error : _error;
-           
+        public Int64 GetMaximunHistorical(Int64 columnID, Int16 inditatorTypeID)
+        {
+            DataSet result;
+            _historicalIndicator = new HistoricalIndicator(_ccnValTest);
+            result =_historicalIndicator.GetObjectDS("columnID = " + columnID + " AND indicatorTypeID = " + inditatorTypeID, "[count]", "MAX([count]) AS [count]");
+
+            return Convert.ToInt64(!String.IsNullOrEmpty(result.Tables[0].Rows[0][0].ToString()) ? result.Tables[0].Rows[0][0] : 0);
         }
     }
 }

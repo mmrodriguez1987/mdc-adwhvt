@@ -51,8 +51,8 @@ namespace UnitTest.Model.DataWarehouse
                     cdcParameters.Add(new SqlParameter("@startDate", startDate.ToString("yyyy-MM-dd HH:mm")));
                     cdcParameters.Add(new SqlParameter("@endDate", endDate.ToString("yyyy-MM-dd HH:mm")));
 
-                    dtwParameters.Add(new SqlParameter("@startDate", endDate.ToString("yyyy-MM-dd HH:mm")));
-                    dtwParameters.Add(new SqlParameter("@endDate", endDate.AddHours(5).ToString("yyyy-MM-dd HH:mm")));
+                    dtwParameters.Add(new SqlParameter("@startDate", endDate.AddHours(5).ToString("yyyy-MM-dd HH:mm")));
+                    dtwParameters.Add(new SqlParameter("@endDate", endDate.AddHours(5).AddHours(5).ToString("yyyy-MM-dd HH:mm")));
 
 
                     string interpoledQueryDTW = "SELECT COUNT(DISTINCT SRC_BSEG_ID) DTW_Count from dwadm2.CF_BILLED_USAGE WHERE DATA_LOAD_DTTM BETWEEN '" + endDate.ToString("yyyy-MM-dd HH:mm") + "' AND '" + endDate.AddHours(5).ToString("yyyy-MM-dd HH:mm") + "'";

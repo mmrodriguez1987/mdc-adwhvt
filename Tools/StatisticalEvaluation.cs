@@ -10,7 +10,7 @@ namespace Tools.Statistics
         private DateTime intialDate;
         private DateTime endDate;
         private Int32 evalDateIndex;
-        private Int64 val;
+        private Int64 averageValue;
 
         public StatisticalEvaluation()
         {
@@ -30,9 +30,9 @@ namespace Tools.Statistics
             get => evalDateIndex; 
             set => evalDateIndex = value; 
         }
-        public long Val {
-            get => val; 
-            set => val = value; 
+        public long DistinctCountValue {
+            get => averageValue; 
+            set => averageValue = value; 
         }
     }
 }

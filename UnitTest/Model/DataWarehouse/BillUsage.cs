@@ -107,7 +107,7 @@ namespace UnitTest.Model.DataWarehouse
                 {
                     List<SqlParameter> dtwParameters = new List<SqlParameter>();
 
-                    dtwParameters.Add(new SqlParameter("@startDate", endDate.ToString("yyyy-MM-dd HH:mm")));
+                    dtwParameters.Add(new SqlParameter("@startDate", endDate.AddHours(5).ToString("yyyy-MM-dd HH:mm")));
                     dtwParameters.Add(new SqlParameter("@endDate", endDate.AddHours(5).ToString("yyyy-MM-dd HH:mm")));
 
                     evaluatedData = SqlHelper.ExecuteDataset(_ccnDTW, CommandType.Text, query, dtwParameters.ToArray());
@@ -115,7 +115,7 @@ namespace UnitTest.Model.DataWarehouse
                     string interpolatedQuery = "SELECT  B.BILL_DATE_KEY, B.BILLED_USAGE_KEY, B.UDDGEN1, B.FISCAL_CAL_KEY, C.StartDate, " +
                         "C.EndDate, CASE WHEN (B.UDDGEN1 BETWEEN C.StartDate AND C.EndDate) THEN 1 ELSE 0 END AS IsCorrectFiscalYear " +
                         "FROM dwadm2.CF_BILLED_USAGE B INNER JOIN dwadm2.vw_CD_FISCAL_CAL C ON B.FISCAL_CAL_KEY=C.FISCAL_CAL_KEY " +
-                        "WHERE (B.DATA_LOAD_DTTM BETWEEN '" + endDate.ToString("yyyy-MM-dd HH:mm") + "' AND '"+ endDate.AddHours(5).ToString("yyyy-MM-dd HH:mm") + "') ";
+                        "WHERE (B.DATA_LOAD_DTTM BETWEEN '" + endDate.AddHours(5).ToString("yyyy-MM-dd HH:mm") + "' AND '"+ endDate.AddHours(5).ToString("yyyy-MM-dd HH:mm") + "') ";
 
                     myResponse.Tables[0].Rows[0][0] = (evaluatedData.Tables[0].Select("IsCorrectFiscalYear = 0").Length > 0) ? "Warning" : "OK!";
                     myResponse.Tables[0].Rows[0][1] = "Get-Bill-Generated-On-Wrong-Fiscal-Year";

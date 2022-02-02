@@ -1,8 +1,9 @@
 
 --create database [valdat-m2c-dtwh-dev]
 
---use [valdat-m2c-dtwh-prod]
+--use [valdat-m2c-dtwh-prod] 
 /*DELETE OBJECTS IF EXIST*/
+IF EXISTS (SELECT * FROM sys.all_views WHERE SCHEMA_NAME(schema_id) LIKE 'dbo' AND name like 'vwHistoricalInformation') DROP VIEW vwHistoricalInformation
 IF EXISTS (SELECT * FROM sys.all_views WHERE SCHEMA_NAME(schema_id) LIKE 'dbo' AND name like 'vwTestInformationSummary') DROP VIEW vwTestInformationSummary
 IF EXISTS (SELECT * FROM sys.all_views WHERE SCHEMA_NAME(schema_id) LIKE 'dbo' AND name like 'vwTestInformation') DROP VIEW vwTestInformation
 IF EXISTS (SELECT * FROM sys.all_views WHERE SCHEMA_NAME(schema_id) LIKE 'dbo' AND name like 'vwDataEntity') DROP VIEW vwDataEntity
@@ -141,31 +142,30 @@ CREATE TABLE HistoricalIndicator
 
 GO
 
-CREATE VIEW vwTestResult
+create VIEW vwTestResult
 AS
 SELECT 
 R.resultID, 
-S.stateName stateDesc, 
-T.testName, 
-TT.typeDescription, 
-TP.columnID,  
-R.[description], 
-R.startDate, 
-R.endDate, 
+S.stateName [State], 
+T.testName Test, 
+TT.typeDescription [Type], 
+RT.acronym,
+RD.[count] [Count],
+R.[description] [Description], 
+R.startDate [Start Date], 
+R.endDate [End Date], 
 R.testDate
 FROM Result R
 INNER JOIN [State] S ON R.stateID=S.stateID
 INNER JOIN Test T ON T.testID=R.testID
 INNER JOIN TestType TT ON TT.testTypeID=T.testTypeID
-INNER JOIN TestParameter TP ON TP.testID=T.testID
-INNER JOIN ColumnDefinition C ON C.columnID=TP.columnID
 INNER JOIN ResultDetail RD ON R.resultID=RD.resultID
 INNER JOIN ResultType RT on RT.resultTypeID=RD.resultTypeID
-	
+
+Go
 
 
 
-go
 
 CREATE VIEW vwDataEntity
 AS
@@ -184,7 +184,7 @@ T.testName,
 T.testDescription,
 T.query,
 TT.typeDescription TestType,
-STRING_AGG(CONCAT(S.sourceName,':',E.entityShortName,':',CD.columnName),', ') Entity,
+STRING_AGG(CONCAT(S.sourceName,':',E.entityShortName,':',CD.columnName),', ') Entity, 
 STRING_AGG(CD.columnID,', ') ColumnsID
 FROM Test T
 INNER JOIN TestType TT ON T.testTypeID=TT.testTypeID
@@ -214,10 +214,15 @@ INNER JOIN TestParameter TP ON TP.testID=T.testID
 INNER JOIN ColumnDefinition CD ON CD.columnID=TP.columnID
 INNER JOIN Entity E ON E.entityID=CD.entityID
 INNER JOIN [Source] S ON S.sourceID=E.sourceID
+GO
 
-
-
-
+create VIEW vwHistoricalInformation
+AS
+SELECT histIndicatorID, H.columnID, H.[count] Count, C.columnName [Column], E.entityShortName Entity, h.indicatorTypeID, i.typeDesc TypeIndicator
+FROM HistoricalIndicator H
+INNER JOIN ColumnDefinition C ON H.columnID=C.columnID
+INNER JOIN Entity E ON E.entityID = C.entityID
+INNER JOIN IndicatorType I ON I.indicatorTypeID=H.indicatorTypeID
 
 GO
 
@@ -982,9 +987,3 @@ INSERT INTO TestParameter VALUES (33,196)
 INSERT INTO TestParameter VALUES (33,319)
 INSERT INTO TestParameter VALUES (33,469)
 
-
-SELECT * FROM vwDataEntity where columnName = 'DATA_LOAD_DTTM'
-
-SELECT * FROM vwTestInformation ORDER BY testID
-
-SELECT * FROM vwTestInformationSummary ORDER BY testID

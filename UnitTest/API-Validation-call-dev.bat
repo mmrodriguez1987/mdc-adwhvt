@@ -1,7 +1,7 @@
 @echo on
 ECHO "Data Validation Init"
 
-SET URL1=http://s0146154:443/api/AccountTest/
+SET URL1=http://s0146154:443/api/AccountTest?startDate=2022-01-31%2010%3A00%3A00.00&endDate=2022-02-01%2010%3A00%3A00.00
 
 SET HTTP1=
 for /f %%a in ( 'curl -s -o nul -w  "%%{http_code}" "%URL1%"' ) do set HTTP1=%%a
@@ -13,8 +13,9 @@ if "%HTTP1%" == "200" (
     exit /b 1
 )
 
+GOTO comment
 
-SET URL3=http://s0146154:443/api/BillUsageTest/
+SET URL3=http://s0146154:443/api/BillUsageTest?startDate=2022-01-31%2010%3A00%3A00.00&endDate=2022-02-01%2010%3A00%3A00.00
 
 SET HTTP3=
 for /f %%a in ( 'curl -s -o nul -w  "%%{http_code}" "%URL3%"' ) do set HTTP3=%%a
@@ -26,7 +27,7 @@ if "%HTTP3%" == "200" (
     exit /b 1
 )
 
-SET URL4=http://s0146154:443/api/PersonTest/
+SET URL4=http://s0146154:443/api/PersonTest?startDate=2022-01-31%2010%3A00%3A00.00&endDate=2022-02-01%2010%3A00%3A00.00
 
 SET HTTP4=
 for /f %%a in ( 'curl -s -o nul -w  "%%{http_code}" "%URL4%"' ) do set HTTP4=%%a
@@ -38,7 +39,7 @@ if "%HTTP4%" == "200" (
     exit /b 1
 )
 
-SET URL5=http://s0146154:443/api/PremiseTest/
+SET URL5=http://s0146154:443/api/PremiseTest?startDate=2022-01-31%2010%3A00%3A00.00&endDate=2022-02-01%2010%3A00%3A00.00
 
 SET HTTP5=
 for /f %%a in ( 'curl -s -o nul -w  "%%{http_code}" "%URL5%"' ) do set HTTP5=%%a
@@ -50,7 +51,7 @@ if "%HTTP5%" == "200" (
     exit /b 1
 )
 
-SET URL6=http://s0146154:443/api/ServiceAgreementTest/
+SET URL6=http://s0146154:443/api/ServiceAgreementTest?startDate=2022-01-31%2010%3A00%3A00.00&endDate=2022-02-01%2010%3A00%3A00.00
 
 SET HTTP6=
 for /f %%a in ( 'curl -s -o nul -w  "%%{http_code}" "%URL6%"' ) do set HTTP6=%%a
@@ -63,7 +64,7 @@ if "%HTTP6%" == "200" (
 )
 
 
-SET URL2=http://s0146154:443/api/BillSegmentTest/
+SET URL2=http://s0146154:443/api/BillSegmentTest?startDate=2022-01-31%2010%3A00%3A00.00&endDate=2022-02-01%2010%3A00%3A00.00
 
 SET HTTP2=
 for /f %%a in ( 'curl -s -o nul -w  "%%{http_code}" "%URL2%"' ) do set HTTP2=%%a
@@ -75,5 +76,6 @@ if "%HTTP2%" == "200" (
     exit /b 1
 )
 
+:comment
 
 echo "Test finisihed"

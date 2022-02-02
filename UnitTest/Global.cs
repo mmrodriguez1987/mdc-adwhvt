@@ -2,8 +2,7 @@
 using System;
 
 namespace UnitTest
-{
-    
+{   
 
     public class Global
     {    
@@ -57,8 +56,8 @@ namespace UnitTest
             _DTVAL_BU_MAX_COUNT_DISTINCT_ACCT_IDs = conf.GetValue<int>("PrjVar:DTVAL_BU_MAX_COUNT_DISTINCT_ACCT_IDs");
             _EvaluatedDatesRangeOnAverageTest = conf.GetValue<int>("PrjVar:EVAL_DATES_RANGE_ON_AVE_TEST");
             _EvaluatedDatesRangeOnOrdinaryTest = conf.GetValue<int>("PrjVar:EVAL_DATES_RANGE_ON_ORD_TEST");
-            _endDate = DateTime.UtcNow;
-            _startDate = _endDate.AddDays(-_EvaluatedDatesRangeOnOrdinaryTest);
+            _endDate = DateTime.Today;
+            _startDate = _endDate.AddDays(-_EvaluatedDatesRangeOnOrdinaryTest);           
         }        
     }
 }
