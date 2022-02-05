@@ -8,5 +8,10 @@ namespace UnitTest.Model.DataWarehouse
     public class UnitOfMeasure
     {
 
+        public UnitOfMeasure()
+        {
+
+        }
+
     }
 }

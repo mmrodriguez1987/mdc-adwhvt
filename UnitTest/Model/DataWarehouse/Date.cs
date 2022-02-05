@@ -7,6 +7,10 @@ namespace UnitTest.Model.DataWarehouse
 {
     public class Date
     {
+        public Date()
+        {
+
+        }
 
     }
 }

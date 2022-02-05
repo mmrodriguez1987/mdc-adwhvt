@@ -7,6 +7,9 @@ namespace UnitTest.Model.DataWarehouse
 {
     public class FiscalCalendar
     {
+        public FiscalCalendar()
+        {
 
+        }
     }
 }

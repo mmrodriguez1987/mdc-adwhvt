@@ -7,5 +7,9 @@ namespace UnitTest.Model.DataWarehouse
 {
     public class ServiceQuantityIdentifier
     {
+        public ServiceQuantityIdentifier()
+        {
+
+        }
     }
 }
