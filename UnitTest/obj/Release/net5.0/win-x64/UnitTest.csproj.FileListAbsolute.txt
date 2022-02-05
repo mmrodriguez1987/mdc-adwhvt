@@ -59,7 +59,6 @@ C:\BIProjectUT\UnitTest\bin\Release\net5.0\win-x64\YamlDotNet.dll
 C:\BIProjectUT\UnitTest\obj\Release\net5.0\win-x64\UnitTest.MvcApplicationPartsAssemblyInfo.cs
 C:\BIProjectUT\UnitTest\bin\Release\net5.0\win-x64\DBHelper.dll
 C:\BIProjectUT\UnitTest\bin\Release\net5.0\win-x64\DBHelper.pdb
-C:\BIProjectUT\UnitTest\bin\Release\net5.0\win-x64\UnitTest BI.postman_collection.json
 C:\BIProjectUT\UnitTest\bin\Release\net5.0\win-x64\CsvHelper.dll
 C:\BIProjectUT\UnitTest\bin\Release\net5.0\win-x64\Microsoft.CSharp.dll
 C:\BIProjectUT\UnitTest\bin\Release\net5.0\win-x64\Microsoft.VisualBasic.Core.dll
@@ -414,5 +413,5 @@ C:\BIProjectUT\UnitTest\bin\Release\net5.0\win-x64\Azure.Core.dll
 C:\BIProjectUT\UnitTest\bin\Release\net5.0\win-x64\Microsoft.Bcl.AsyncInterfaces.dll
 C:\BIProjectUT\UnitTest\bin\Release\net5.0\win-x64\System.Memory.Data.dll
 C:\BIProjectUT\UnitTest\bin\Release\net5.0\win-x64\mscordaccore_amd64_amd64_5.0.1321.56516.dll
-C:\BIProjectUT\UnitTest\bin\Release\net5.0\win-x64\Developoment.postman_environment.json
-C:\BIProjectUT\UnitTest\bin\Release\net5.0\win-x64\Production.postman_environment.json
+C:\BIProjectUT\UnitTest\bin\Release\net5.0\win-x64\appsettings.Production.json
+C:\BIProjectUT\UnitTest\bin\Release\net5.0\win-x64\appsettings.Staging.json

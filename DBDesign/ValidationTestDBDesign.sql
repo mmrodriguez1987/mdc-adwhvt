@@ -216,9 +216,9 @@ INNER JOIN Entity E ON E.entityID=CD.entityID
 INNER JOIN [Source] S ON S.sourceID=E.sourceID
 GO
 
-create VIEW vwHistoricalInformation
+create  VIEW vwHistoricalInformation
 AS
-SELECT histIndicatorID, H.columnID, H.[count] Count, C.columnName [Column], E.entityShortName Entity, h.indicatorTypeID, i.typeDesc TypeIndicator
+SELECT histIndicatorID, H.columnID, H.[count] Count, C.columnName [Column], E.entityShortName Entity, h.indicatorTypeID, i.typeDesc TypeIndicator,h.calculatedDate
 FROM HistoricalIndicator H
 INNER JOIN ColumnDefinition C ON H.columnID=C.columnID
 INNER JOIN Entity E ON E.entityID = C.entityID

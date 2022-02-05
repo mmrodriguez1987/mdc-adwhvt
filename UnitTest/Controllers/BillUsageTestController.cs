@@ -36,7 +36,7 @@ namespace UnitTest.Controllers
         public async Task<IActionResult> Get()
         {
           
-            mySMS = new SMS(gbl.CcnAzureCommunicSrvs);
+            mySMS = new SMS(gbl.CcnAzureCommunicationServices);
 
             //Instance the BillUsage Model
             BillUsage bug = new BillUsage(gbl.CcnDatawareHouse, testFileName);            
@@ -60,7 +60,7 @@ namespace UnitTest.Controllers
 
 
             //Validation: Get Bills Generated on weekend
-            dsResult = await bug.GetCountDistinctBillOnDataLoadOverTheMaxHistric(gbl.StartDate, gbl.EndDate, gbl.DTVAL_BU_MAX_COUNT_DISTINCT_BILL_IDs);
+            dsResult = await bug.GetCountDistinctBillOnDataLoadOverTheMaxHistric(gbl.StartDate, gbl.EndDate);
             finalResultDS.Tables[0].ImportRow(dsResult.Tables[0].Rows[0]);
             if (dsResult.Tables[0].Rows[0][0].ToString() == "Warning" || dsResult.Tables[0].Rows[0][0].ToString() == "Failed")
                 mySMS.SendSMS(gbl.FromPhNumbAlert, gbl.BiTeamPhoneNumbers, dsResult.Tables[0].Rows[0][11].ToString());

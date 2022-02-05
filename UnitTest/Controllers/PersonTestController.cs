@@ -35,7 +35,7 @@ namespace UnitTest.Controllers
         [HttpGet]
         public async Task<IActionResult> Get()
         {
-            mySMS = new SMS(gbl.CcnAzureCommunicSrvs);
+            mySMS = new SMS(gbl.CcnAzureCommunicationServices);
 
             Person per = new Person(gbl.CcnDatawareHouse, gbl.CcnCDC, testFileName);
 

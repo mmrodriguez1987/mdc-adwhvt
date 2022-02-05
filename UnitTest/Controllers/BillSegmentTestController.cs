@@ -36,7 +36,7 @@ namespace UnitTest.Controllers
         [HttpGet]
         public async Task<IActionResult> Get()
         {
-            mySMS = new SMS(gbl.CcnAzureCommunicSrvs);
+            mySMS = new SMS(gbl.CcnAzureCommunicationServices);
             BillSegment bst = new BillSegment(gbl.CcnDatawareHouse, gbl.CcnCDC, testFileName);
 
             dsResult = Extensions.getResponseStructure("");

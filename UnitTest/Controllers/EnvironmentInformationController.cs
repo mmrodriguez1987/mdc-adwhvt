@@ -13,13 +13,13 @@ namespace UnitTest.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [Author("Michael Rodriguez", "11/30/2021", "Controller for Test Incremental Load at Azure Data Factory")]
-    public class EnviromentInformationController : ControllerBase
+    public class EnvironmentInformationController : ControllerBase
     {
-        private readonly ILogger<EnviromentInformationController> _log;        
+        private readonly ILogger<EnvironmentInformationController> _log;        
         private Global gbl;
         private EnviromentInformation envInfo;
 
-        public EnviromentInformationController(IConfiguration conf, ILogger<EnviromentInformationController> log)
+        public EnvironmentInformationController(IConfiguration conf, ILogger<EnvironmentInformationController> log)
         {
             gbl = new Global(conf);
             _log = log;

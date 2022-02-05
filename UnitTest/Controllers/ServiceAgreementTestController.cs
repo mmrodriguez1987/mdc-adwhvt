@@ -37,7 +37,7 @@ namespace UnitTest.Controllers
         public async Task<IActionResult> Get()
         {
 
-            mySMS = new SMS(gbl.CcnAzureCommunicSrvs);
+            mySMS = new SMS(gbl.CcnAzureCommunicationServices);
 
             ServiceAgreement sa = new ServiceAgreement(gbl.CcnDatawareHouse, gbl.CcnCDC, testFileName);
 

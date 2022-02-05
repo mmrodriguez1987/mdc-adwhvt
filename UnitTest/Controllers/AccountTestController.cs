@@ -32,66 +32,24 @@ namespace UnitTest.Controllers
             dsResult = new DataSet();
             testFileName = @gbl.LogFileRoot + "UT_BI_ADWH_" + DateTime.UtcNow.ToString("yyyy_MM_dd");
         }
-        /*
-        [HttpGet]
-        public async Task<IActionResult> Get()
-        {           
-            mySMS = new SMS(gbl.CcnAzureCommunicSrvs);            
-            Account acct = new Account(gbl.CcnDatawareHouse, gbl.CcnCDC, gbl.CcnValidationDB, gbl.CcnAzureCommunicSrvs, testFileName);
-
-            dsResult = Extensions.getResponseStructure("");
-            finalResultDS = Extensions.getResponseStructure("GlobalTestResult");
-          
-
-            //Validation: Get Distinct Accounts Count between the CCB and DTW
-            dsResult = await acct.DistinctAccountCount(gbl.StartDate, gbl.EndDate);
-            finalResultDS.Tables[0].ImportRow(dsResult.Tables[0].Rows[0]);
-            if (dsResult.Tables[0].Rows[0][0].ToString() == "Warning" || dsResult.Tables[0].Rows[0][0].ToString() == "Failed")            
-                mySMS.SendSMS(gbl.FromPhNumbAlert, gbl.BiTeamPhoneNumbers, dsResult.Tables[0].Rows[0][11].ToString());            
-           
-
-            //Validation: Get Distinct Account On load Over the Maximun Historic Count
-            dsResult = await acct.DistinctAcctCountOnDataLoadOverTheMaxHistricCount(gbl.StartDate, gbl.EndDate);
-            finalResultDS.Tables[0].ImportRow(dsResult.Tables[0].Rows[0]);
-            if (dsResult.Tables[0].Rows[0][0].ToString() == "Warning" || dsResult.Tables[0].Rows[0][0].ToString() == "Failed")
-                mySMS.SendSMS(gbl.FromPhNumbAlert, gbl.BiTeamPhoneNumbers, dsResult.Tables[0].Rows[0][11].ToString());        
-
-
-            //Validation: Get comparision of new records between CCB and DWT
-            dsResult = await acct.NewAccountCounts(gbl.StartDate, gbl.EndDate);
-            finalResultDS.Tables[0].ImportRow(dsResult.Tables[0].Rows[0]);
-            if (dsResult.Tables[0].Rows[0][0].ToString() == "Warning" || dsResult.Tables[0].Rows[0][0].ToString() == "Failed")
-               mySMS.SendSMS(gbl.FromPhNumbAlert, gbl.BiTeamPhoneNumbers, dsResult.Tables[0].Rows[0][11].ToString());
-
-
-            //Validation: Get comparision of updated records between CCB and DTW
-            dsResult = await acct.UpdatedAccountCounts(gbl.StartDate, gbl.EndDate);
-            finalResultDS.Tables[0].ImportRow(dsResult.Tables[0].Rows[0]);
-            if (dsResult.Tables[0].Rows[0][0].ToString() == "Warning" || dsResult.Tables[0].Rows[0][0].ToString() == "Failed")
-                mySMS.SendSMS(gbl.FromPhNumbAlert, gbl.BiTeamPhoneNumbers, dsResult.Tables[0].Rows[0][11].ToString());
-
-
-            //Validation: Get a 5 Days statistical comparision of account
-            dsResult = await acct.StatisticalAcountEvaluation(gbl.EndDate, gbl.EvaluatedDatesRangeOnAverageTest, gbl.ToleranceVariatonNumber);            
-            finalResultDS.Tables[0].ImportRow(dsResult.Tables[0].Rows[0]);
-            if (dsResult.Tables[0].Rows[0][0].ToString() == "Warning" || dsResult.Tables[0].Rows[0][0].ToString() == "Failed")
-                mySMS.SendSMS(gbl.FromPhNumbAlert, gbl.BiTeamPhoneNumbers, dsResult.Tables[0].Rows[0][11].ToString());
-           
-            finalResultDS.Tables[0].ImportRow(dsResult.Tables[0].Rows[0]);         
-
-            return base.Ok(Extensions.DataTableToJSONWithStringBuilder(finalResultDS.Tables[0]));
-        }*/
-
+             
         
         [HttpGet]
         public async Task<IActionResult> Get(DateTime startDate, DateTime endDate)
         {
-
-            mySMS = new SMS(gbl.CcnAzureCommunicSrvs);
-            Account acct = new Account(gbl.CcnDatawareHouse, gbl.CcnCDC, gbl.CcnValidationDB, gbl.CcnAzureCommunicSrvs, testFileName);
-
+            //Local members
             dsResult = Extensions.getResponseStructure("");
-            finalResultDS = Extensions.getResponseStructure("GlobalTestResult");
+            finalResultDS = Extensions.getResponseStructure("");
+
+            //Adding 10am to the hour
+            startDate = startDate.Date.AddHours(10);
+            endDate = endDate.Date.AddHours(10);
+
+            //Initializing the communication service
+            mySMS = new SMS(gbl.CcnAzureCommunicationServices);
+
+            //Initializing Account Business Layer
+            Account acct = new Account(gbl.CcnDatawareHouse, gbl.CcnCDC, gbl.CcnValidationDB, gbl.CcnAzureCommunicationServices, testFileName);         
 
             
             //Validation: Get Distinct Accounts Count between the CCB and DTW
@@ -132,6 +90,5 @@ namespace UnitTest.Controllers
 
             return base.Ok(Extensions.DataTableToJSONWithStringBuilder(finalResultDS.Tables[0]));
         }
-
     }
 }

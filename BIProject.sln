@@ -12,8 +12,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tools", "Tools\Tools.csproj
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DBHelper", "DBHelper\DBHelper.csproj", "{A198C982-0B60-4493-AB8F-50602E6BDC6B}"
 EndProject
-Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "ValidationDB", "ValidationDB\ValidationDB.sqlproj", "{2D8D9233-0E7D-48D0-8511-D75D438706E8}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -32,12 +30,6 @@ Global
 		{A198C982-0B60-4493-AB8F-50602E6BDC6B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A198C982-0B60-4493-AB8F-50602E6BDC6B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A198C982-0B60-4493-AB8F-50602E6BDC6B}.Release|Any CPU.Build.0 = Release|Any CPU
-		{2D8D9233-0E7D-48D0-8511-D75D438706E8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{2D8D9233-0E7D-48D0-8511-D75D438706E8}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{2D8D9233-0E7D-48D0-8511-D75D438706E8}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
-		{2D8D9233-0E7D-48D0-8511-D75D438706E8}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{2D8D9233-0E7D-48D0-8511-D75D438706E8}.Release|Any CPU.Build.0 = Release|Any CPU
-		{2D8D9233-0E7D-48D0-8511-D75D438706E8}.Release|Any CPU.Deploy.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

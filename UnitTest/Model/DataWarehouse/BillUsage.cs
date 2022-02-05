@@ -157,8 +157,9 @@ namespace UnitTest.Model.DataWarehouse
         /// <param name="endDate">Final Evaluated Date</param>
         /// <param name="BU_MAX_COUNT_DISTINCT_BILL_IDs">Maximun Histic Count of Discint bill_id </param>
         /// <returns></returns>
-        public Task<DataSet> GetCountDistinctBillOnDataLoadOverTheMaxHistric(DateTime startDate, DateTime endDate, Int32 BU_MAX_COUNT_DISTINCT_BILL_IDs)
+        public Task<DataSet> GetCountDistinctBillOnDataLoadOverTheMaxHistric(DateTime startDate, DateTime endDate)
         {
+            Int32 BU_MAX_COUNT_DISTINCT_BILL_IDs = 100000;
             myResponse = Extensions.getResponseStructure("GetCountDistinctBillOnDataLoad");
 
             string query = "SELECT COUNT(DISTINCT SRC_BILL_ID) DwCount, CONVERT(VARCHAR,DATA_LOAD_DTTM,1) DATA_LOAD_DTTM, FORMAT(DATA_LOAD_DTTM,'dddd') DayofWeek " + 
