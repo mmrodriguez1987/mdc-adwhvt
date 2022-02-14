@@ -15,40 +15,35 @@ namespace UnitTest.Controllers
     [ApiController]
     [Author("Michael Rodriguez", "11/30/2021", "Controller for Test Incremental Load at Azure Data Factory")]
     public class PremiseTestController : ControllerBase
-    {    
-        private readonly ILogger<PremiseTestController> _log;       
+    {       
         private DataSet finalResultDS, dsResult;
-        private string testFileName;
         private SMS mySMS;
         private Global gbl;
 
-        public PremiseTestController(IConfiguration conf, ILogger<PremiseTestController> log)
+        public PremiseTestController(IConfiguration conf)
         {            
-            _log = log;
+           
             gbl = new Global(conf);
             finalResultDS = new DataSet();
-            dsResult = new DataSet();
-            testFileName = @gbl.LogFileRoot + "UT_BI_ADWH_" + DateTime.UtcNow.ToString("yyyy_MM_dd");
+            dsResult = new DataSet();           
         }
 
         [HttpGet]
-        public async Task<IActionResult> Get()
+        public async Task<IActionResult> Get(DateTime startDate, DateTime endDate, Boolean sendSMSNotify)
         {
-            mySMS = new SMS(gbl.CcnAzureCommunicationServices);
+            mySMS = new SMS(gbl.CcnACS);
 
-            Premise prem = new Premise(gbl.CcnDatawareHouse, gbl.CcnCDC, testFileName);
+            Premise prem = new Premise(gbl.CcnDTW, gbl.CcnCDC);
 
             dsResult = Extensions.getResponseStructure("");
             finalResultDS = Extensions.getResponseStructure("PremiseTestResult");
           
             //Validation: Get Premise Count
-            dsResult = await prem.UniquePremisesCount(gbl.StartDate, gbl.EndDate);
+            dsResult = await prem.UniquePremisesCount(startDate, endDate);
             finalResultDS.Tables[0].ImportRow(dsResult.Tables[0].Rows[0]);
-            if (dsResult.Tables[0].Rows[0][0].ToString() == "Warning" || dsResult.Tables[0].Rows[0][0].ToString() == "Failed")
+            if ((dsResult.Tables[0].Rows[0][0].ToString() == "Warning" || dsResult.Tables[0].Rows[0][0].ToString() == "Failed") && sendSMSNotify)
                 mySMS.SendSMS(gbl.FromPhNumbAlert, gbl.BiTeamPhoneNumbers, dsResult.Tables[0].Rows[0][11].ToString());
-
-
-            _log.LogInformation("End of the Premise Count Test at: " + DateTime.Now.ToString());
+            
 
             return base.Ok(Extensions.DataTableToJSONWithStringBuilder(finalResultDS.Tables[0]));
         }

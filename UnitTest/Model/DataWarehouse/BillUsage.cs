@@ -4,23 +4,38 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Threading.Tasks;
 using DBHelper.SqlHelper;
-using Tools.Files;
 using Tools.DataConversion;
-
+using UnitTest.Model.ValidationTest;
+using Tools;
 
 namespace UnitTest.Model.DataWarehouse
 {
-    public class BillUsage    {
-       
+    public class BillUsage    
+    {
+        private string _ccnDTW, _ccnCDC, testInterpretation;        
+        private DataSet myResponse = new DataSet(), evalDataDTW = new DataSet(), evalDataCDC = new DataSet();
+        private CBDate tTime;
+        private Historical historical;
+        private TestResult results;
+        private int dtwCount = 0;
 
-        private string _ccnDTW;
-        private string _testFileName;
-        private DataSet myResponse, evaluatedData = new DataSet();
-
-        public BillUsage(string ccnDTW, string testFileName)
+        /// <summary>
+        /// Initialize the Billed Usage class with params required
+        /// </summary>
+        /// <param name="cnnDTW">conexion to Datawarehouse</param>
+        /// <param name="ccnCDC">conexion to CDC Database</param>
+        /// <param name="ccnValTest">conexion to Validation Test Database</param>       
+        public BillUsage(string cnnDTW, string ccnCDC, string ccnValTest)
         {
-            _ccnDTW = ccnDTW;
-            _testFileName = testFileName;
+            _ccnDTW = cnnDTW;
+            _ccnCDC = ccnCDC;            
+            //Initializa Historical Indicators Computing
+            historical = new Historical(ccnValTest);
+            results = new TestResult(ccnValTest);
+            testInterpretation = String.Empty;
+            //spCDCforAccount = "cdc.sp_ci_acct_ct";
+            // spCDCforBillSegment = "cdc.sp_ci_bseg_ct";
+            tTime = new CBDate();
         }
 
         /// <summary>
@@ -29,13 +44,15 @@ namespace UnitTest.Model.DataWarehouse
         /// <param name="startDate"></param>
         /// <param name="endDate"></param>
         /// <returns></returns>
-        public Task<DataSet> GetBillsGeneratedOnWeekend(DateTime startDate, DateTime endDate)
+        public Task<DataSet> GetBillsGeneratedOnWeekend(DateTime startDate, DateTime endDate, Boolean saveResult)
         {
             myResponse = Extensions.getResponseStructure("BillsGeneratedOnWeekend");
-            string query = "SELECT B.BILLED_USAGE_KEY, B.SRC_BILL_ID, B.PER_KEY,"  + 
-                "B.ACCT_KEY, D.BillDayofWeek, D.BillWorkDayCode, B.UDDGEN1 BillDate " + 
-                "FROM dwadm2.CF_BILLED_USAGE B INNER JOIN dwadm2.vw_BillDate D ON B.BILL_DATE_KEY=D.BillDateKey " +
+            string query = "SELECT DISTINCT B.SRC_BILL_ID FROM dwadm2.CF_BILLED_USAGE B INNER JOIN dwadm2.vw_BillDate D ON B.BILL_DATE_KEY=D.BillDateKey " +
                 "WHERE B.DATA_LOAD_DTTM BETWEEN @startDate AND @endDate AND BillWorkDayCode = 0";
+            
+            startDate = startDate.AddHours(5); // adding the dates to UTC
+            endDate = endDate.AddHours(5);  ///adding the hours to UTC
+            List<string> affectedIDs = new List<string>();
 
             return Task.Run(() =>
             {
@@ -43,44 +60,60 @@ namespace UnitTest.Model.DataWarehouse
                 {                   
                     List<SqlParameter> dtwParameters = new List<SqlParameter>();                   
 
-                    dtwParameters.Add(new SqlParameter("@startDate", endDate.ToString("yyyy-MM-dd HH:mm")));
-                    dtwParameters.Add(new SqlParameter("@endDate", endDate.AddHours(5).ToString("yyyy-MM-dd HH:mm")));
+                    dtwParameters.Add(new SqlParameter("@startDate", startDate.ToString("yyyy-MM-dd HH:mm")));
+                    dtwParameters.Add(new SqlParameter("@endDate", endDate.ToString("yyyy-MM-dd HH:mm")));
 
-
-                    String interpoledQuery = "SELECT B.BILLED_USAGE_KEY, B.SRC_BILL_ID, B.PER_KEY," +
-                        "B.ACCT_KEY, D.BillDayofWeek, D.BillWorkDayCode, B.UDDGEN1 BillDate " +
+                    String interpoledQuery = "SELECT B.SRC_BILL_ID, D.BillDayofWeek, B.UDDGEN1 BillDate  " +
                         "FROM dwadm2.CF_BILLED_USAGE B INNER JOIN dwadm2.vw_BillDate D ON B.BILL_DATE_KEY=D.BillDateKey " +
-                        "WHERE B.DATA_LOAD_DTTM BETWEEN '"+ endDate.ToString("yyyy-MM-dd HH:mm") + "' AND '"+ endDate.AddHours(5).ToString("yyyy-MM-dd HH:mm") + "' AND BillWorkDayCode = 0";
+                        "WHERE B.DATA_LOAD_DTTM BETWEEN '"+ endDate.ToString("yyyy-MM-dd HH:mm") + "' AND '"+ endDate.ToString("yyyy-MM-dd HH:mm") + "' AND BillWorkDayCode = 0";
 
-                    evaluatedData = SqlHelper.ExecuteDataset(_ccnDTW, CommandType.Text, query, dtwParameters.ToArray());
+                    evalDataDTW = SqlHelper.ExecuteDataset(_ccnDTW, CommandType.Text, query, dtwParameters.ToArray());
 
-                    myResponse.Tables[0].Rows[0][0] = (evaluatedData.Tables[0].Rows.Count > 0) ? "Failed" : "OK!"; 
-                    myResponse.Tables[0].Rows[0][1] = "Check-New-Bills-On-Weekend";
-                    myResponse.Tables[0].Rows[0][2] = "BillUsage, BillDate";
-                    myResponse.Tables[0].Rows[0][3] = (evaluatedData.Tables[0].Rows.Count > 0) ? "There are bills generated on weekend or holidays" : "No bills Generated on weekend or holidays were found";
-                    myResponse.Tables[0].Rows[0][4] = endDate.ToString("yyyy-MM-dd HH:mm");
-                    myResponse.Tables[0].Rows[0][5] = endDate.AddHours(5).ToString("yyyy-MM-dd HH:mm");                    
+                    dtwCount = evalDataDTW.Tables[0].Rows.Count; 
+                   
+                    testInterpretation = (dtwCount > 0) ? ("There are " + dtwCount + " bills that were generated on weekends or holidays") : "No bills were generated on weekend or holidays";
+                    
+                    if (dtwCount > 0)            
+                        foreach (DataRow row in evalDataDTW.Tables[0].Rows) affectedIDs.Add((string)Convert.ToString(row["SRC_BILL_ID"]));
+
+                    myResponse.Tables[0].Rows[0][0] = (dtwCount > 0) ? "Failed" : "OK!"; 
+                    myResponse.Tables[0].Rows[0][1] = "Bills Generated on Weekend";
+                    myResponse.Tables[0].Rows[0][2] = "dt-ttdp: dwadm2.CF_BILLED_USAGE";
+                    myResponse.Tables[0].Rows[0][3] = testInterpretation;
+                    myResponse.Tables[0].Rows[0][4] = startDate.ToString("yyyy-MM-dd HH:mm");
+                    myResponse.Tables[0].Rows[0][5] = endDate.ToString("yyyy-MM-dd HH:mm");                    
                     myResponse.Tables[0].Rows[0][6] = -1;
-                    myResponse.Tables[0].Rows[0][7] = -1;
+                    myResponse.Tables[0].Rows[0][7] = dtwCount;
                     myResponse.Tables[0].Rows[0][8] = "";
                     myResponse.Tables[0].Rows[0][9] = interpoledQuery;
-                    myResponse.Tables[0].Rows[0][10] = endDate.AddHours(5).ToString("yyyy-MM-dd HH:mm");
-                    myResponse.Tables[0].Rows[0][11] = "ADTWH - Validation: Test Name =>" + myResponse.Tables[0].Rows[0][1].ToString() + ", Test Result => " + myResponse.Tables[0].Rows[0][0].ToString();
+                    myResponse.Tables[0].Rows[0][10] = endDate.ToString("yyyy-MM-dd HH:mm");
+                    myResponse.Tables[0].Rows[0][11] = "ADTWH-Val=> T.N: " + myResponse.Tables[0].Rows[0][1].ToString() + ", T.R: " + testInterpretation;
 
-                    CSV logFile = new CSV(_testFileName + ".csv");
-                    logFile.writeNewOrExistingFile(myResponse.Tables[0]);
-
-                    if (evaluatedData.Tables[0].Rows.Count > 0)
+                    if (saveResult)
                     {
-                        CSV DetaillogFile = new CSV(_testFileName + "_Detail_Bill_Generated_On_Weekend.csv");
-                        DetaillogFile.writeNewOrExistingFile(evaluatedData.Tables[0]);
+                        //recording on DB 
+                        results.Description = testInterpretation;
+                        results.StartDate = startDate;
+                        results.EndDate = endDate;
+                        results.StateID = (short)((dtwCount == 0) ? 3 : 2);
+                        results.TestDate = DateTime.Now;
+                        results.TestID = 1; // Bills Generated On Weekend
+                        results.recordBilledUsageBusinessRuleValidationTest(dtwCount, "CF_BILLED_USAGE.SRC_BILL_ID", (dtwCount > 0) ? affectedIDs.ToArray() : null);
+
+                        // if there re any error on recording db
+                        if (!String.IsNullOrEmpty(results.Error))
+                        {
+                            myResponse.Tables[0].Rows[0][3] = ("Error saving NewAccountCounts test results in Account");
+                            myResponse.Tables[0].Rows[0][11] = ("Error saving NewAccountCounts test results in Account");
+                        }
                     }
+                    
                     return myResponse;
                 }
-                catch (Exception e)
+                catch (Exception )
                 {
-                    myResponse.Tables[0].Rows[0][3] = ("Error: " + e.ToString().Substring(0, 160));
-                    myResponse.Tables[0].Rows[0][11] = ("Error: " + e.ToString().Substring(0, 160));
+                    myResponse.Tables[0].Rows[0][3] = ("Exception error on NewAccountCounts process");
+                    myResponse.Tables[0].Rows[0][11] = ("Exception error on NewAccountCounts process");
                     return myResponse;
                 }
             });
@@ -93,13 +126,16 @@ namespace UnitTest.Model.DataWarehouse
         /// <param name="startDate">Initial Evaluated Date</param>
         /// <param name="endDate">Final Evaluated Date</param>
         /// <returns></returns>
-        public Task<DataSet> GetBillGeneratedOnWrongFiscalYear(DateTime startDate, DateTime endDate)
+        public Task<DataSet> GetBillGeneratedOnWrongFiscalYear(DateTime startDate, DateTime endDate, Boolean saveResult)
         {
             myResponse = Extensions.getResponseStructure("BillGeneratedOnWrongFiscalYear");
-            string query = "SELECT  B.BILL_DATE_KEY, B.BILLED_USAGE_KEY, B.UDDGEN1, B.FISCAL_CAL_KEY, C.StartDate, " +
-                "C.EndDate, CASE WHEN (B.UDDGEN1 BETWEEN C.StartDate AND C.EndDate) THEN 1 ELSE 0 END AS IsCorrectFiscalYear " + 
-                "FROM dwadm2.CF_BILLED_USAGE B INNER JOIN dwadm2.vw_CD_FISCAL_CAL C ON B.FISCAL_CAL_KEY=C.FISCAL_CAL_KEY "+
-                "WHERE (B.DATA_LOAD_DTTM BETWEEN @startDate AND @endDate) ";            
+            string query = "SELECT T.SRC_BILL_ID FROM (SELECT top(100) B.SRC_BILL_ID, CASE WHEN (B.UDDGEN1 BETWEEN C.StartDate AND C.EndDate) THEN 1 ELSE 0 END AS IsCorrectFiscalYear " +
+                "FROM dwadm2.CF_BILLED_USAGE B INNER JOIN dwadm2.vw_CD_FISCAL_CAL C ON B.FISCAL_CAL_KEY=C.FISCAL_CAL_KEY " +
+                "WHERE (B.DATA_LOAD_DTTM BETWEEN @startDate AND @endDate)) AS T WHERE T.IsCorrectFiscalYear = 0 ";
+
+            startDate = startDate.AddHours(5); // adding the dates to UTC
+            endDate = endDate.AddHours(5);  ///adding the hours to UTC
+            List<string> affectedIDs = new List<string>();
 
             return Task.Run(() =>
             {
@@ -110,41 +146,60 @@ namespace UnitTest.Model.DataWarehouse
                     dtwParameters.Add(new SqlParameter("@startDate", endDate.AddHours(5).ToString("yyyy-MM-dd HH:mm")));
                     dtwParameters.Add(new SqlParameter("@endDate", endDate.AddHours(5).ToString("yyyy-MM-dd HH:mm")));
 
-                    evaluatedData = SqlHelper.ExecuteDataset(_ccnDTW, CommandType.Text, query, dtwParameters.ToArray());
+                    evalDataDTW = SqlHelper.ExecuteDataset(_ccnDTW, CommandType.Text, query, dtwParameters.ToArray());
 
-                    string interpolatedQuery = "SELECT  B.BILL_DATE_KEY, B.BILLED_USAGE_KEY, B.UDDGEN1, B.FISCAL_CAL_KEY, C.StartDate, " +
-                        "C.EndDate, CASE WHEN (B.UDDGEN1 BETWEEN C.StartDate AND C.EndDate) THEN 1 ELSE 0 END AS IsCorrectFiscalYear " +
+                    string interpolatedQuery = "SELECT T.SRC_BILL_ID FROM (SELECT top(100) B.SRC_BILL_ID, CASE WHEN (B.UDDGEN1 BETWEEN C.StartDate AND C.EndDate) THEN 1 ELSE 0 END AS IsCorrectFiscalYear  " +
                         "FROM dwadm2.CF_BILLED_USAGE B INNER JOIN dwadm2.vw_CD_FISCAL_CAL C ON B.FISCAL_CAL_KEY=C.FISCAL_CAL_KEY " +
-                        "WHERE (B.DATA_LOAD_DTTM BETWEEN '" + endDate.AddHours(5).ToString("yyyy-MM-dd HH:mm") + "' AND '"+ endDate.AddHours(5).ToString("yyyy-MM-dd HH:mm") + "') ";
+                        "FROM dwadm2.CF_BILLED_USAGE B INNER JOIN dwadm2.vw_CD_FISCAL_CAL C ON B.FISCAL_CAL_KEY=C.FISCAL_CAL_KEY " +
+                        "WHERE (B.DATA_LOAD_DTTM BETWEEN '" + startDate.ToString("yyyy-MM-dd HH:mm") + "' AND '" + endDate.ToString("yyyy-MM-dd HH:mm") + "')) AS T ";
 
-                    myResponse.Tables[0].Rows[0][0] = (evaluatedData.Tables[0].Select("IsCorrectFiscalYear = 0").Length > 0) ? "Warning" : "OK!";
-                    myResponse.Tables[0].Rows[0][1] = "Get-Bill-Generated-On-Wrong-Fiscal-Year";
-                    myResponse.Tables[0].Rows[0][2] = "BillUsage, Fiscal Year";
-                    myResponse.Tables[0].Rows[0][3] = (evaluatedData.Tables[0].Select("IsCorrectFiscalYear = 0").Length > 0) ? "There are bills generated on wrong fiscal year" : "No bills Generated on weekend or holidays were found";
-                    myResponse.Tables[0].Rows[0][4] = endDate.ToString("yyyy-MM-dd HH:mm");
-                    myResponse.Tables[0].Rows[0][5] = endDate.AddHours(5).ToString("yyyy-MM-dd HH:mm");                   
+                    dtwCount = evalDataDTW.Tables[0].Rows.Count;
+
+                    testInterpretation = (dtwCount > 0) ? ("There are " + dtwCount + " bills that were generated on wrong fiscal year") : "No bills were generated on wrong fiscal year";
+
+                    if (dtwCount > 0)
+                        foreach (DataRow row in evalDataDTW.Tables[0].Rows) affectedIDs.Add((string)Convert.ToString(row["SRC_BILL_ID"]));
+
+
+                    myResponse.Tables[0].Rows[0][0] = (dtwCount > 0) ? "Warning" : "OK!";
+                    myResponse.Tables[0].Rows[0][1] = "Get Bill Generated On Wrong Fiscal Year";
+                    myResponse.Tables[0].Rows[0][2] = "dt-ttdp: dwadm2.CF_BILLED_USAGE";
+                    myResponse.Tables[0].Rows[0][3] = testInterpretation;
+                    myResponse.Tables[0].Rows[0][4] = startDate.ToString("yyyy-MM-dd HH:mm");
+                    myResponse.Tables[0].Rows[0][5] = endDate.ToString("yyyy-MM-dd HH:mm");                   
                     myResponse.Tables[0].Rows[0][6] = -1;
-                    myResponse.Tables[0].Rows[0][7] = -1;
+                    myResponse.Tables[0].Rows[0][7] = dtwCount;
                     myResponse.Tables[0].Rows[0][8] = "";
                     myResponse.Tables[0].Rows[0][9] = interpolatedQuery + "IsCorrectFiscalYear = 0";
-                    myResponse.Tables[0].Rows[0][10] = endDate.AddHours(5).ToString("yyyy-MM-dd HH:mm");
-                    myResponse.Tables[0].Rows[0][11] = "ADTWH - Validation: Test Name =>" + myResponse.Tables[0].Rows[0][1].ToString() + ", Test Result => " + myResponse.Tables[0].Rows[0][0].ToString();
+                    myResponse.Tables[0].Rows[0][10] = endDate.ToString("yyyy-MM-dd HH:mm");
+                    myResponse.Tables[0].Rows[0][11] = "ADTWH-Val=> T.N: " + myResponse.Tables[0].Rows[0][1].ToString() + ", T.R: " + testInterpretation;                   
 
-                    CSV logFile = new CSV(_testFileName + ".csv");
-                    logFile.writeNewOrExistingFile(myResponse.Tables[0]);
-
-                    //if the Test Fail write other file with the failed_data
-                    if ((evaluatedData.Tables[0].Select("IsCorrectFiscalYear = 0").Length > 0))
+                    if (saveResult)
                     {
-                        CSV DetaillogFile = new CSV(_testFileName + "_Detail_Bill_Generated_On_Wrong_Fiscal_Year.csv");
-                        DetaillogFile.writeNewOrExistingFile(evaluatedData.Tables[0].Select("IsCorrectFiscalYear = 0").CopyToDataTable());
+                        //recording on DB 
+                        results.Description = testInterpretation;
+                        results.StartDate = startDate;
+                        results.EndDate = endDate;
+                        results.StateID = (short)((dtwCount == 0) ? 3 : 2);
+                        results.TestDate = DateTime.Now;
+                        results.TestID = 2; // Bills Generated On Wrong Fiscal Year
+                        results.recordBilledUsageBusinessRuleValidationTest(dtwCount, "CF_BILLED_USAGE.SRC_BILL_ID", (dtwCount > 0) ? affectedIDs.ToArray() : null);
+
+                        // if there re any error on recording db
+                        if (!String.IsNullOrEmpty(results.Error))
+                        {
+                            myResponse.Tables[0].Rows[0][3] = ("Error saving NewAccountCounts test results in Account");
+                            myResponse.Tables[0].Rows[0][11] = ("Error saving NewAccountCounts test results in Account");
+                        }
                     }
+                    
+                   
                     return myResponse;
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
-                    myResponse.Tables[0].Rows[0][3] = ("Error: " + e.ToString().Substring(0, 160));
-                    myResponse.Tables[0].Rows[0][11] = ("Error: " + e.ToString().Substring(0, 160));
+                    myResponse.Tables[0].Rows[0][3] = ("Exception error on NewAccountCounts process");
+                    myResponse.Tables[0].Rows[0][11] = ("Exception error on NewAccountCounts process");
                     return myResponse;
                 }
             });
@@ -157,7 +212,7 @@ namespace UnitTest.Model.DataWarehouse
         /// <param name="endDate">Final Evaluated Date</param>
         /// <param name="BU_MAX_COUNT_DISTINCT_BILL_IDs">Maximun Histic Count of Discint bill_id </param>
         /// <returns></returns>
-        public Task<DataSet> GetCountDistinctBillOnDataLoadOverTheMaxHistric(DateTime startDate, DateTime endDate)
+        public Task<DataSet> GetCountDistinctBillOnDataLoadOverTheMaxHistric(DateTime startDate, DateTime endDate, Boolean saveResult)
         {
             Int32 BU_MAX_COUNT_DISTINCT_BILL_IDs = 100000;
             myResponse = Extensions.getResponseStructure("GetCountDistinctBillOnDataLoad");
@@ -174,9 +229,9 @@ namespace UnitTest.Model.DataWarehouse
                     dtwParameters.Add(new SqlParameter("@startDate", endDate.ToString("yyyy-MM-dd HH:mm")));
                     dtwParameters.Add(new SqlParameter("@endDate", endDate.AddHours(5).ToString("yyyy-MM-dd HH:mm")));
 
-                    evaluatedData = SqlHelper.ExecuteDataset(_ccnDTW, CommandType.Text, query, dtwParameters.ToArray());
+                    evalDataDTW = SqlHelper.ExecuteDataset(_ccnDTW, CommandType.Text, query, dtwParameters.ToArray());
 
-                    int dtwCount = Convert.ToInt32(evaluatedData.Tables[0].Rows[0][0]);
+                    int dtwCount = Convert.ToInt32(evalDataDTW.Tables[0].Rows[0][0]);
 
                     string interpolatedQuery = " SELECT COUNT(DISTINCT SRC_BILL_ID) DwCount, CONVERT(VARCHAR,DATA_LOAD_DTTM,1) DATA_LOAD_DTTM, FORMAT(DATA_LOAD_DTTM,'dddd') DayofWeek FROM dwadm2.CF_BILLED_USAGE WHERE DATA_LOAD_DTTM BETWEEN '"
                     + endDate.ToString("yyyy-MM-dd HH:mm") + "' AND '" + endDate.AddHours(5).ToString("yyyy-MM-dd HH:mm") + "' GROUP BY CONVERT(VARCHAR, DATA_LOAD_DTTM,1), FORMAT(DATA_LOAD_DTTM,'dddd') ORDER BY DATA_LOAD_DTTM DESC";
@@ -193,10 +248,7 @@ namespace UnitTest.Model.DataWarehouse
                     myResponse.Tables[0].Rows[0][9] = interpolatedQuery;
                     myResponse.Tables[0].Rows[0][10] = endDate.AddHours(5).ToString("yyyy-MM-dd HH:mm");
                     myResponse.Tables[0].Rows[0][11] = "ADTWH - Validation: Test Name =>" + myResponse.Tables[0].Rows[0][1].ToString() + ", Test Result => " + myResponse.Tables[0].Rows[0][0].ToString();
-
-                    CSV logFile = new CSV(_testFileName + ".csv");
-                    logFile.writeNewOrExistingFile(myResponse.Tables[0]);
-                   
+                                       
                     return myResponse;
                 }
                 catch (Exception e)

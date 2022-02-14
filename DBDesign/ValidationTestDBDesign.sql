@@ -9,7 +9,7 @@ IF EXISTS (SELECT * FROM sys.all_views WHERE SCHEMA_NAME(schema_id) LIKE 'dbo' A
 IF EXISTS (SELECT * FROM sys.all_views WHERE SCHEMA_NAME(schema_id) LIKE 'dbo' AND name like 'vwDataEntity') DROP VIEW vwDataEntity
 IF EXISTS (SELECT * FROM sys.all_views WHERE SCHEMA_NAME(schema_id) LIKE 'dbo' AND name like 'vwTestResult') DROP VIEW vwTestResult
 
-IF EXISTS (SELECT * FROM sys.tables WHERE SCHEMA_NAME(schema_id) LIKE 'dbo' AND name like 'HistoricalIndicator') DROP TABLE HistoricalIndicator
+IF EXISTS (SELECT * FROM sys.tables WHERE SCHEMA_NAME(schema_id) LIKE 'dbo' AND name like 'ResultStat') DROP TABLE ResultStat
 IF EXISTS (SELECT * FROM sys.tables WHERE SCHEMA_NAME(schema_id) LIKE 'dbo' AND name like 'IndicatorType') DROP TABLE IndicatorType
 IF EXISTS (SELECT * FROM sys.tables WHERE SCHEMA_NAME(schema_id) LIKE 'dbo' AND name like 'ResultDetail') DROP TABLE ResultDetail
 IF EXISTS (SELECT * FROM sys.tables WHERE SCHEMA_NAME(schema_id) LIKE 'dbo' AND name like 'Result') DROP TABLE Result
@@ -129,9 +129,9 @@ CREATE TABLE IndicatorType
 	typeDesc VARCHAR(100),
 	active BIT
 )
-CREATE TABLE HistoricalIndicator
+CREATE TABLE ResultStat
 (                                                                                                                                                              
-	histIndicatorID BIGINT IDENTITY(1,1) PRIMARY KEY,
+	resultStatID BIGINT IDENTITY(1,1) PRIMARY KEY,
 	columnID BIGINT FOREIGN KEY REFERENCES ColumnDefinition(columnID),
 	indicatorTypeID SMALLINT FOREIGN KEY REFERENCES IndicatorType(indicatorTypeID),
 	[count] float,
@@ -218,8 +218,8 @@ GO
 
 create  VIEW vwHistoricalInformation
 AS
-SELECT histIndicatorID, H.columnID, H.[count] Count, C.columnName [Column], E.entityShortName Entity, h.indicatorTypeID, i.typeDesc TypeIndicator,h.calculatedDate
-FROM HistoricalIndicator H
+SELECT resultStatID, H.columnID, H.[count] Count, C.columnName [Column], E.entityShortName Entity, h.indicatorTypeID, i.typeDesc TypeIndicator,h.calculatedDate
+FROM ResultStat H
 INNER JOIN ColumnDefinition C ON H.columnID=C.columnID
 INNER JOIN Entity E ON E.entityID = C.entityID
 INNER JOIN IndicatorType I ON I.indicatorTypeID=H.indicatorTypeID
@@ -231,7 +231,7 @@ INSERT INTO [Source] VALUES('cdcProd','Change Data Capture from CCBProd',1)		--2
 INSERT INTO [Source] VALUES('dw-ttdp', 'Datawarehouse',1)							--3
 									--3
 
-INSERT INTO IndicatorType VALUES('Distinct',1)
+INSERT INTO IndicatorType VALUES('Rows Number',1)
 INSERT INTO IndicatorType VALUES('New',1)
 INSERT INTO IndicatorType VALUES('Updated',1)
 INSERT INTO IndicatorType VALUES('Max Value',1)
@@ -987,3 +987,19 @@ INSERT INTO TestParameter VALUES (33,196)
 INSERT INTO TestParameter VALUES (33,319)
 INSERT INTO TestParameter VALUES (33,469)
 
+INSERT INTO Test VALUES (3,'Distinct BSEG','Compare Distinct BSEG_ID count between CCB and DTWH','',1)					--testID=34
+INSERT INTO TestParameter VALUES (34,195)
+INSERT INTO TestParameter VALUES (34,243)
+INSERT INTO TestParameter VALUES (34,219)
+
+
+/*
+DELETE FROM ResultDetail
+DBCC CHECKIDENT (ResultDetail, RESEED,0)
+GO
+DELETE FROM Result
+DBCC CHECKIDENT (Result, RESEED,0)
+GO 
+DELETE FROM ResultStat
+DBCC CHECKIDENT (ResultStat, RESEED,0)
+*/

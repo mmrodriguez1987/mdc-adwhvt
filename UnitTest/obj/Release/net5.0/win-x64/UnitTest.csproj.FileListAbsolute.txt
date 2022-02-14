@@ -412,6 +412,6 @@ C:\BIProjectUT\UnitTest\bin\Release\net5.0\win-x64\Azure.Communication.Sms.dll
 C:\BIProjectUT\UnitTest\bin\Release\net5.0\win-x64\Azure.Core.dll
 C:\BIProjectUT\UnitTest\bin\Release\net5.0\win-x64\Microsoft.Bcl.AsyncInterfaces.dll
 C:\BIProjectUT\UnitTest\bin\Release\net5.0\win-x64\System.Memory.Data.dll
-C:\BIProjectUT\UnitTest\bin\Release\net5.0\win-x64\mscordaccore_amd64_amd64_5.0.1321.56516.dll
 C:\BIProjectUT\UnitTest\bin\Release\net5.0\win-x64\appsettings.Production.json
 C:\BIProjectUT\UnitTest\bin\Release\net5.0\win-x64\appsettings.Staging.json
+C:\BIProjectUT\UnitTest\bin\Release\net5.0\win-x64\mscordaccore_amd64_amd64_5.0.1422.5710.dll

@@ -104,7 +104,9 @@ namespace Tools.DataConversion
         /// <summary>
         /// Prepara the response structure on Dataset
         /// </summary>
-        /// <returns>a Dataset with a structure ready to be converted in JSON</returns>
+        /// <returns>a Dataset with a structure ready to be converted in JSON with Details about the test result
+        ///  | State | Test Information | Entitites Envolved | Test Result Description | Start Date | End Date | Count CDC | Count DTW | query CDC | query DTW | Effect Date | SMS test |
+        /// </returns>
         public static DataSet getResponseStructure(String dataTableName)
         {
             DataSet dsResult = new DataSet("dsResults");

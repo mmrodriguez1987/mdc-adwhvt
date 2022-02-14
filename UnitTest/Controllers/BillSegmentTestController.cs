@@ -19,8 +19,7 @@ namespace UnitTest.Controllers
     {
             
         private readonly ILogger<BillSegmentTestController> _log;     
-        private DataSet finalResultDS, dsResult;
-        private string testFileName;
+        private DataSet finalResultDS, dsResult;       
         private SMS mySMS;
         private Global gbl;
 
@@ -29,28 +28,35 @@ namespace UnitTest.Controllers
             gbl = new Global(conf);
             _log = log;           
             finalResultDS = new DataSet();
-            dsResult = new DataSet();
-            testFileName = @gbl.LogFileRoot + "UT_BI_ADWH_" + DateTime.UtcNow.ToString("yyyy_MM_dd");
+            dsResult = new DataSet();           
         }
 
         [HttpGet]
-        public async Task<IActionResult> Get()
+        public async Task<IActionResult> Get(DateTime startDate, DateTime endDate)
         {
-            mySMS = new SMS(gbl.CcnAzureCommunicationServices);
-            BillSegment bst = new BillSegment(gbl.CcnDatawareHouse, gbl.CcnCDC, testFileName);
+            //Local members
+            dsResult = Extensions.getResponseStructure("");
+            finalResultDS = Extensions.getResponseStructure("");
+
+            //Adding 10am to the hour
+            startDate = startDate.Date.AddHours(10);
+            endDate = endDate.Date.AddHours(10);
+
+            //Initializing the communication service
+            mySMS = new SMS(gbl.CcnACS);
+
+            BillSegment bst = new BillSegment(gbl.CcnDTW, gbl.CcnCDC, gbl.CcnDVT);
 
             dsResult = Extensions.getResponseStructure("");
             finalResultDS = Extensions.getResponseStructure("GlobalTestResult");
 
             //Validation: Get Count of Bill Segment and comparei
-            dsResult = await bst.UniqueBillSegmentCount(gbl.StartDate, gbl.EndDate);
+            dsResult = await bst.DistinctBillSegmentCount(startDate, endDate);
             finalResultDS.Tables[0].ImportRow(dsResult.Tables[0].Rows[0]);
             if (dsResult.Tables[0].Rows[0][0].ToString() == "Warning" || dsResult.Tables[0].Rows[0][0].ToString() == "Failed")
                 mySMS.SendSMS(gbl.FromPhNumbAlert, gbl.BiTeamPhoneNumbers, dsResult.Tables[0].Rows[0][11].ToString());
 
 
-
-            _log.LogInformation("End of the Global Test at: " + DateTime.Now.ToString());
 
             return base.Ok(Extensions.DataTableToJSONWithStringBuilder(finalResultDS.Tables[0]));           
             

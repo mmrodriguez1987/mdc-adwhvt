@@ -12,7 +12,7 @@ namespace UnitTest.Model.DataWarehouse
 {
     public class Person
     {
-        private string _ccnDTW, _ccnCDC, _testFileName, queryCDC, queryDTW;
+        private string _ccnDTW, _ccnCDC, queryCDC, queryDTW;
         private DataSet myResponse, evalDataDTW, evalDataCDC = new DataSet();
 
 
@@ -22,11 +22,10 @@ namespace UnitTest.Model.DataWarehouse
         /// <param name="cnnDTW">conexion to Datawarehouse</param>
         /// <param name="ccnCDC">conexion to CDC Database</param>
         /// <param name="testFileName">File Name of the Test Result</param>
-        public Person(string cnnDTW, string ccnCDC, string testFileName)
+        public Person(string cnnDTW, string ccnCDC)
         {
             _ccnDTW = cnnDTW;
-            _ccnCDC = ccnCDC;
-            _testFileName = testFileName;       
+            _ccnCDC = ccnCDC;            
             queryCDC = "cdc.sp_ci_per_ct";
         }
 
@@ -75,9 +74,7 @@ namespace UnitTest.Model.DataWarehouse
                     myResponse.Tables[0].Rows[0][9] = interpoledQueryDTW;
                     myResponse.Tables[0].Rows[0][10] = endDate.ToString("yyyy-MM-dd HH:mm");
                     myResponse.Tables[0].Rows[0][11] = "ADTWH - Validation: Test Name =>" + myResponse.Tables[0].Rows[0][1].ToString() + ", Test Result => " + myResponse.Tables[0].Rows[0][0].ToString();
-
-                    CSV logFile = new CSV(_testFileName + ".csv");
-                    logFile.writeNewOrExistingFile(myResponse.Tables[0]);
+                                        
                     return myResponse;
                 }
                 catch (Exception e)
@@ -144,9 +141,6 @@ namespace UnitTest.Model.DataWarehouse
                     myResponse.Tables[0].Rows[0][9] = interpoledQueryDTW;
                     myResponse.Tables[0].Rows[0][10] = endDate.ToString("yyyy-MM-dd HH:mm");
                     myResponse.Tables[0].Rows[0][11] = "ADTWH-Validation => Test Name: " + myResponse.Tables[0].Rows[0][1].ToString() + ", Test Result: " + myResponse.Tables[0].Rows[0][0].ToString();
-
-                    CSV logFile = new CSV(_testFileName + ".csv");
-                    logFile.writeNewOrExistingFile(myResponse.Tables[0]);
 
                     return myResponse;
                 }
@@ -216,9 +210,6 @@ namespace UnitTest.Model.DataWarehouse
                     myResponse.Tables[0].Rows[0][9] = interpoledQueryDTW;
                     myResponse.Tables[0].Rows[0][10] = endDate.ToString("yyyy-MM-dd HH:mm");
                     myResponse.Tables[0].Rows[0][11] = "ADTWH-Validation => Test Name: " + myResponse.Tables[0].Rows[0][1].ToString() + ", Test Result: " + myResponse.Tables[0].Rows[0][0].ToString();
-
-                    CSV logFile = new CSV(_testFileName + ".csv");
-                    logFile.writeNewOrExistingFile(myResponse.Tables[0]);
 
                     return myResponse;
                 }

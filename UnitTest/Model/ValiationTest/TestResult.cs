@@ -86,11 +86,34 @@ namespace UnitTest.Model.ValidationTest
             }
         }
 
-        public void recordBusinessValidationTest()
+        public void recordBilledUsageBusinessRuleValidationTest(Int64 dtwhCount, String affectedDesc, String[] affectedIDs)
         {
+            result = new Result(_ccnValTest);
+            resultDetail = new ResultDetail(_ccnValTest);
 
+            result.StateID = _stateID;
+            result.TestID = _testID;
+            result.Description = _description;
+            result.StartDate = _startDate;
+            result.EndDate = _endDate;
+            result.TestDate = _testDate;
+            result.Insert();
+            _error = (!String.IsNullOrEmpty(result.Error)) ? result.Error : String.Empty;
+
+            if (result.ResultID > 0 && (affectedIDs != null))
+            {                
+                    //Insertig values for CDC               
+                    resultDetail.ResultID = result.ResultID;
+                    resultDetail.ResultTypeID = 2;
+                    resultDetail.Count = dtwhCount;
+                    resultDetail.AffectedDesc = affectedDesc;
+                    resultDetail.AffectedIDs = String.Join("|", affectedIDs);
+                    resultDetail.Insert();
+                    _error = (!String.IsNullOrEmpty(resultDetail.Error)) ? resultDetail.Error : String.Empty;               
+                
+            }
         }
-
+        
         public void recordStatisticalValidationTest(Double weekAverageCount, Int64 evaluatedCount)
         {
             result = new Result(_ccnValTest);

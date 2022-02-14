@@ -7,7 +7,7 @@ namespace UnitTest.Model.ValidationTest
     public class Historical
     {
         private string _ccnCDC, _ccnValTest, _error;
-        private HistoricalIndicator _historicalIndicator;
+        private ResultStat _historicalIndicator;
         public Historical(string ccnValTest)
         {            
             _ccnValTest = ccnValTest;
@@ -35,7 +35,7 @@ namespace UnitTest.Model.ValidationTest
         /// <param name="calculatedDate">Evaluated Date</param>
         public void recordHistorical(Int64 columnID, Int16 indicatorType, Double count, DateTime calculatedDate)
         {
-            _historicalIndicator = new HistoricalIndicator(_ccnValTest);
+            _historicalIndicator = new ResultStat(_ccnValTest);
             _historicalIndicator.ColumnID = columnID;
             _historicalIndicator.CalculatedDate = calculatedDate;   
             _historicalIndicator.IndicatorTypeID = indicatorType;
@@ -47,7 +47,7 @@ namespace UnitTest.Model.ValidationTest
         public Int64 GetMaximunHistorical(Int64 columnID, Int16 inditatorTypeID)
         {
             DataSet result;
-            _historicalIndicator = new HistoricalIndicator(_ccnValTest);
+            _historicalIndicator = new ResultStat(_ccnValTest);
             result =_historicalIndicator.GetObjectDS("columnID = " + columnID + " AND indicatorTypeID = " + inditatorTypeID, "[count]", "MAX([count]) AS [count]");
 
             return Convert.ToInt64(!String.IsNullOrEmpty(result.Tables[0].Rows[0][0].ToString()) ? result.Tables[0].Rows[0][0] : 0);

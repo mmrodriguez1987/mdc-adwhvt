@@ -11,7 +11,7 @@ namespace UnitTest.Model.DataWarehouse
 {
     public class ServiceAgreement
     {
-        private string _ccnDTW, _ccnCDC, _testFileName, queryCDC, queryDTW;
+        private string _ccnDTW, _ccnCDC,queryCDC, queryDTW;
         private DataSet myResponse, evalDataDTW, evalDataCDC = new DataSet();
 
 
@@ -19,13 +19,11 @@ namespace UnitTest.Model.DataWarehouse
         /// Initialize the Premise class with params required
         /// </summary>
         /// <param name="cnnDTW">conexion to Datawarehouse</param>
-        /// <param name="ccnCDC">conexion to CDC Database</param>
-        /// <param name="testFileName">File Name of the Test Result</param>
-        public ServiceAgreement(string cnnDTW, string ccnCDC, string testFileName)
+        /// <param name="ccnCDC">conexion to CDC Database</param>        
+        public ServiceAgreement(string cnnDTW, string ccnCDC)
         {
             _ccnDTW = cnnDTW;
-            _ccnCDC = ccnCDC;
-            _testFileName = testFileName;
+            _ccnCDC = ccnCDC;            
             queryDTW = "SELECT COUNT(DISTINCT SRC_SA_ID) AS DTW_Count " +
                " from dwadm2.CD_SA WHERE DATA_LOAD_DTTM BETWEEN @startDate AND @endDate";
             queryCDC = "cdc.sp_ci_sa_ct";
@@ -70,8 +68,6 @@ namespace UnitTest.Model.DataWarehouse
                     myResponse.Tables[0].Rows[0][10] = endDate.ToString("yyyy-MM-dd HH:mm");
                     myResponse.Tables[0].Rows[0][11] = "ADTWH - Validation: Test Name =>" + myResponse.Tables[0].Rows[0][1].ToString() + ", Test Result => " + myResponse.Tables[0].Rows[0][0].ToString();
 
-                    CSV logFile = new CSV(_testFileName + ".csv");
-                    logFile.writeNewOrExistingFile(myResponse.Tables[0]);
                     return myResponse;
                 }
                 catch (Exception e)

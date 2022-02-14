@@ -347,7 +347,7 @@ C:\BIProjectUT\UnitTest\obj\Release\net5.0\win-x64\PubTmp\Out\dbgshim.dll
 C:\BIProjectUT\UnitTest\obj\Release\net5.0\win-x64\PubTmp\Out\hostfxr.dll
 C:\BIProjectUT\UnitTest\obj\Release\net5.0\win-x64\PubTmp\Out\hostpolicy.dll
 C:\BIProjectUT\UnitTest\obj\Release\net5.0\win-x64\PubTmp\Out\mscordaccore.dll
-C:\BIProjectUT\UnitTest\obj\Release\net5.0\win-x64\PubTmp\Out\mscordaccore_amd64_amd64_5.0.1321.56516.dll
+C:\BIProjectUT\UnitTest\obj\Release\net5.0\win-x64\PubTmp\Out\mscordaccore_amd64_amd64_5.0.1422.5710.dll
 C:\BIProjectUT\UnitTest\obj\Release\net5.0\win-x64\PubTmp\Out\mscordbi.dll
 C:\BIProjectUT\UnitTest\obj\Release\net5.0\win-x64\PubTmp\Out\mscorrc.dll
 C:\BIProjectUT\UnitTest\obj\Release\net5.0\win-x64\PubTmp\Out\ucrtbase.dll
