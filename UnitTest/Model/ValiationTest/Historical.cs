@@ -8,8 +8,13 @@ namespace UnitTest.Model.ValidationTest
     {
         private string _ccnCDC, _ccnValTest, _error;
         private ResultStat _historicalIndicator;
+      
+        public string Error { get => _error; set => _error = value; }
+        public string CcnValTest { get => _ccnValTest; set => _ccnValTest = value; }
+        public string CcnCDC { get => _ccnCDC; set => _ccnCDC = value; }
+
         public Historical(string ccnValTest)
-        {            
+        {
             _ccnValTest = ccnValTest;
             Error = String.Empty;
         }
@@ -21,11 +26,6 @@ namespace UnitTest.Model.ValidationTest
             _error = String.Empty;
         }
 
-        public string Error { get => _error; set => _error = value; }
-        public string CcnValTest { get => _ccnValTest; set => _ccnValTest = value; }
-        public string CcnCDC { get => _ccnCDC; set => _ccnCDC = value; }
-
-        
         /// <summary>
         /// Record a Historical Indicator
         /// </summary>

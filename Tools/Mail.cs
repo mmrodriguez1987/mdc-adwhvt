@@ -7,40 +7,37 @@ using System.Text;
 
 namespace Tools
 {
-
-
-
     public class Mail
     {
-        #region Variables Miembros
-        private string p_Para, p_File;
-        private string p_Asunto;
-        private string p_Mensaje;
-        private string p_DisplayName;
-        private string p_De;
-        private string p_CC;
-        private string p_Contraseña;
-        private string p_ServerMail;
-        private Boolean p_IsBodyHtml = true;
-        private MailPriority p_Prioridad = MailPriority.Normal;
-        private int p_Puerto = 25;
-        private Boolean p_EnableSsl = false;
+        #region members
+        private string to, file;
+        private string subject;
+        private string message;
+        private string displayName;
+        private string from;
+        private string withCopy;
+        private string password;
+        private string serverMail;
+        private Boolean isBodyHtml = true;
+        private MailPriority priority = MailPriority.Normal;
+        private int port;
+        private Boolean enableSsl = false;
         #endregion
 
-        #region Atributos
+        #region Attributes
         /// <summary>
         /// Cadena de Email separados por comas a los que se
         /// le enviara copia del Email original
         /// </summary>
-        public string ConCopia
+        public string CC
         {
             get
             {
-                return p_CC;
+                return withCopy;
             }
             set
             {
-                p_CC = value;
+                withCopy = value;
             }
         }
         /// <summary>
@@ -50,11 +47,11 @@ namespace Tools
         {
             get
             {
-                return p_DisplayName;
+                return displayName;
             }
             set
             {
-                p_DisplayName = value;
+                displayName = value;
             }
         }
         /// <summary>
@@ -64,39 +61,39 @@ namespace Tools
         {
             get
             {
-                return p_EnableSsl;
+                return enableSsl;
             }
             set
             {
-                p_EnableSsl = value;
+                enableSsl = value;
             }
         }
         /// <summary>
         /// Contraseña de la cuenta que envia el correo
         /// </summary>
-        public string Contraseña
+        public string Password
         {
             get
             {
-                return p_Contraseña;
+                return password;
             }
             set
             {
-                p_Contraseña = value;
+                password = value;
             }
         }
         /// <summary>
         /// Correo electronico de donde se envia el Mensaje
         /// </summary>
-        public string De
+        public string From
         {
             get
             {
-                return p_De;
+                return from;
             }
             set
             {
-                p_De = value;
+                from = value;
             }
         }
         /// <summary>
@@ -106,53 +103,53 @@ namespace Tools
         {
             get
             {
-                return p_IsBodyHtml;
+                return isBodyHtml;
             }
             set
             {
-                p_IsBodyHtml = value;
+                isBodyHtml = value;
             }
         }
         /// <summary>
         /// Cuerpo del Mensaje
         /// </summary>
-        public string Mensaje
+        public string Message
         {
             get
             {
-                return p_Mensaje;
+                return message;
             }
             set
             {
-                p_Mensaje = value;
+                message = value;
             }
         }
         /// <summary>
         /// Asunto del Mensaje
         /// </summary>
-        public string Asunto
+        public string Subject
         {
             get
             {
-                return p_Asunto;
+                return subject;
             }
             set
             {
-                p_Asunto = value;
+                subject = value;
             }
         }
         /// <summary>
         /// Cadena de Correos electronicos separados por coma a los cuales se enviara el mensaje
         /// </summary>
-        public string Para
+        public string To
         {
             get
             {
-                return p_Para;
+                return to;
             }
             set
             {
-                p_Para = value;
+                to = value;
             }
         }
 
@@ -163,56 +160,56 @@ namespace Tools
         {
             get
             {
-                return p_File;
+                return file;
             }
             set
             {
-                p_File = value;
+                file = value;
             }
         }
 
         /// <summary>
         /// Puerto que utiliza la bandeja de salida
         /// </summary>
-        public int Puerto
+        public int Port
         {
             get
             {
-                return p_Puerto;
+                return port;
             }
             set
             {
-                p_Puerto = value;
+                port = value;
             }
         }
         /// <summary>
         /// Prioridad del Menesaje
         /// </summary>
-        public MailPriority Prioridad
+        public MailPriority Priority
         {
             get
             {
-                return p_Prioridad;
+                return priority;
             }
             set
             {
-                p_Prioridad = value;
+                priority = value;
             }
         }
         #endregion
 
-        #region Constructor de la Clase
+        #region Constructor
         /// <summary>
         /// Constructor de la clase
         /// </summary>
-        /// <param name="ServerMail">Host del Servidor de Correos</param>       
-        public Mail(string ServerMail)
+        /// <param name="server_mail">Host del Servidor de Correos</param>       
+        public Mail(string server_mail)
         {
-            this.p_ServerMail = ServerMail;
+            serverMail = server_mail;
         }
         #endregion
 
-        #region Metodos
+        #region Methods
         /// <summary>
         /// Metodo que envia el correo electronico
         /// </summary>
@@ -224,24 +221,24 @@ namespace Tools
                 MailMessage msg = new MailMessage();
                 SmtpClient smtp = new SmtpClient();
 
-                smtp.Credentials = new NetworkCredential(p_De, p_Contraseña);
-                smtp.Host = p_ServerMail;
-                smtp.Port = p_Puerto;
-                smtp.EnableSsl = p_EnableSsl;
+                smtp.Credentials = new NetworkCredential(from, password);
+                smtp.Host = serverMail;
+                smtp.Port = port;
+                smtp.EnableSsl = enableSsl;
 
-                msg.To.Add(p_Para);
-                msg.From = new MailAddress(p_De, p_DisplayName, System.Text.Encoding.UTF8);
-                msg.Subject = p_Asunto;
+                msg.To.Add(to);
+                msg.From = new MailAddress(from, displayName, System.Text.Encoding.UTF8);
+                msg.Subject = subject;
                 msg.SubjectEncoding = System.Text.Encoding.UTF8;
-                msg.Body = p_Mensaje;
+                msg.Body = message;
                 msg.BodyEncoding = System.Text.Encoding.UTF8;
-                msg.CC.Add(p_CC);
-                msg.Priority = p_Prioridad;
-                if (p_File != String.Empty)
+                msg.CC.Add(withCopy);
+                msg.Priority = priority;
+                if (file != String.Empty)
                 {
-                    msg.Attachments.Add(new Attachment(p_File, MediaTypeNames.Application.Octet));
+                    msg.Attachments.Add(new Attachment(file, MediaTypeNames.Application.Octet));
                 }
-                msg.IsBodyHtml = p_IsBodyHtml;
+                msg.IsBodyHtml = IsBodyHtml;
                 smtp.Send(msg);
             }
             catch (SmtpException e)

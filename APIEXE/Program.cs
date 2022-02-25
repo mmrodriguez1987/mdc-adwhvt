@@ -30,7 +30,7 @@ namespace ValidationTest
             endDate = DateTime.Now.Date;
 
             foreach (string item in testList) {
-                string url = "api/" + item + "?starDate=" + startDate.ToString("yyyy-MM-dd") + "&endDate=" + endDate.ToString("yyyy-MM-dd") + "&sendSMSNotify=" + (keySMSNotify  ? "True" : "False") + "&saveResult=" + (keySaveResult ? "True" : "False");
+                string url = "api/" + item + "?startDate=" + startDate.ToString("yyyy-MM-dd") + "&endDate=" + endDate.ToString("yyyy-MM-dd") + "&sendSMSNotify=" + (keySMSNotify  ? "true" : "false") + "&saveResult=" + (keySaveResult ? "true" : "false");
                 if (serverURI is not null)
                 {
                     CallWebAPIAsync(serverURI, url).Wait();
@@ -53,7 +53,7 @@ namespace ValidationTest
                 if (response.IsSuccessStatusCode)                
                     httpResponseAPI = await response.Content.ReadAsStringAsync();
                 else
-                    Console.WriteLine("Internal server Error");
+                    Console.WriteLine("Internal server Error: Status Code: " + response.StatusCode.ToString() + " , Description: " + response.ReasonPhrase.ToString());
                 
             }
         }

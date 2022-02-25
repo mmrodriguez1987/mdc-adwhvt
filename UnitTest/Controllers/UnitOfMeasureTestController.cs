@@ -12,86 +12,41 @@ namespace UnitTest.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Author("Michael Rodriguez", "02/11/2022", "Controller for Test Incremental Load at Azure Data Factory")]
-    public class AccountTestController : ControllerBase
-    {  
-        private DataSet finalResultDS, dsResult;
-       
+    [Author("Michael Rodriguez", "11/30/2021", "Controller for Test Incremental Load at Azure Data Factory")]
+    public class UnitOfMeasureTestController : ControllerBase
+    {    
+        private DataSet finalResultDS, dsResult;       
         private SMS mySMS;
         private Global gbl;
 
-        public AccountTestController(IConfiguration conf)
+        public UnitOfMeasureTestController(IConfiguration conf)
         {
-            gbl = new Global(conf); 
+            gbl = new Global(conf);              
             finalResultDS = new DataSet();
             dsResult = new DataSet();           
         }
-             
-        
+
         [HttpGet]
         public async Task<IActionResult> Get(DateTime startDate, DateTime endDate, Boolean sendSMSNotify, Boolean saveResult)
         {
-            #region Controller Intitialization
-            //Initializing members
+            #region Controller Initialization   
+            //Local members
             dsResult = Extensions.getResponseStructure("");
-            finalResultDS = Extensions.getResponseStructure("");            
+            finalResultDS = Extensions.getResponseStructure("");           
             startDate = startDate.Date.AddHours(10);
             endDate = endDate.Date.AddHours(10);            
-            mySMS = new SMS(gbl.CcnACS);            
-            Account acct = new Account(gbl.CcnDTW, gbl.CcnCDC, gbl.CcnDVT);
+            mySMS = new SMS(gbl.CcnACS);
+            UnitOfMeasure uom = new UnitOfMeasure(gbl.CcnDTW, gbl.CcnCDC, gbl.CcnDVT);
+            dsResult = Extensions.getResponseStructure("");
+            finalResultDS = Extensions.getResponseStructure("");
             #endregion
 
-            #region Validation: Accounts Count
-            dsResult = await acct.AccountCount(startDate, endDate, saveResult);
+            #region Validation: Persons Count     
+            dsResult = await uom.UOMCount(startDate, endDate, saveResult);
             finalResultDS.Tables[0].ImportRow(dsResult.Tables[0].Rows[0]);
+            if ((dsResult.Tables[0].Rows[0][0].ToString() == "Warning" || dsResult.Tables[0].Rows[0][0].ToString() == "Failed") && sendSMSNotify )
+                mySMS.SendSMS(gbl.FromPhNumbAlert, gbl.BiTeamPhoneNumbers, dsResult.Tables[0].Rows[0][11].ToString());
 
-            if (dsResult.Tables[0].Rows[0][11].ToString().StartsWith("Error")) 
-                return base.BadRequest(dsResult.Tables[0].Rows[0][11].ToString());            
-            else
-            {
-                if ((dsResult.Tables[0].Rows[0][0].ToString() == "Warning" || dsResult.Tables[0].Rows[0][0].ToString() == "Failed") && sendSMSNotify)
-                    mySMS.SendSMS(gbl.FromPhNumbAlert, gbl.BiTeamPhoneNumbers, dsResult.Tables[0].Rows[0][11].ToString());
-            }
-            #endregion
-
-            #region Validation: Account Count vs Historic
-            dsResult = await acct.TotalAcctCountVsMaxHist(startDate, endDate, saveResult);
-            finalResultDS.Tables[0].ImportRow(dsResult.Tables[0].Rows[0]);
-
-            if (dsResult.Tables[0].Rows[0][11].ToString().StartsWith("Error"))           
-                return base.BadRequest(dsResult.Tables[0].Rows[0][11].ToString());
-            #endregion
-
-            #region Validation: New Records
-            dsResult = await acct.NewAccountCount(startDate, endDate, saveResult);
-            finalResultDS.Tables[0].ImportRow(dsResult.Tables[0].Rows[0]);
-
-            if (dsResult.Tables[0].Rows[0][11].ToString().StartsWith("Error"))           
-                return base.BadRequest(dsResult.Tables[0].Rows[0][11].ToString());            
-            else
-            {
-                if ((dsResult.Tables[0].Rows[0][0].ToString() == "Warning" || dsResult.Tables[0].Rows[0][0].ToString() == "Failed") && sendSMSNotify)
-                    mySMS.SendSMS(gbl.FromPhNumbAlert, gbl.BiTeamPhoneNumbers, dsResult.Tables[0].Rows[0][11].ToString());
-            }
-            #endregion
-
-            #region Validation: Updated account
-            dsResult = await acct.UpdatedAccountCounts(startDate, endDate, saveResult);
-            finalResultDS.Tables[0].ImportRow(dsResult.Tables[0].Rows[0]);
-            
-            if (dsResult.Tables[0].Rows[0][11].ToString().StartsWith("Error"))           
-                return base.BadRequest(dsResult.Tables[0].Rows[0][11].ToString());           
-            else
-            {
-                if ((dsResult.Tables[0].Rows[0][0].ToString() == "Warning" || dsResult.Tables[0].Rows[0][0].ToString() == "Failed") && sendSMSNotify)
-                    mySMS.SendSMS(gbl.FromPhNumbAlert, gbl.BiTeamPhoneNumbers, dsResult.Tables[0].Rows[0][11].ToString());
-            }
-            #endregion
-
-            #region Validation: Statistical Comparision
-            dsResult = await acct.StatisticalAcountEvaluation(endDate, gbl.EvaluatedDatesRangeOnAverageTest, gbl.ToleranceVariatonNumber, saveResult);
-            finalResultDS.Tables[0].ImportRow(dsResult.Tables[0].Rows[0]);
-            
             if (dsResult.Tables[0].Rows[0][11].ToString().StartsWith("Error"))            
                 return base.BadRequest(dsResult.Tables[0].Rows[0][11].ToString());            
             else
@@ -101,6 +56,57 @@ namespace UnitTest.Controllers
             }
             #endregion
 
+            #region Validation New Person
+            dsResult = await uom.NewUOMCount(startDate,endDate, saveResult);
+            finalResultDS.Tables[0].ImportRow(dsResult.Tables[0].Rows[0]);
+            if ((dsResult.Tables[0].Rows[0][0].ToString() == "Warning" || dsResult.Tables[0].Rows[0][0].ToString() == "Failed") && sendSMSNotify)
+                mySMS.SendSMS(gbl.FromPhNumbAlert, gbl.BiTeamPhoneNumbers, dsResult.Tables[0].Rows[0][11].ToString());
+            
+            if (dsResult.Tables[0].Rows[0][11].ToString().StartsWith("Error"))
+                return base.BadRequest(dsResult.Tables[0].Rows[0][11].ToString());
+            else
+            {
+                if ((dsResult.Tables[0].Rows[0][0].ToString() == "Warning" || dsResult.Tables[0].Rows[0][0].ToString() == "Failed") && sendSMSNotify)
+                    mySMS.SendSMS(gbl.FromPhNumbAlert, gbl.BiTeamPhoneNumbers, dsResult.Tables[0].Rows[0][11].ToString());
+            }
+            #endregion
+
+            #region Validation: Updated Person
+            dsResult = await uom.UpdatedUOMCount(startDate, endDate, saveResult);
+            finalResultDS.Tables[0].ImportRow(dsResult.Tables[0].Rows[0]);
+            if ((dsResult.Tables[0].Rows[0][0].ToString() == "Warning" || dsResult.Tables[0].Rows[0][0].ToString() == "Failed") && sendSMSNotify )
+                mySMS.SendSMS(gbl.FromPhNumbAlert, gbl.BiTeamPhoneNumbers, dsResult.Tables[0].Rows[0][11].ToString());
+
+            if (dsResult.Tables[0].Rows[0][11].ToString().StartsWith("Error"))
+                return base.BadRequest(dsResult.Tables[0].Rows[0][11].ToString());
+            else
+            {
+                if ((dsResult.Tables[0].Rows[0][0].ToString() == "Warning" || dsResult.Tables[0].Rows[0][0].ToString() == "Failed") && sendSMSNotify)
+                    mySMS.SendSMS(gbl.FromPhNumbAlert, gbl.BiTeamPhoneNumbers, dsResult.Tables[0].Rows[0][11].ToString());
+            }
+            #endregion
+
+            #region Validation: Statistical comparision
+            dsResult = await uom.StatisticalUOMEvaluation(endDate, gbl.EvaluatedDatesRangeOnAverageTest, gbl.ToleranceVariatonNumber, saveResult);
+            finalResultDS.Tables[0].ImportRow(dsResult.Tables[0].Rows[0]);
+
+            if (dsResult.Tables[0].Rows[0][11].ToString().StartsWith("Error"))            
+                return base.BadRequest(dsResult.Tables[0].Rows[0][11].ToString());            
+            else
+            {
+                if ((dsResult.Tables[0].Rows[0][0].ToString() == "Warning" || dsResult.Tables[0].Rows[0][0].ToString() == "Failed") && sendSMSNotify)
+                    mySMS.SendSMS(gbl.FromPhNumbAlert, gbl.BiTeamPhoneNumbers, dsResult.Tables[0].Rows[0][11].ToString());
+            }
+            #endregion
+
+            #region Validation: Person Count vs Max Historic
+            dsResult = await uom.UOMCountVsMaxHistoric(startDate, endDate, saveResult);
+            finalResultDS.Tables[0].ImportRow(dsResult.Tables[0].Rows[0]);
+            if (dsResult.Tables[0].Rows[0][11].ToString().StartsWith("Error"))            
+                return base.BadRequest(dsResult.Tables[0].Rows[0][11].ToString());
+            
+            #endregion
+            
             return base.Ok(Extensions.DataTableToJSONWithStringBuilder(finalResultDS.Tables[0]));
         }
     }

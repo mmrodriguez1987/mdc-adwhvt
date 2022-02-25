@@ -30,7 +30,7 @@ namespace Tools.Statistics
             get => evalDateIndex; 
             set => evalDateIndex = value; 
         }
-        public long DistinctCountValue {
+        public long CountValue {
             get => averageValue; 
             set => averageValue = value; 
         }

@@ -993,9 +993,38 @@ INSERT INTO TestParameter VALUES (34,243)
 INSERT INTO TestParameter VALUES (34,219)
 
 
+--Address select * from test order by 1 desc
+INSERT INTO Test VALUES (3,'ADDR Count','Compare Distinct ADDR count between CCB and DTWH','',1)								--testID=35
+INSERT INTO TestParameter VALUES (35,35)
+INSERT INTO TestParameter VALUES (35,37)
+INSERT INTO TestParameter VALUES (35,377)
+
+INSERT INTO Test VALUES (3,'New ADDR','Compare New ADDR count between CCB and DTWH','',1)											--testID=36
+INSERT INTO TestParameter VALUES (36,35)
+INSERT INTO TestParameter VALUES (36,37)
+INSERT INTO TestParameter VALUES (36,377)
+
+INSERT INTO Test VALUES (3,'Updated ADDR','Compare count of Updated ADDR between CCB and DTWH','',1)								--testID=37
+INSERT INTO TestParameter VALUES (37,35)
+INSERT INTO TestParameter VALUES (37,37)
+INSERT INTO TestParameter VALUES (37,377)
+
+INSERT INTO Test VALUES (1,'Maximun Historical ADDR','Compare Distinct SQI count with Historical Max Value count','',1)					--testID=38
+INSERT INTO TestParameter VALUES (38,35)
+INSERT INTO TestParameter VALUES (38,37)
+INSERT INTO TestParameter VALUES (38,377)
+
+INSERT INTO Test VALUES (1,'Statistical Average ADDR','Compare Average SQI count with the last week average','',1)					--testID=39
+INSERT INTO TestParameter VALUES (39,35)
+INSERT INTO TestParameter VALUES (39,37)
+INSERT INTO TestParameter VALUES (39,377)
+
+SELECT * FROM Test order by 1 desc
+
+
 /*
 DELETE FROM ResultDetail
-DBCC CHECKIDENT (ResultDetail, RESEED,0)
+DBCC CHECKIDENT (Test, RESEED,34)
 GO
 DELETE FROM Result
 DBCC CHECKIDENT (Result, RESEED,0)
