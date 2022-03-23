@@ -21,7 +21,7 @@ namespace UnitTest.Model.DataWarehouse
         private CBDate tTime;
         private Historical historical;
         private TestResult results;
-        private int cdcCountTotal, cdcCountNew, cdcCountUpdated, ccbCountTotal, ccbCountNew, ccbCountUpdated;
+        private int  cdcCountNew, cdcCountUpdated,  ccbCountNew, ccbCountUpdated;
 
 
         /// <summary>
@@ -106,24 +106,23 @@ namespace UnitTest.Model.DataWarehouse
                         results.StartDate = startDate;
                         results.EndDate = endDate;
                         results.StateID = (short)(stateTest ? 3 : 2);
-                        results.TestDate = DateTime.Now;
+                        results.CalcDate = DateTime.Now;
                         results.TestID = 9; 
                         results.recordUntitValidationTest(cdcCount, dtwCount);
 
                         // if there re any error on recording db
                         if (!String.IsNullOrEmpty(results.Error))
                         {
-                            myResponse.Tables[0].Rows[0][3] = ("Error saving SQICount test results in SQI");
-                            myResponse.Tables[0].Rows[0][11] = ("Error saving SQICount test results in SQI");
+                            myResponse.Tables[0].Rows[0][3] = ("Error Saving SQI Count Test Result: " + results.Error.Substring(0, 200));
+                            myResponse.Tables[0].Rows[0][11] = ("Error Saving SQI Count Test Result: " + results.Error.Substring(0, 200));
                         }
                     }
-
                     return myResponse;
                 }
                 catch (Exception e)
                 {
-                    myResponse.Tables[0].Rows[0][3] = ("Error on SQICount process: " + e.ToString().Substring(0, 198));
-                    myResponse.Tables[0].Rows[0][11] = ("Error on SQICount process: " + e.ToString().Substring(0, 198));
+                    myResponse.Tables[0].Rows[0][3] = ("Error Reading SQI Count from CCB: " + e.ToString().Substring(0, 198));
+                    myResponse.Tables[0].Rows[0][11] = ("Error Reading SQI Count from CCB: " + e.ToString().Substring(0, 198));
                     return myResponse;
                 }
             });
@@ -207,23 +206,23 @@ namespace UnitTest.Model.DataWarehouse
                         results.StartDate = startDate;
                         results.EndDate = endDate;
                         results.StateID = (short)(stateTest ? 3 : 2);
-                        results.TestDate = DateTime.Now;
-                        results.TestID = 41;
+                        results.CalcDate = DateTime.Now;
+                        results.TestID = 30;
                         results.recordUntitValidationTest(cdcCountNew, ccbCountNew);
 
                         // if there re any error on recording db
                         if (!String.IsNullOrEmpty(results.Error))
                         {
-                            myResponse.Tables[0].Rows[0][3] = ("Error saving NewSQICount test results in SQI");
-                            myResponse.Tables[0].Rows[0][11] = ("Error saving NewSQICount test results in SQI");
+                            myResponse.Tables[0].Rows[0][3] = ("Error Saving New SQI Count Test Result: " + results.Error.Substring(0, 200));
+                            myResponse.Tables[0].Rows[0][11] = ("Error Saving New SQI Count Test Result: " + results.Error.Substring(0, 200));
                         }
                     }
                     return myResponse;
                 }
                 catch (Exception e)
                 {
-                    myResponse.Tables[0].Rows[0][3] = ("Error on NewSQICount process: " + e.ToString().Substring(0, 570));
-                    myResponse.Tables[0].Rows[0][11] = ("Error on NewSQICount process: " + e.ToString().Substring(0, 570));
+                    myResponse.Tables[0].Rows[0][3] = ("Error Reading New SQI Count from CCB: " + e.ToString().Substring(0, 198));
+                    myResponse.Tables[0].Rows[0][11] = ("Error Reading New SQI Count from CCB: " + e.ToString().Substring(0, 198));
                     return myResponse;
                 }
             });
@@ -302,24 +301,23 @@ namespace UnitTest.Model.DataWarehouse
                         results.StartDate = startDate;
                         results.EndDate = endDate;
                         results.StateID = (short)(stateTest ? 3 : 2);
-                        results.TestDate = DateTime.Now;
-                        results.TestID = 42;
+                        results.CalcDate = DateTime.Now;
+                        results.TestID = 31;
                         results.recordUntitValidationTest(cdcCountUpdated, ccbCountUpdated);
 
                         // if there re any error on recording db
                         if (!String.IsNullOrEmpty(results.Error))
                         {
-                            myResponse.Tables[0].Rows[0][3] = ("Error saving UpdatedSQICount test results in SQI");
-                            myResponse.Tables[0].Rows[0][11] = ("Error saving UpdatedSQICount test results in SQI");
+                            myResponse.Tables[0].Rows[0][3] = ("Error Saving Updated SQI Count Test Result: " + results.Error.Substring(0, 200));
+                            myResponse.Tables[0].Rows[0][11] = ("Error Saving Updated SQI Count Test Result: " + results.Error.Substring(0, 200));
                         }
                     }
-
                     return myResponse;
                 }
                 catch (Exception e)
                 {
-                    myResponse.Tables[0].Rows[0][3] = ("Error on UpdatedSQICount process: " + e.ToString().Substring(0, 570));
-                    myResponse.Tables[0].Rows[0][11] = ("Error on UpdatedSQICount process: " + e.ToString().Substring(0, 570));
+                    myResponse.Tables[0].Rows[0][3] = ("Error Reading Updated SQI Count from CCB: " + e.ToString().Substring(0, 198));
+                    myResponse.Tables[0].Rows[0][11] = ("Error Reading Updated SQI Count from CCB: " + e.ToString().Substring(0, 198));
                     return myResponse;
                 }
             });
@@ -380,24 +378,23 @@ namespace UnitTest.Model.DataWarehouse
                         results.StartDate = startDate;
                         results.EndDate = endDate;
                         results.StateID = (short)(stateTest ? 3 : 1);
-                        results.TestDate = endDate;
-                        results.TestID = 43;
+                        results.CalcDate = endDate;
+                        results.TestID = 32;
                         results.recordHistoricalValidationTest(dtwCount);
 
                         // if there re any error on recording db
                         if (!String.IsNullOrEmpty(results.Error))
                         {
-                            myResponse.Tables[0].Rows[0][3] = ("Error saving UomCountVsMaxHist test results in SQI");
-                            myResponse.Tables[0].Rows[0][11] = ("Error saving UomCountVsMaxHist test results in SQI");
+                            myResponse.Tables[0].Rows[0][3] = ("Error Saving Max Hist SQI Count Test Result: " + results.Error.Substring(0, 200));
+                            myResponse.Tables[0].Rows[0][11] = ("Error Saving Max Hist SQI Count Test Result: " + results.Error.Substring(0, 200));
                         }
                     }
-
                     return myResponse;
                 }
                 catch (Exception e)
                 {
-                    myResponse.Tables[0].Rows[0][3] = ("Error on UomCountVsMaxHist process: " + e.ToString());
-                    myResponse.Tables[0].Rows[0][11] = ("Error on UomCountVsMaxHist process: " + e.ToString());
+                    myResponse.Tables[0].Rows[0][3] = ("Error Reading Max Hist SQI Count from CCB: " + e.ToString().Substring(0, 198));
+                    myResponse.Tables[0].Rows[0][11] = ("Error Reading Max Hist SQI Count from CCB: " + e.ToString().Substring(0, 198));
                     return myResponse;
                 }
             });
@@ -488,23 +485,22 @@ namespace UnitTest.Model.DataWarehouse
                         results.StartDate = evalDate;
                         results.EndDate = evalDate;
                         results.StateID = (short)(stateTest ? 1 : 3);
-                        results.TestDate = DateTime.Now;
-                        results.TestID = 44;
+                        results.CalcDate = DateTime.Now;
+                        results.TestID = 33;
                         results.recordStatisticalValidationTest(averCount, evaluatedCount);
 
                         if (!String.IsNullOrEmpty(results.Error))
                         {
-                            myResponse.Tables[0].Rows[0][3] = ("Error saving StatisticalSQIEvaluation test results in SQI");
-                            myResponse.Tables[0].Rows[0][11] = ("Error saving StatisticalSQIEvaluation test results in SQI");
+                            myResponse.Tables[0].Rows[0][3] = ("Error Saving Statistical SQI Count Test Result: " + results.Error.Substring(0, 200));
+                            myResponse.Tables[0].Rows[0][11] = ("Error Saving Statistical SQI Count Test Result: " + results.Error.Substring(0, 200));
                         }
                     }
-
                     return myResponse;
                 }
                 catch (Exception e)
                 {
-                    myResponse.Tables[0].Rows[0][3] = ("Error on StatisticalSQIEvaluation process: " + e.ToString().Substring(0, 570));
-                    myResponse.Tables[0].Rows[0][11] = ("Error on StatisticalSQIEvaluation process: " + e.ToString().Substring(0, 570));
+                    myResponse.Tables[0].Rows[0][3] = ("Error Reading Statistical SQI Count from CCB: " + e.ToString().Substring(0, 198));
+                    myResponse.Tables[0].Rows[0][11] = ("Error Reading Statistical SQI Count from CCB: " + e.ToString().Substring(0, 198));
                     return myResponse;
                 }
             });

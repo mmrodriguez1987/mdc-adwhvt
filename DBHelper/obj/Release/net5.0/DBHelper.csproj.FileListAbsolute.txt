@@ -1,6 +1,5 @@
 C:\BIProjectUT\DBHelper\bin\Release\net5.0\DBHelper.deps.json
 C:\BIProjectUT\DBHelper\bin\Release\net5.0\DBHelper.dll
-C:\BIProjectUT\DBHelper\bin\Release\net5.0\ref\DBHelper.dll
 C:\BIProjectUT\DBHelper\bin\Release\net5.0\DBHelper.pdb
 C:\BIProjectUT\DBHelper\obj\Release\net5.0\DBHelper.csproj.AssemblyReference.cache
 C:\BIProjectUT\DBHelper\obj\Release\net5.0\DBHelper.GeneratedMSBuildEditorConfig.editorconfig
@@ -10,3 +9,4 @@ C:\BIProjectUT\DBHelper\obj\Release\net5.0\DBHelper.csproj.CoreCompileInputs.cac
 C:\BIProjectUT\DBHelper\obj\Release\net5.0\DBHelper.dll
 C:\BIProjectUT\DBHelper\obj\Release\net5.0\ref\DBHelper.dll
 C:\BIProjectUT\DBHelper\obj\Release\net5.0\DBHelper.pdb
+C:\BIProjectUT\DBHelper\obj\Release\net5.0\refint\DBHelper.dll

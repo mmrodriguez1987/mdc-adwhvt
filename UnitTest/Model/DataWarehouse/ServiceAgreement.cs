@@ -106,24 +106,23 @@ namespace UnitTest.Model.DataWarehouse
                         results.StartDate = startDate;
                         results.EndDate = endDate;
                         results.StateID = (short)(stateTest ? 3 : 2);
-                        results.TestDate = DateTime.Now;
+                        results.CalcDate = DateTime.Now;
                         results.TestID = 19; // Compare Dsitinct SA
                         results.recordUntitValidationTest(cdcCount, dtwCount);
 
                         // if there re any error on recording db
                         if (!String.IsNullOrEmpty(results.Error))
                         {
-                            myResponse.Tables[0].Rows[0][3] = ("Error saving SACount test results in SA");
-                            myResponse.Tables[0].Rows[0][11] = ("Error saving SACount test results in SA");
+                            myResponse.Tables[0].Rows[0][3] = ("Error Saving SA Count Test Result: " + results.Error.Substring(0, 200));
+                            myResponse.Tables[0].Rows[0][11] = ("Error Saving SA Count Test Result: " + results.Error.Substring(0, 200));
                         }
                     }
-
                     return myResponse;
                 }
                 catch (Exception e)
                 {
-                    myResponse.Tables[0].Rows[0][3] = ("Error on SACount process: " + e.ToString().Substring(0, 198));
-                    myResponse.Tables[0].Rows[0][11] = ("Error on SACount process: " + e.ToString().Substring(0, 198));
+                    myResponse.Tables[0].Rows[0][3] = ("Error Reading SA Count from CCB: " + e.ToString().Substring(0, 198));
+                    myResponse.Tables[0].Rows[0][11] = ("Error Reading SA Count from CCB: " + e.ToString().Substring(0, 198));
                     return myResponse;
                 }
             });
@@ -211,23 +210,23 @@ namespace UnitTest.Model.DataWarehouse
                         results.StartDate = startDate;
                         results.EndDate = endDate;
                         results.StateID = (short)(stateTest ? 3 : 2);
-                        results.TestDate = DateTime.Now;
+                        results.CalcDate = DateTime.Now;
                         results.TestID = 20; 
                         results.recordUntitValidationTest(cdcCount, dtwCount);
 
                         // if there re any error on recording db
                         if (!String.IsNullOrEmpty(results.Error))
                         {
-                            myResponse.Tables[0].Rows[0][3] = ("Error saving NewSACount test results in SA");
-                            myResponse.Tables[0].Rows[0][11] = ("Error saving NewSACount test results in SA");
+                            myResponse.Tables[0].Rows[0][3] = ("Error Saving New SA Count Test Result: " + results.Error.Substring(0, 200));
+                            myResponse.Tables[0].Rows[0][11] = ("Error Saving New SA Count Test Result: " + results.Error.Substring(0, 200));
                         }
                     }
                     return myResponse;
                 }
                 catch (Exception e)
                 {
-                    myResponse.Tables[0].Rows[0][3] = ("Error on NewSACount process: " + e.ToString().Substring(0, 570));
-                    myResponse.Tables[0].Rows[0][11] = ("Error on NewSACount process: " + e.ToString().Substring(0, 570));
+                    myResponse.Tables[0].Rows[0][3] = ("Error Reading New SA Count from CCB: " + e.ToString().Substring(0, 198));
+                    myResponse.Tables[0].Rows[0][11] = ("Error Reading New SA Count from CCB: " + e.ToString().Substring(0, 198));
                     return myResponse;
                 }
             });
@@ -308,24 +307,23 @@ namespace UnitTest.Model.DataWarehouse
                         results.StartDate = startDate;
                         results.EndDate = endDate;
                         results.StateID = (short)(stateTest ? 3 : 2);
-                        results.TestDate = DateTime.Now;
+                        results.CalcDate = DateTime.Now;
                         results.TestID = 21;
                         results.recordUntitValidationTest(cdcCount, dwhCount);
 
                         // if there re any error on recording db
                         if (!String.IsNullOrEmpty(results.Error))
                         {
-                            myResponse.Tables[0].Rows[0][3] = ("Error saving UpdatedSACounts test results in SA");
-                            myResponse.Tables[0].Rows[0][11] = ("Error saving UpdatedSACounts test results in SA");
+                            myResponse.Tables[0].Rows[0][3] = ("Error Saving Updated Count Test Result: " + results.Error.Substring(0, 200));
+                            myResponse.Tables[0].Rows[0][11] = ("Error Saving Updated Count Test Result: " + results.Error.Substring(0, 200));
                         }
                     }
-
                     return myResponse;
                 }
                 catch (Exception e)
                 {
-                    myResponse.Tables[0].Rows[0][3] = ("Error on UpdatedSACounts process: " + e.ToString().Substring(0, 570));
-                    myResponse.Tables[0].Rows[0][11] = ("Error on UpdatedSACounts process: " + e.ToString().Substring(0, 570));
+                    myResponse.Tables[0].Rows[0][3] = ("Error Reading Updated Count from CCB: " + e.ToString().Substring(0, 198));
+                    myResponse.Tables[0].Rows[0][11] = ("Error Reading Updated Count from CCB: " + e.ToString().Substring(0, 198));
                     return myResponse;
                 }
             });
@@ -388,24 +386,23 @@ namespace UnitTest.Model.DataWarehouse
                         results.StartDate = startDate;
                         results.EndDate = endDate;
                         results.StateID = (short)(stateTest ? 3 : 1);
-                        results.TestDate = endDate;
+                        results.CalcDate = endDate;
                         results.TestID = 22; 
                         results.recordHistoricalValidationTest(dtwCount);
 
                         // if there re any error on recording db
                         if (!String.IsNullOrEmpty(results.Error))
                         {
-                            myResponse.Tables[0].Rows[0][3] = ("Error saving SACountVsMaxHist test results in SA");
-                            myResponse.Tables[0].Rows[0][11] = ("Error saving SACountVsMaxHist test results in SA");
+                            myResponse.Tables[0].Rows[0][3] = ("Error Saving Max Hist SA Count Test Result: " + results.Error.Substring(0, 200));
+                            myResponse.Tables[0].Rows[0][11] = ("Error Saving Max Hist SA Count Test Result: " + results.Error.Substring(0, 200));
                         }
                     }
-
                     return myResponse;
                 }
                 catch (Exception e)
                 {
-                    myResponse.Tables[0].Rows[0][3] = ("Error on SACountVsMaxHist process: " + e.ToString());
-                    myResponse.Tables[0].Rows[0][11] = ("Error on SACountVsMaxHist process: " + e.ToString());
+                    myResponse.Tables[0].Rows[0][3] = ("Error Reading Max SA Count from CCB: " + e.ToString().Substring(0, 198));
+                    myResponse.Tables[0].Rows[0][11] = ("Error Reading Max SA Count from CCB: " + e.ToString().Substring(0, 198));
                     return myResponse;
                 }
             });
@@ -507,23 +504,22 @@ namespace UnitTest.Model.DataWarehouse
                         results.StartDate = evalDate;
                         results.EndDate = evalDate;
                         results.StateID = (short)(stateTest ? 1 : 3);
-                        results.TestDate = DateTime.Now;
+                        results.CalcDate = DateTime.Now;
                         results.TestID = 23;
                         results.recordStatisticalValidationTest(averCount, evaluatedCount);
                         // if there re any error on recording db
                         if (!String.IsNullOrEmpty(results.Error))
                         {
-                            myResponse.Tables[0].Rows[0][3] = ("Error saving StatisticalAcountEvaluation test results in SA");
-                            myResponse.Tables[0].Rows[0][11] = ("Error saving StatisticalAcountEvaluation test results in SA");
+                            myResponse.Tables[0].Rows[0][3] = ("Error Saving Statistical SA Count Test Result: " + results.Error.Substring(0, 200));
+                            myResponse.Tables[0].Rows[0][11] = ("Error Saving Statistical SA Count Test Result: " + results.Error.Substring(0, 200));
                         }
                     }
-
                     return myResponse;
                 }
                 catch (Exception e)
                 {
-                    myResponse.Tables[0].Rows[0][3] = ("Error on StatisticalAcountEvaluation process: " + e.ToString().Substring(0, 570));
-                    myResponse.Tables[0].Rows[0][11] = ("Error on StatisticalAcountEvaluation process: " + e.ToString().Substring(0, 570));
+                    myResponse.Tables[0].Rows[0][3] = ("Error Reading Statistical SA Count from CCB: " + e.ToString().Substring(0, 198));
+                    myResponse.Tables[0].Rows[0][11] = ("Error Reading Statistical SA Count from CCB: " + e.ToString().Substring(0, 198));
                     return myResponse;
                 }
             });

@@ -28,27 +28,28 @@ namespace UnitTest.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Get(DateTime startDate, DateTime endDate, Boolean sendSMSNotify, Boolean saveResult)
+        public async Task<IActionResult> Get(DateTime startDate, DateTime endDate, Boolean sendSMSNotify, Boolean saveResult, Int32 startHour, Int32 endHour)
         {
             #region Controller Initializacion
             dsResult = Extensions.getResponseStructure("");
             finalResultDS = Extensions.getResponseStructure("");
-            startDate = startDate.Date.AddHours(10);
-            endDate = endDate.Date.AddHours(10);
+            startDate = startDate.Date.AddHours((startHour == 0) ? gbl.StartHour : startHour);
+            endDate = endDate.Date.AddHours((endHour == 0) ? gbl.EndHour : endHour);
             mySMS = new SMS(gbl.CcnACS);
             Address addr = new Address(gbl.CcnDTW, gbl.CcnCDC, gbl.CcnDVT);
             dsResult = Extensions.getResponseStructure("");
             finalResultDS = Extensions.getResponseStructure("");
             #endregion
 
-            #region Validation: Premise Count
+            #region Validation: Address Count
             dsResult = await addr.AddressCount(startDate, endDate, saveResult);
             finalResultDS.Tables[0].ImportRow(dsResult.Tables[0].Rows[0]);
-            if ((dsResult.Tables[0].Rows[0][0].ToString() == "Warning" || dsResult.Tables[0].Rows[0][0].ToString() == "Failed") && sendSMSNotify)
-                mySMS.SendSMS(gbl.FromPhNumbAlert, gbl.BiTeamPhoneNumbers, dsResult.Tables[0].Rows[0][11].ToString());
-
+           
             if (dsResult.Tables[0].Rows[0][11].ToString().StartsWith("Error"))
+            {
+                mySMS.SendSMS(gbl.FromPhNumbAlert, gbl.BiTeamPhoneNumbers[0], dsResult.Tables[0].Rows[0][11].ToString());
                 return base.BadRequest(dsResult.Tables[0].Rows[0][11].ToString());
+            }
             else
             {
                 if ((dsResult.Tables[0].Rows[0][0].ToString() == "Warning" || dsResult.Tables[0].Rows[0][0].ToString() == "Failed") && sendSMSNotify)
@@ -56,14 +57,15 @@ namespace UnitTest.Controllers
             }
             #endregion
 
-            #region Validation: New Premise Count
+            #region Validation: New Address Count
             dsResult = await addr.NewAddressCount(startDate, endDate, saveResult);
             finalResultDS.Tables[0].ImportRow(dsResult.Tables[0].Rows[0]);
-            if ((dsResult.Tables[0].Rows[0][0].ToString() == "Warning" || dsResult.Tables[0].Rows[0][0].ToString() == "Failed") && sendSMSNotify)
-                mySMS.SendSMS(gbl.FromPhNumbAlert, gbl.BiTeamPhoneNumbers, dsResult.Tables[0].Rows[0][11].ToString());
-
+            
             if (dsResult.Tables[0].Rows[0][11].ToString().StartsWith("Error"))
+            {
+                mySMS.SendSMS(gbl.FromPhNumbAlert, gbl.BiTeamPhoneNumbers[0], dsResult.Tables[0].Rows[0][11].ToString());
                 return base.BadRequest(dsResult.Tables[0].Rows[0][11].ToString());
+            }
             else
             {
                 if ((dsResult.Tables[0].Rows[0][0].ToString() == "Warning" || dsResult.Tables[0].Rows[0][0].ToString() == "Failed") && sendSMSNotify)
@@ -71,14 +73,15 @@ namespace UnitTest.Controllers
             }
             #endregion
 
-            #region Validation: Updated Premises Count
+            #region Validation: Updated Address Count
             dsResult = await addr.UpdatedAddressCount(startDate, endDate, saveResult);
             finalResultDS.Tables[0].ImportRow(dsResult.Tables[0].Rows[0]);
-            if ((dsResult.Tables[0].Rows[0][0].ToString() == "Warning" || dsResult.Tables[0].Rows[0][0].ToString() == "Failed") && sendSMSNotify)
-                mySMS.SendSMS(gbl.FromPhNumbAlert, gbl.BiTeamPhoneNumbers, dsResult.Tables[0].Rows[0][11].ToString());
-
+           
             if (dsResult.Tables[0].Rows[0][11].ToString().StartsWith("Error"))
+            {
+                mySMS.SendSMS(gbl.FromPhNumbAlert, gbl.BiTeamPhoneNumbers[0], dsResult.Tables[0].Rows[0][11].ToString());
                 return base.BadRequest(dsResult.Tables[0].Rows[0][11].ToString());
+            }
             else
             {
                 if ((dsResult.Tables[0].Rows[0][0].ToString() == "Warning" || dsResult.Tables[0].Rows[0][0].ToString() == "Failed") && sendSMSNotify)
@@ -86,24 +89,36 @@ namespace UnitTest.Controllers
             }
             #endregion
 
-            #region Validation: Statistical comparision of account
+            #region Validation: Statistical comparision of Address
             dsResult = await addr.StatisticalAddressEvaluation(endDate, gbl.EvaluatedDatesRangeOnAverageTest, gbl.ToleranceVariatonNumber, saveResult);
             finalResultDS.Tables[0].ImportRow(dsResult.Tables[0].Rows[0]);
 
             if (dsResult.Tables[0].Rows[0][11].ToString().StartsWith("Error"))
+            {
+                mySMS.SendSMS(gbl.FromPhNumbAlert, gbl.BiTeamPhoneNumbers[0], dsResult.Tables[0].Rows[0][11].ToString());
                 return base.BadRequest(dsResult.Tables[0].Rows[0][11].ToString());
+            }
             else
             {
-                if ((dsResult.Tables[0].Rows[0][0].ToString() == "Warning" || dsResult.Tables[0].Rows[0][0].ToString() == "Failed") && sendSMSNotify)
+               if ((dsResult.Tables[0].Rows[0][0].ToString() == "Warning" || dsResult.Tables[0].Rows[0][0].ToString() == "Failed") && false)
                     mySMS.SendSMS(gbl.FromPhNumbAlert, gbl.BiTeamPhoneNumbers, dsResult.Tables[0].Rows[0][11].ToString());
             }
             #endregion
 
-            #region Validation: Premises Count vs Max Historic
+            #region Validation: Address Count vs Max Historic
             dsResult = await addr.AddressCountVsMaxHist(startDate, endDate, saveResult);
             finalResultDS.Tables[0].ImportRow(dsResult.Tables[0].Rows[0]);
+            
             if (dsResult.Tables[0].Rows[0][11].ToString().StartsWith("Error"))
+            {
+                mySMS.SendSMS(gbl.FromPhNumbAlert, gbl.BiTeamPhoneNumbers[0], dsResult.Tables[0].Rows[0][11].ToString());
                 return base.BadRequest(dsResult.Tables[0].Rows[0][11].ToString());
+            }
+            else
+            {
+                if ((dsResult.Tables[0].Rows[0][0].ToString() == "Warning" || dsResult.Tables[0].Rows[0][0].ToString() == "Failed") && false)
+                    mySMS.SendSMS(gbl.FromPhNumbAlert, gbl.BiTeamPhoneNumbers, dsResult.Tables[0].Rows[0][11].ToString());
+            }
             #endregion
 
             return base.Ok(Extensions.DataTableToJSONWithStringBuilder(finalResultDS.Tables[0]));

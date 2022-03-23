@@ -7,7 +7,7 @@ namespace UnitTest
     {
         #region Private members
         private string[] _phoneArrayBITEAM;        
-        private int _evaluatedDatesRangeOnOrdinaryTest, _evaluatedDatesRangeOnAverageTest;       
+        private int _evaluatedDatesRangeOnOrdinaryTest, _evaluatedDatesRangeOnAverageTest, _startHour, _endHour;       
         private string _dataWarehouseCCN, _valTestCCN, _ccbCCN, _cdcCCN, _azComServCCN, _fromSMS;        
         private Double _toleranceVariationNumber;
         #endregion
@@ -27,6 +27,8 @@ namespace UnitTest
         public double ToleranceVariatonNumber { get => _toleranceVariationNumber; set => _toleranceVariationNumber = value; }        
         public int EvaluatedDatesRangeOnAverageTest { get => _evaluatedDatesRangeOnAverageTest; set => _evaluatedDatesRangeOnAverageTest = value; }
         public int EvaluatedDateRangeOnOrdinaryTest { get => _evaluatedDatesRangeOnOrdinaryTest; set => _evaluatedDatesRangeOnOrdinaryTest = value; }
+        public int StartHour { get => _startHour; set => _startHour = value; }
+        public int EndHour { get => _endHour; set => _endHour = value; }
         #endregion
 
         public Global(IConfiguration conf)
@@ -44,7 +46,9 @@ namespace UnitTest
             _fromSMS = conf.GetValue<string>("ValidationTest:FROM_PHONE_NUMBER");                      
             _toleranceVariationNumber = conf.GetValue<double>("ValidationTest:TOLE_VAR_NUMBER");
             _evaluatedDatesRangeOnAverageTest = conf.GetValue<int>("ValidationTest:EVAL_DATES_RANGE_ON_AVE_TEST");
-            _evaluatedDatesRangeOnOrdinaryTest = conf.GetValue<int>("ValidationTest:EVAL_DATES_RANGE_ON_ORD_TEST");                  
+            _evaluatedDatesRangeOnOrdinaryTest = conf.GetValue<int>("ValidationTest:EVAL_DATES_RANGE_ON_ORD_TEST");
+            _startHour = conf.GetValue<int>("ValidationTest:START_HOUR");
+            _endHour = conf.GetValue<int>("ValidationTest:END_HOUR");
         }        
     }
 }

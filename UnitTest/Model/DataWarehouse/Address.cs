@@ -104,24 +104,23 @@ namespace UnitTest.Model.DataWarehouse
                         results.StartDate = startDate;
                         results.EndDate = endDate;
                         results.StateID = (short)(stateTest ? 3 : 2);
-                        results.TestDate = DateTime.Now;
+                        results.CalcDate = DateTime.Now;
                         results.TestID = 35; 
                         results.recordUntitValidationTest(cdcCount, dwhCount);
 
                         // if there re any error on recording db
                         if (!String.IsNullOrEmpty(results.Error))
                         {
-                            myResponse.Tables[0].Rows[0][3] = ("Error saving AddrCount test results in ADDR");
-                            myResponse.Tables[0].Rows[0][11] = ("Error saving AddrCount test results in ADDR");
+                            myResponse.Tables[0].Rows[0][3] = ("Error Saving ADDR Count Test Result: " + results.Error.Substring(0, 200));
+                            myResponse.Tables[0].Rows[0][11] = ("Error Saving ADDR Count Test Result: " + results.Error.Substring(0, 200));
                         }
                     }
-
                     return myResponse;
                 }
                 catch (Exception e)
                 {
-                    myResponse.Tables[0].Rows[0][3] = ("Error on AddrCount process: " + e.ToString().Substring(0, 198));
-                    myResponse.Tables[0].Rows[0][11] = ("Error on AddrCount process: " + e.ToString().Substring(0, 198));
+                    myResponse.Tables[0].Rows[0][3] = ("Error Reading ADDR Count from CCB: " + e.ToString().Substring(0, 198));
+                    myResponse.Tables[0].Rows[0][11] = ("Error Reading ADDR Count from CCB: " + e.ToString().Substring(0, 198));
                     return myResponse;
                 }
             });
@@ -209,23 +208,23 @@ namespace UnitTest.Model.DataWarehouse
                         results.StartDate = startDate;
                         results.EndDate = endDate;
                         results.StateID = (short)(stateTest ? 3 : 2);
-                        results.TestDate = DateTime.Now;
+                        results.CalcDate = DateTime.Now;
                         results.TestID = 36; 
                         results.recordUntitValidationTest(cdcCount, dwhCount);
 
                         // if there re any error on recording db
                         if (!String.IsNullOrEmpty(results.Error))
                         {
-                            myResponse.Tables[0].Rows[0][3] = ("Error saving NewAddressCount test results in ADDR");
-                            myResponse.Tables[0].Rows[0][11] = ("Error saving NewAddressCount test results in ADDR");
+                            myResponse.Tables[0].Rows[0][3] = ("Error Saving New ADDR Count Test Result: " + results.Error.Substring(0, 200));
+                            myResponse.Tables[0].Rows[0][11] = ("Error Saving New ADDR Count Test Result: " + results.Error.Substring(0, 200));
                         }
                     }
                     return myResponse;
                 }
                 catch (Exception e)
                 {
-                    myResponse.Tables[0].Rows[0][3] = ("Error on NewAddressCount process: " + e.ToString().Substring(0, 570));
-                    myResponse.Tables[0].Rows[0][11] = ("Error on NewAddressCount process: " + e.ToString().Substring(0, 570));
+                    myResponse.Tables[0].Rows[0][3] = ("Error Reading New ADDR Count from CCB: " + e.ToString().Substring(0, 198));
+                    myResponse.Tables[0].Rows[0][11] = ("Error Reading New ADDR Count from CCB: " + e.ToString().Substring(0, 198));
                     return myResponse;
                 }
             });
@@ -306,24 +305,23 @@ namespace UnitTest.Model.DataWarehouse
                         results.StartDate = startDate;
                         results.EndDate = endDate;
                         results.StateID = (short)(stateTest ? 3 : 2);
-                        results.TestDate = DateTime.Now;
+                        results.CalcDate = DateTime.Now;
                         results.TestID = 37;
                         results.recordUntitValidationTest(cdcCount, dwhCount);
 
                         // if there re any error on recording db
                         if (!String.IsNullOrEmpty(results.Error))
                         {
-                            myResponse.Tables[0].Rows[0][3] = ("Error saving UpdatedAddressCount test results in ADDR");
-                            myResponse.Tables[0].Rows[0][11] = ("Error saving UpdatedAddressCount test results in ADDR");
+                            myResponse.Tables[0].Rows[0][3] = ("Error Saving Updated ADDR Count Test Result: " + results.Error.Substring(0, 200));
+                            myResponse.Tables[0].Rows[0][11] = ("Error Saving Updated ADDR Count Test Result: " + results.Error.Substring(0, 200));
                         }
                     }
-
                     return myResponse;
                 }
                 catch (Exception e)
                 {
-                    myResponse.Tables[0].Rows[0][3] = ("Error on UpdatedAddressCount process: " + e.ToString().Substring(0, 570));
-                    myResponse.Tables[0].Rows[0][11] = ("Error on UpdatedAddressCount process: " + e.ToString().Substring(0, 570));
+                    myResponse.Tables[0].Rows[0][3] = ("Error Reading Updated Count from CCB: " + e.ToString().Substring(0, 200));
+                    myResponse.Tables[0].Rows[0][11] = ("Error Reading Updated Count from CCB: " + e.ToString().Substring(0, 200));
                     return myResponse;
                 }
             });
@@ -386,24 +384,23 @@ namespace UnitTest.Model.DataWarehouse
                         results.StartDate = startDate;
                         results.EndDate = endDate;
                         results.StateID = (short)(stateTest ? 3 : 1);
-                        results.TestDate = endDate;
+                        results.CalcDate = endDate;
                         results.TestID = 38; 
                         results.recordHistoricalValidationTest(dwhCount);
 
                         // if there re any error on recording db
                         if (!String.IsNullOrEmpty(results.Error))
                         {
-                            myResponse.Tables[0].Rows[0][3] = ("Error saving AddressCountVsMaxHist test results in ADDR");
-                            myResponse.Tables[0].Rows[0][11] = ("Error saving AddressCountVsMaxHist test results in ADDR");
+                            myResponse.Tables[0].Rows[0][3] = ("Error Saving Max Hist ADDR Count Test Result: " + results.Error.Substring(0, 200));
+                            myResponse.Tables[0].Rows[0][11] = ("Error Saving Max Hist ADDR Count Test Result: " + results.Error.Substring(0, 200));
                         }
                     }
-
                     return myResponse;
                 }
                 catch (Exception e)
                 {
-                    myResponse.Tables[0].Rows[0][3] = ("Error on AddressCountVsMaxHist process: " + e.ToString());
-                    myResponse.Tables[0].Rows[0][11] = ("Error on AddressCountVsMaxHist process: " + e.ToString());
+                    myResponse.Tables[0].Rows[0][3] = ("Error Reading Max Hist ADDR Count from CCB: " + e.ToString().Substring(0, 200));
+                    myResponse.Tables[0].Rows[0][11] = ("Error Reading Max Hist ADDR Count from CCB: " + e.ToString().Substring(0, 200));
                     return myResponse;
                 }
             });
@@ -478,7 +475,7 @@ namespace UnitTest.Model.DataWarehouse
 
                     bool stateTest = (Math.Abs(incremIndicator) > (TOLERANCE_PERCENTAGE_IN_AVERAGE_VARIATION * 100));
 
-                    testInterpretation = results.createMessageNotification(TestResult.BusinessStar.BU, TestResult.Entity.DimPrem, TestResult.TestGenericName.Statistical, evaluatedCount, Convert.ToInt64(Math.Round(averCount)), appEnv, stateTest);
+                    testInterpretation = results.createMessageNotification(TestResult.BusinessStar.BU, TestResult.Entity.DimAddress, TestResult.TestGenericName.Statistical, evaluatedCount, Convert.ToInt64(Math.Round(averCount)), appEnv, stateTest);
 
 
                     myResponse.Tables[0].Rows[0][0] = stateTest ? "Warning" : "OK!";
@@ -504,23 +501,22 @@ namespace UnitTest.Model.DataWarehouse
                         results.StartDate = evalDate;
                         results.EndDate = evalDate;
                         results.StateID = (short)(stateTest ? 1 : 3);
-                        results.TestDate = DateTime.Now;
+                        results.CalcDate = DateTime.Now;
                         results.TestID = 39;
                         results.recordStatisticalValidationTest(averCount, evaluatedCount);
                         // if there re any error on recording db
                         if (!String.IsNullOrEmpty(results.Error))
                         {
-                            myResponse.Tables[0].Rows[0][3] = ("Error saving StatisticalAddressEvaluation test results in Address");
-                            myResponse.Tables[0].Rows[0][11] = ("Error saving StatisticalAddressEvaluation test results in Address");
+                            myResponse.Tables[0].Rows[0][3] = ("Error Saving Statistical ADDR Count Test Result: " + results.Error.Substring(0, 200));
+                            myResponse.Tables[0].Rows[0][11] = ("Error Saving Statistical ADDR Count Test Result: " + results.Error.Substring(0, 200));
                         }
                     }
-
                     return myResponse;
                 }
                 catch (Exception e)
                 {
-                    myResponse.Tables[0].Rows[0][3] = ("Error on StatisticalAddressEvaluation process: " + e.ToString().Substring(0, 570));
-                    myResponse.Tables[0].Rows[0][11] = ("Error on StatisticalAddressEvaluation process: " + e.ToString().Substring(0, 570));
+                    myResponse.Tables[0].Rows[0][3] = ("Error Reading Statistical ADDR Count from CCB: " + e.ToString().Substring(0, 200));
+                    myResponse.Tables[0].Rows[0][11] = ("Error Reading Statistical ADDR Count from CCB: " + e.ToString().Substring(0, 200));
                     return myResponse;
                 }
             });

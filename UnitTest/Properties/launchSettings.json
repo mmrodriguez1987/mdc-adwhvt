@@ -13,14 +13,20 @@
       "commandName": "IISExpress",
       "workingDirectory": "C:\\BIProjectUT\\UnitTest",
       "launchBrowser": true,
-      "launchUrl": "api/"
+      "launchUrl": "api/",
+      "environmentVariables": {
+        "VaultUri": "https://kvm2cdwhddev.vault.azure.net/",
+        "AZURE_USERNAME": "E327464@miamidade.gov"
+      }
     },
     "Staging": {
       "commandName": "Project",
       "launchBrowser": true,
       "launchUrl": "api/",
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Staging"
+        "ASPNETCORE_ENVIRONMENT": "Staging",
+        "VaultUri": "https://kvm2cdwhddev.vault.azure.net/",
+        "AZURE_USERNAME": "E327464@miamidade.gov"
       },
       "applicationUrl": "https://s0146154:443"
     },
@@ -28,7 +34,9 @@
       "commandName": "Project",
       "launchBrowser": true,
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Production"
+        "ASPNETCORE_ENVIRONMENT": "Production",
+        "VaultUri": "https://kvm2cdwhddev.vault.azure.net/",
+        "AZURE_USERNAME": "E327464@miamidade.gov"
       },
       "applicationUrl": "https://s0146154:80"
     }

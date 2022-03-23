@@ -6,7 +6,6 @@ C:\BIProjectUT\UnitTest\bin\Release\net6.0\win-x64\appsettings.json
 C:\BIProjectUT\UnitTest\bin\Release\net6.0\win-x64\UnitTest.deps.json
 C:\BIProjectUT\UnitTest\bin\Release\net6.0\win-x64\UnitTest.runtimeconfig.json
 C:\BIProjectUT\UnitTest\bin\Release\net6.0\win-x64\UnitTest.dll
-C:\BIProjectUT\UnitTest\bin\Release\net6.0\win-x64\ref\UnitTest.dll
 C:\BIProjectUT\UnitTest\bin\Release\net6.0\win-x64\UnitTest.pdb
 C:\BIProjectUT\UnitTest\bin\Release\net6.0\win-x64\Azure.Communication.Sms.dll
 C:\BIProjectUT\UnitTest\bin\Release\net6.0\win-x64\Azure.Core.dll
@@ -395,7 +394,6 @@ C:\BIProjectUT\UnitTest\bin\Release\net6.0\win-x64\dbgshim.dll
 C:\BIProjectUT\UnitTest\bin\Release\net6.0\win-x64\hostfxr.dll
 C:\BIProjectUT\UnitTest\bin\Release\net6.0\win-x64\hostpolicy.dll
 C:\BIProjectUT\UnitTest\bin\Release\net6.0\win-x64\mscordaccore.dll
-C:\BIProjectUT\UnitTest\bin\Release\net6.0\win-x64\mscordaccore_amd64_amd64_6.0.222.6406.dll
 C:\BIProjectUT\UnitTest\bin\Release\net6.0\win-x64\mscordbi.dll
 C:\BIProjectUT\UnitTest\bin\Release\net6.0\win-x64\mscorrc.dll
 C:\BIProjectUT\UnitTest\bin\Release\net6.0\win-x64\msquic.dll
@@ -418,3 +416,6 @@ C:\BIProjectUT\UnitTest\obj\Release\net6.0\win-x64\UnitTest.dll
 C:\BIProjectUT\UnitTest\obj\Release\net6.0\win-x64\ref\UnitTest.dll
 C:\BIProjectUT\UnitTest\obj\Release\net6.0\win-x64\UnitTest.pdb
 C:\BIProjectUT\UnitTest\obj\Release\net6.0\win-x64\UnitTest.genruntimeconfig.cache
+C:\BIProjectUT\UnitTest\bin\Release\net6.0\win-x64\api-ms-win-core-fibers-l1-1-0.dll
+C:\BIProjectUT\UnitTest\bin\Release\net6.0\win-x64\mscordaccore_amd64_amd64_6.0.322.12309.dll
+C:\BIProjectUT\UnitTest\obj\Release\net6.0\win-x64\refint\UnitTest.dll

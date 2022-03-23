@@ -11,7 +11,7 @@ using System.Linq;
 
 namespace UnitTest.Model.DataWarehouse
 {
-    public class BillUsage    
+    public class BilledUsage    
     {
         private string _ccnDTW, _ccnCDC, testInterpretation, sp_ccb_bseg, queryDWH, appEnv;        
         private DataSet myResponse = new DataSet(), evalDataDWH = new DataSet(), evalDataCDC = new DataSet();
@@ -26,7 +26,7 @@ namespace UnitTest.Model.DataWarehouse
         /// <param name="cnnDTW">conexion to Datawarehouse</param>
         /// <param name="ccnCDC">conexion to CDC Database</param>
         /// <param name="ccnValTest">conexion to Validation Test Database</param>       
-        public BillUsage(string cnnDTW, string ccnCDC, string ccnValTest)
+        public BilledUsage(string cnnDTW, string ccnCDC, string ccnValTest)
         {
             _ccnDTW = cnnDTW;
             _ccnCDC = ccnCDC;
@@ -96,7 +96,7 @@ namespace UnitTest.Model.DataWarehouse
                         results.StartDate = startDate;
                         results.EndDate = endDate;
                         results.StateID = (short)((dtwCount == 0) ? 3 : 2);
-                        results.TestDate = DateTime.Now;
+                        results.CalcDate = DateTime.Now;
                         results.TestID = 1; // Bills Generated On Weekend
                         results.recordBilledUsageBusinessRuleValidationTest(dtwCount, "CF_BILLED_USAGE.SRC_BILL_ID", (dtwCount > 0) ? affectedIDs.ToArray() : null);
 
@@ -179,7 +179,7 @@ namespace UnitTest.Model.DataWarehouse
                         results.StartDate = startDate;
                         results.EndDate = endDate;
                         results.StateID = (short)((dtwCount == 0) ? 3 : 2);
-                        results.TestDate = DateTime.Now;
+                        results.CalcDate = DateTime.Now;
                         results.TestID = 2; // Bills Generated On Wrong Fiscal Year
                         results.recordBilledUsageBusinessRuleValidationTest(dtwCount, "CF_BILLED_USAGE.SRC_BILL_ID", (dtwCount > 0) ? affectedIDs.ToArray() : null);
 
@@ -322,7 +322,7 @@ namespace UnitTest.Model.DataWarehouse
                     results.StartDate = startDate;
                     results.EndDate = endDate;
                     results.StateID = (short)((cdcCount > 0 && dwhCount > 0 && (cdcCount == dwhCount)) ? 3 : 2);
-                    results.TestDate = DateTime.Now;
+                    results.CalcDate = DateTime.Now;
                     results.TestID = 34; // Compare Dsitinct ACCT
                     results.recordUntitValidationTest(cdcCount, dwhCount);
 

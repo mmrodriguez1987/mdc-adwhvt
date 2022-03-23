@@ -108,7 +108,7 @@ CREATE TABLE Result
 	[description] VARCHAR(3000),
 	startDate DATETIME,
 	endDate DATETIME,	
-	testDate DATETIME
+	calculationDate DATETIME
 )
 
 GO
@@ -154,7 +154,7 @@ RD.[count] [Count],
 R.[description] [Description], 
 R.startDate [Start Date], 
 R.endDate [End Date], 
-R.testDate
+R.calculationDate
 FROM Result R
 INNER JOIN [State] S ON R.stateID=S.stateID
 INNER JOIN Test T ON T.testID=R.testID
@@ -817,10 +817,10 @@ INSERT INTO TestType VALUES ('Business')  --2
 INSERT INTO TestType VALUES ('Unit')  --3
 INSERT INTO TestType VALUES ('ETL')  --4
 
-INSERT INTO ResultType VALUES('CDC Count','Count CCB reflected on CDC')
-INSERT INTO ResultType VALUES('DTWH Count','Count on Data Warehouse')
-INSERT INTO ResultType VALUES('Aver Count CDC','Average Count calculated on CDC')
-INSERT INTO ResultType VALUES('Max Hist Count','Maximun Historical Count')
+INSERT INTO ResultType VALUES('CCB Count','Count CCB reflected on CDC')
+INSERT INTO ResultType VALUES('DWH Count','Count on Data Warehouse')
+INSERT INTO ResultType VALUES('CCB Aver Count ','Average Count calculated on CDC')
+INSERT INTO ResultType VALUES('CCB Max Hist Count','Maximun Historical Count')
 
 
 INSERT INTO Test VALUES (2,'Bills Generated On Weekend','Check that no bills generated on weekend','SELECT * FROM (SELECT B.BILL_DATE_KEY, CASE WHEN (B.UDDGEN1 BETWEEN C.StartDate AND C.EndDate) THEN 1 ELSE 0 END AS validFiscalYear FROM dwadm2.CF_BILLED_USAGE B INNER JOIN dwadm2.vw_CD_FISCAL_CAL C ON B.FISCAL_CAL_KEY=C.FISCAL_CAL_KEY WHERE (B.DATA_LOAD_DTTM BETWEEN @startDate AND @endDate)) T',1)							--testID=1
@@ -1019,7 +1019,7 @@ INSERT INTO TestParameter VALUES (39,35)
 INSERT INTO TestParameter VALUES (39,37)
 INSERT INTO TestParameter VALUES (39,377)
 
-SELECT * FROM Test order by 1 desc
+
 
 
 /*

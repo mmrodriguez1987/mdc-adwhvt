@@ -219,26 +219,22 @@ namespace Tools
             try
             {
                 MailMessage msg = new MailMessage();
-                SmtpClient smtp = new SmtpClient();
+                SmtpClient smtp = new SmtpClient(serverMail);
 
-                smtp.Credentials = new NetworkCredential(from, password);
-                smtp.Host = serverMail;
+                smtp.Credentials = new NetworkCredential(from, password);               
                 smtp.Port = port;
+                
                 smtp.EnableSsl = enableSsl;
-
+                
                 msg.To.Add(to);
-                msg.From = new MailAddress(from, displayName, System.Text.Encoding.UTF8);
+                msg.From = new MailAddress(from, displayName);
                 msg.Subject = subject;
-                msg.SubjectEncoding = System.Text.Encoding.UTF8;
+                //msg.SubjectEncoding = System.Text.Encoding.UTF8;
                 msg.Body = message;
-                msg.BodyEncoding = System.Text.Encoding.UTF8;
-                msg.CC.Add(withCopy);
-                msg.Priority = priority;
-                if (file != String.Empty)
-                {
-                    msg.Attachments.Add(new Attachment(file, MediaTypeNames.Application.Octet));
-                }
+                //msg.BodyEncoding = System.Text.Encoding.UTF8;               
+                //msg.Priority = priority;               
                 msg.IsBodyHtml = IsBodyHtml;
+
                 smtp.Send(msg);
             }
             catch (SmtpException e)

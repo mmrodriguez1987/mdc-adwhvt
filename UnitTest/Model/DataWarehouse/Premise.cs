@@ -105,24 +105,23 @@ namespace UnitTest.Model.DataWarehouse
                         results.StartDate = startDate;
                         results.EndDate = endDate;
                         results.StateID = (short)(stateTest ? 3 : 2);
-                        results.TestDate = DateTime.Now;
+                        results.CalcDate = DateTime.Now;
                         results.TestID = 14; // Compare Dsitinct PREM
                         results.recordUntitValidationTest(cdcCount, dwhCount);
 
                         // if there re any error on recording db
                         if (!String.IsNullOrEmpty(results.Error))
                         {
-                            myResponse.Tables[0].Rows[0][3] = ("Error saving PremCount test results in Prem");
-                            myResponse.Tables[0].Rows[0][11] = ("Error saving PremCount test results in Prem");
+                            myResponse.Tables[0].Rows[0][3] = ("Error Saving PREM Count Test Result: " + results.Error.Substring(0, 200));
+                            myResponse.Tables[0].Rows[0][11] = ("Error Saving PREM Count Test Result: " + results.Error.Substring(0, 200));
                         }
                     }
-
                     return myResponse;
                 }
                 catch (Exception e)
                 {
-                    myResponse.Tables[0].Rows[0][3] = ("Error on PremCount process: " + e.ToString().Substring(0, 198));
-                    myResponse.Tables[0].Rows[0][11] = ("Error on PremCount process: " + e.ToString().Substring(0, 198));
+                    myResponse.Tables[0].Rows[0][3] = ("Error Reading PREM Count from CCB: " + e.ToString().Substring(0, 198));
+                    myResponse.Tables[0].Rows[0][11] = ("Error Reading PREM Count from CCB: " + e.ToString().Substring(0, 198));
                     return myResponse;
                 }
             });
@@ -210,23 +209,23 @@ namespace UnitTest.Model.DataWarehouse
                         results.StartDate = startDate;
                         results.EndDate = endDate;
                         results.StateID = (short)(stateTest ? 3 : 2);
-                        results.TestDate = DateTime.Now;
+                        results.CalcDate = DateTime.Now;
                         results.TestID = 15; // Compare Dsitinct PREM
                         results.recordUntitValidationTest(cdcCount, dwhCount);
 
                         // if there re any error on recording db
                         if (!String.IsNullOrEmpty(results.Error))
                         {
-                            myResponse.Tables[0].Rows[0][3] = ("Error saving NewPremiseCount test results in Premise");
-                            myResponse.Tables[0].Rows[0][11] = ("Error saving NewPremiseCount test results in Premise");
+                            myResponse.Tables[0].Rows[0][3] = ("Error Saving New PREM Count Test Result: " + results.Error.Substring(0, 200));
+                            myResponse.Tables[0].Rows[0][11] = ("Error Saving New PREM Count Test Result: " + results.Error.Substring(0, 200));
                         }
                     }
                     return myResponse;
                 }
                 catch (Exception e)
                 {
-                    myResponse.Tables[0].Rows[0][3] = ("Error on NewPremiseCount process: " + e.ToString().Substring(0, 570));
-                    myResponse.Tables[0].Rows[0][11] = ("Error on NewPremiseCount process: " + e.ToString().Substring(0, 570));
+                    myResponse.Tables[0].Rows[0][3] = ("Error Reading New PREM Count from CCB: " + e.ToString().Substring(0, 198));
+                    myResponse.Tables[0].Rows[0][11] = ("Error Reading New PREM Count from CCB: " + e.ToString().Substring(0, 198));
                     return myResponse;
                 }
             });
@@ -307,24 +306,23 @@ namespace UnitTest.Model.DataWarehouse
                         results.StartDate = startDate;
                         results.EndDate = endDate;
                         results.StateID = (short)(stateTest ? 3 : 2);
-                        results.TestDate = DateTime.Now;
+                        results.CalcDate = DateTime.Now;
                         results.TestID = 16;
                         results.recordUntitValidationTest(cdcCount, dwhCount);
 
                         // if there re any error on recording db
                         if (!String.IsNullOrEmpty(results.Error))
                         {
-                            myResponse.Tables[0].Rows[0][3] = ("Error saving UpdatedPremCount test results in Prem");
-                            myResponse.Tables[0].Rows[0][11] = ("Error saving UpdatedPremCount test results in Prem");
+                            myResponse.Tables[0].Rows[0][3] = ("Error Saving Updated PREM Count Test Result: " + results.Error.Substring(0, 200));
+                            myResponse.Tables[0].Rows[0][11] = ("Error Saving Updated PREM Count Test Result: " + results.Error.Substring(0, 200));
                         }
                     }
-
                     return myResponse;
                 }
                 catch (Exception e)
                 {
-                    myResponse.Tables[0].Rows[0][3] = ("Error on UpdatedPremCount process: " + e.ToString().Substring(0, 570));
-                    myResponse.Tables[0].Rows[0][11] = ("Error on UpdatedPremCount process: " + e.ToString().Substring(0, 570));
+                    myResponse.Tables[0].Rows[0][3] = ("Error Reading Updated PREM Count from CCB: " + e.ToString().Substring(0, 198));
+                    myResponse.Tables[0].Rows[0][11] = ("Error Reading Updated PREM Count from CCB: " + e.ToString().Substring(0, 198));
                     return myResponse;
                 }
             });
@@ -387,24 +385,23 @@ namespace UnitTest.Model.DataWarehouse
                         results.StartDate = startDate;
                         results.EndDate = endDate;
                         results.StateID = (short)(stateTest ? 3 : 1);
-                        results.TestDate = endDate;
+                        results.CalcDate = endDate;
                         results.TestID = 17; // Compare Dsitinct PREM Over the maximun
                         results.recordHistoricalValidationTest(dwhCount);
 
                         // if there re any error on recording db
                         if (!String.IsNullOrEmpty(results.Error))
                         {
-                            myResponse.Tables[0].Rows[0][3] = ("Error saving PremCountVsMaxHist test results in Premise");
-                            myResponse.Tables[0].Rows[0][11] = ("Error saving PremCountVsMaxHist test results in Premise");
+                            myResponse.Tables[0].Rows[0][3] = ("Error Saving Max Hist PREM Count Test Result: " + results.Error.Substring(0, 200));
+                            myResponse.Tables[0].Rows[0][11] = ("Error Saving Max Hist PREM Count Test Result: " + results.Error.Substring(0, 200));
                         }
                     }
-
                     return myResponse;
                 }
                 catch (Exception e)
                 {
-                    myResponse.Tables[0].Rows[0][3] = ("Error on PremCountVsMaxHist process: " + e.ToString());
-                    myResponse.Tables[0].Rows[0][11] = ("Error on PremCountVsMaxHist process: " + e.ToString());
+                    myResponse.Tables[0].Rows[0][3] = ("Error Reading Max Hist PREM Count from CCB: " + e.ToString().Substring(0, 198));
+                    myResponse.Tables[0].Rows[0][11] = ("Error Reading Max Hist PREM Count from CCB: " + e.ToString().Substring(0, 198));
                     return myResponse;
                 }
             });
@@ -505,29 +502,25 @@ namespace UnitTest.Model.DataWarehouse
                         results.StartDate = evalDate;
                         results.EndDate = evalDate;
                         results.StateID = (short)(stateTest ? 1 : 3);
-                        results.TestDate = DateTime.Now;
+                        results.CalcDate = DateTime.Now;
                         results.TestID = 18;
                         results.recordStatisticalValidationTest(averCountPremise, evaluatedCount);
                         // if there re any error on recording db
                         if (!String.IsNullOrEmpty(results.Error))
                         {
-                            myResponse.Tables[0].Rows[0][3] = ("Error saving StatisticalPremiseEvaluation test results in Premise");
-                            myResponse.Tables[0].Rows[0][11] = ("Error saving StatisticalPremiseEvaluation test results in Premise");
+                            myResponse.Tables[0].Rows[0][3] = ("Error Saving Statistical PREM Count Test Result: " + results.Error.Substring(0, 200));
+                            myResponse.Tables[0].Rows[0][11] = ("Error Saving Statistical PREM Count Test Result: " + results.Error.Substring(0, 200));
                         }
                     }
-
                     return myResponse;
                 }
                 catch (Exception e)
                 {
-                    myResponse.Tables[0].Rows[0][3] = ("Error on StatisticalPremiseEvaluation process: " + e.ToString().Substring(0, 570));
-                    myResponse.Tables[0].Rows[0][11] = ("Error on StatisticalPremiseEvaluation process: " + e.ToString().Substring(0, 570));
+                    myResponse.Tables[0].Rows[0][3] = ("Error Reading Statistical PREM Count from CCB: " + e.ToString().Substring(0, 198));
+                    myResponse.Tables[0].Rows[0][11] = ("Error Reading Statistical PREM Count from CCB: " + e.ToString().Substring(0, 198));
                     return myResponse;
                 }
             });
         }
-
-
-
     }
 }

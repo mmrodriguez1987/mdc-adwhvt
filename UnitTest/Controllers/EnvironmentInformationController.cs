@@ -72,6 +72,14 @@ namespace UnitTest.Controllers
                 dr[2] = "Validate the Enviroment";
                 dr[3] = envVar;
                 dsResult.Tables[0].Rows.Add(dr);
+                   
+                
+                dr = dsResult.Tables[0].NewRow();
+                dr[0] = r ? "T" : "F";
+                dr[1] = "Phone Numbers for SMS Notifications";
+                dr[2] = "Validate Phones";
+                dr[3] = String.Join(",", gbl.BiTeamPhoneNumbers); 
+                dsResult.Tables[0].Rows.Add(dr);
 
 
                 return base.Ok(Extensions.DataTableToJSONWithStringBuilder(dsResult.Tables[0]));

@@ -6,7 +6,6 @@ C:\BIProjectUT\UnitTest\bin\Debug\net6.0\appsettings.json
 C:\BIProjectUT\UnitTest\bin\Debug\net6.0\UnitTest.deps.json
 C:\BIProjectUT\UnitTest\bin\Debug\net6.0\UnitTest.runtimeconfig.json
 C:\BIProjectUT\UnitTest\bin\Debug\net6.0\UnitTest.dll
-C:\BIProjectUT\UnitTest\bin\Debug\net6.0\ref\UnitTest.dll
 C:\BIProjectUT\UnitTest\bin\Debug\net6.0\UnitTest.pdb
 C:\BIProjectUT\UnitTest\bin\Debug\net6.0\Azure.Communication.Sms.dll
 C:\BIProjectUT\UnitTest\bin\Debug\net6.0\Azure.Core.dll
@@ -81,3 +80,4 @@ C:\BIProjectUT\UnitTest\obj\Debug\net6.0\UnitTest.dll
 C:\BIProjectUT\UnitTest\obj\Debug\net6.0\ref\UnitTest.dll
 C:\BIProjectUT\UnitTest\obj\Debug\net6.0\UnitTest.pdb
 C:\BIProjectUT\UnitTest\obj\Debug\net6.0\UnitTest.genruntimeconfig.cache
+C:\BIProjectUT\UnitTest\obj\Debug\net6.0\refint\UnitTest.dll

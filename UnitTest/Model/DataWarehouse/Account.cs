@@ -107,15 +107,15 @@ namespace UnitTest.Model.DataWarehouse
                         results.StartDate = startDate;
                         results.EndDate = endDate;
                         results.StateID = (short)(stateTest ? 3 : 2);
-                        results.TestDate = DateTime.Now;
+                        results.CalcDate = DateTime.Now;
                         results.TestID = 4; // Compare Dsitinct ACCT
                         results.recordUntitValidationTest(cdcCount, dtwCount);
 
                         // if there re any error on recording db
                         if (!String.IsNullOrEmpty(results.Error))
                         {
-                            myResponse.Tables[0].Rows[0][3] = ("Error saving DistinctAccountCount test results in Account");
-                            myResponse.Tables[0].Rows[0][11] = ("Error saving DistinctAccountCount test results in Account");
+                            myResponse.Tables[0].Rows[0][3] = ("Error Saving ACCT Count Test Result: " + results.Error.Substring(0, 200));
+                            myResponse.Tables[0].Rows[0][11] = ("Error Saving ACCT Count Test Result: " + results.Error.Substring(0, 200));
                         }
                     }
                     
@@ -123,8 +123,8 @@ namespace UnitTest.Model.DataWarehouse
                 }
                 catch (Exception e)
                 {
-                    myResponse.Tables[0].Rows[0][3] = ("Error on DistinctAccountCount process: " + e.ToString().Substring(0, 198));
-                    myResponse.Tables[0].Rows[0][11] = ("Error on DistinctAccountCount process: " + e.ToString().Substring(0, 198));
+                    myResponse.Tables[0].Rows[0][3] = ("Error Reading ACCT Count from CCB: " + e.ToString().Substring(0, 198));
+                    myResponse.Tables[0].Rows[0][11] = ("Error Reading ACCT Count from CCB: " + e.ToString().Substring(0, 198));
                     return myResponse;
                 }
             });
@@ -212,23 +212,23 @@ namespace UnitTest.Model.DataWarehouse
                         results.StartDate = startDate;
                         results.EndDate = endDate;
                         results.StateID = (short) (stateTest ? 3 : 2);
-                        results.TestDate = DateTime.Now;
+                        results.CalcDate = DateTime.Now;
                         results.TestID = 5; // Compare Dsitinct ACCT
                         results.recordUntitValidationTest(cdcCount, dtwCount);
 
                         // if there re any error on recording db
                         if (!String.IsNullOrEmpty(results.Error))
                         {
-                            myResponse.Tables[0].Rows[0][3] = ("Error saving NewAccountCounts test results in Account");
-                            myResponse.Tables[0].Rows[0][11] = ("Error saving NewAccountCounts test results in Account");
+                            myResponse.Tables[0].Rows[0][3] = ("Error Saving New ACCT Count Test Result: " + results.Error.Substring(0, 200));
+                            myResponse.Tables[0].Rows[0][11] = ("Error Saving New ACCT Count Test Result: " + results.Error.Substring(0, 200));
                         }
                     }                   
                     return myResponse;
                 }
                 catch (Exception e)
                 {
-                    myResponse.Tables[0].Rows[0][3] = ("Error on NewAccountCounts process: " + e.ToString().Substring(0,570));
-                    myResponse.Tables[0].Rows[0][11] = ("Error on NewAccountCounts process: " + e.ToString().Substring(0,570));
+                    myResponse.Tables[0].Rows[0][3] = ("Error Reading New ACCT Count from CCB: " + e.ToString().Substring(0, 198));
+                    myResponse.Tables[0].Rows[0][11] = ("Error Reading New ACCT Count from CCB: " + e.ToString().Substring(0, 198));
                     return myResponse;
                 }
             });
@@ -309,24 +309,24 @@ namespace UnitTest.Model.DataWarehouse
                         results.StartDate = startDate;
                         results.EndDate = endDate;
                         results.StateID = (short)(stateTest ? 3 : 2);
-                        results.TestDate = DateTime.Now;
+                        results.CalcDate = DateTime.Now;
                         results.TestID = 6;
                         results.recordUntitValidationTest(cdcCount, dwhCount);
 
                         // if there re any error on recording db
+                        // if there re any error on recording db
                         if (!String.IsNullOrEmpty(results.Error))
                         {
-                            myResponse.Tables[0].Rows[0][3] = ("Error saving UpdatedAccountCounts test results in Account");
-                            myResponse.Tables[0].Rows[0][11] = ("Error saving UpdatedAccountCounts test results in Account");
+                            myResponse.Tables[0].Rows[0][3] = ("Error Saving Updated ACCT Count Test Result: " + results.Error.Substring(0, 200));
+                            myResponse.Tables[0].Rows[0][11] = ("Error Saving Updated ACCT Count Test Result: " + results.Error.Substring(0, 200));
                         }
                     }
-                   
                     return myResponse;
                 }
                 catch (Exception e)
                 {
-                    myResponse.Tables[0].Rows[0][3] = ("Error on UpdatedAccountCounts process: " + e.ToString().Substring(0, 570));
-                    myResponse.Tables[0].Rows[0][11] = ("Error on UpdatedAccountCounts process: " + e.ToString().Substring(0, 570));
+                    myResponse.Tables[0].Rows[0][3] = ("Error Reading Updated ACCT Count from CCB: " + e.ToString().Substring(0, 198));
+                    myResponse.Tables[0].Rows[0][11] = ("Error Reading Updated ACCT Count from CCB: " + e.ToString().Substring(0, 198));
                     return myResponse;
                 }
             });
@@ -389,24 +389,24 @@ namespace UnitTest.Model.DataWarehouse
                         results.StartDate = startDate;
                         results.EndDate = endDate;
                         results.StateID = (short)(stateTest ? 3 : 1);
-                        results.TestDate = endDate;
+                        results.CalcDate = endDate;
                         results.TestID = 7; // Compare Dsitinct ACCT Over the maximun
                         results.recordHistoricalValidationTest(dtwCount);
 
                         // if there re any error on recording db
+                        // if there re any error on recording db
                         if (!String.IsNullOrEmpty(results.Error))
                         {
-                            myResponse.Tables[0].Rows[0][3] = ("Error saving DistinctAcctCountOnDataLoadOverTheMaxHistricCount test results in Account");
-                            myResponse.Tables[0].Rows[0][11] = ("Error saving DistinctAcctCountOnDataLoadOverTheMaxHistricCount test results in Account");
+                            myResponse.Tables[0].Rows[0][3] = ("Error Saving Max Hist ACCT Count Test Result: " + results.Error.Substring(0, 200));
+                            myResponse.Tables[0].Rows[0][11] = ("Error Saving Max Hist Count Test Result: " + results.Error.Substring(0, 200));
                         }
                     }
-                    
                     return myResponse;
                 }
                 catch (Exception e)
                 {
-                    myResponse.Tables[0].Rows[0][3] = ("Error on DistinctAcctCountOnDataLoadOverTheMaxHistricCount process: " + e.ToString());
-                    myResponse.Tables[0].Rows[0][11] = ("Error on DistinctAcctCountOnDataLoadOverTheMaxHistricCount process: " + e.ToString());
+                    myResponse.Tables[0].Rows[0][3] = ("Error Reading Max Hist ACCT Count from CCB: " + e.ToString().Substring(0, 198));
+                    myResponse.Tables[0].Rows[0][11] = ("Error Reading Max Hist ACCT Count from CCB" + e.ToString().Substring(0, 198));
                     return myResponse;
                 }
             });
@@ -508,23 +508,22 @@ namespace UnitTest.Model.DataWarehouse
                         results.StartDate = evalDate;
                         results.EndDate = evalDate;
                         results.StateID = (short)(stateTest ? 1 : 3);
-                        results.TestDate = DateTime.Now;
+                        results.CalcDate = DateTime.Now;
                         results.TestID = 8;
                         results.recordStatisticalValidationTest(averCountAccount, evaluatedCount);
                         // if there re any error on recording db
                         if (!String.IsNullOrEmpty(results.Error))
                         {
-                            myResponse.Tables[0].Rows[0][3] = ("Error saving StatisticalAcountEvaluation test results in Account");
-                            myResponse.Tables[0].Rows[0][11] = ("Error saving StatisticalAcountEvaluation test results in Account" );
+                            myResponse.Tables[0].Rows[0][3] = ("Error Saving Statistical ACCT Count Test Result: " + results.Error.Substring(0, 200));
+                            myResponse.Tables[0].Rows[0][11] = ("Error Saving Statistical ACCT Count Test Result: " + results.Error.Substring(0, 200));
                         }
                     }
-                   
                     return myResponse;
                 }
                 catch (Exception e)
                 {
-                    myResponse.Tables[0].Rows[0][3] = ("Error on StatisticalAcountEvaluation process: " + e.ToString().Substring(0, 570));
-                    myResponse.Tables[0].Rows[0][11] = ("Error on StatisticalAcountEvaluation process: " + e.ToString().Substring(0, 570));
+                    myResponse.Tables[0].Rows[0][3] = ("Error Reading Statistical ACCT Count from CCB: " + e.ToString().Substring(0, 198));
+                    myResponse.Tables[0].Rows[0][11] = ("Error Reading Statistical ACCT Count from CCB: " + e.ToString().Substring(0, 198));
                     return myResponse;
                 }
             });

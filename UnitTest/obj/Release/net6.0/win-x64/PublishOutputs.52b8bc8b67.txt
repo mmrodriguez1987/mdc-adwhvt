@@ -309,6 +309,7 @@ C:\BIProjectUT\UnitTest\obj\Release\net6.0\win-x64\PubTmp\Out\api-ms-win-core-co
 C:\BIProjectUT\UnitTest\obj\Release\net6.0\win-x64\PubTmp\Out\api-ms-win-core-datetime-l1-1-0.dll
 C:\BIProjectUT\UnitTest\obj\Release\net6.0\win-x64\PubTmp\Out\api-ms-win-core-debug-l1-1-0.dll
 C:\BIProjectUT\UnitTest\obj\Release\net6.0\win-x64\PubTmp\Out\api-ms-win-core-errorhandling-l1-1-0.dll
+C:\BIProjectUT\UnitTest\obj\Release\net6.0\win-x64\PubTmp\Out\api-ms-win-core-fibers-l1-1-0.dll
 C:\BIProjectUT\UnitTest\obj\Release\net6.0\win-x64\PubTmp\Out\api-ms-win-core-file-l1-1-0.dll
 C:\BIProjectUT\UnitTest\obj\Release\net6.0\win-x64\PubTmp\Out\api-ms-win-core-file-l1-2-0.dll
 C:\BIProjectUT\UnitTest\obj\Release\net6.0\win-x64\PubTmp\Out\api-ms-win-core-file-l2-1-0.dll
@@ -353,7 +354,7 @@ C:\BIProjectUT\UnitTest\obj\Release\net6.0\win-x64\PubTmp\Out\dbgshim.dll
 C:\BIProjectUT\UnitTest\obj\Release\net6.0\win-x64\PubTmp\Out\hostfxr.dll
 C:\BIProjectUT\UnitTest\obj\Release\net6.0\win-x64\PubTmp\Out\hostpolicy.dll
 C:\BIProjectUT\UnitTest\obj\Release\net6.0\win-x64\PubTmp\Out\mscordaccore.dll
-C:\BIProjectUT\UnitTest\obj\Release\net6.0\win-x64\PubTmp\Out\mscordaccore_amd64_amd64_6.0.222.6406.dll
+C:\BIProjectUT\UnitTest\obj\Release\net6.0\win-x64\PubTmp\Out\mscordaccore_amd64_amd64_6.0.322.12309.dll
 C:\BIProjectUT\UnitTest\obj\Release\net6.0\win-x64\PubTmp\Out\mscordbi.dll
 C:\BIProjectUT\UnitTest\obj\Release\net6.0\win-x64\PubTmp\Out\mscorrc.dll
 C:\BIProjectUT\UnitTest\obj\Release\net6.0\win-x64\PubTmp\Out\msquic.dll

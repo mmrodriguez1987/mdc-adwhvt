@@ -29,7 +29,7 @@ namespace UnitTest.DAL
 	    protected String p_description; 
 	    protected DateTime p_startDate; 
 	    protected DateTime p_endDate; 
-	    protected DateTime p_testDate; 
+	    protected DateTime p_calculationDate; 
         #endregion
 
         #region attributes
@@ -73,10 +73,10 @@ namespace UnitTest.DAL
             get => p_endDate;            
             set => p_endDate = value;               
         }
-        public DateTime TestDate
+        public DateTime CalculationDate
         {
-            get => p_testDate;            
-            set => p_testDate = value;               
+            get => p_calculationDate;            
+            set => p_calculationDate = value;               
         }
         public string Error { get => _error; set => _error = value; }
         public string Ccn { get => _ccn; set => _error = _ccn; }
@@ -115,7 +115,7 @@ namespace UnitTest.DAL
 				p_description = (dr["description"] == System.DBNull.Value) ? (Convert.ToString(null)) : (Convert.ToString(dr["description"]));				
 				p_startDate = (dr["startDate"] == System.DBNull.Value) ? (Convert.ToDateTime(null)) : (Convert.ToDateTime(dr["startDate"]));				
 				p_endDate = (dr["endDate"] == System.DBNull.Value) ? (Convert.ToDateTime(null)) : (Convert.ToDateTime(dr["endDate"]));				
-				p_testDate = (dr["testDate"] == System.DBNull.Value) ? (Convert.ToDateTime(null)) : (Convert.ToDateTime(dr["testDate"]));				
+				p_calculationDate = (dr["calculationDate"] == System.DBNull.Value) ? (Convert.ToDateTime(null)) : (Convert.ToDateTime(dr["calculationDate"]));				
                     return true;
                 } else { return false; }
             }
@@ -149,7 +149,7 @@ namespace UnitTest.DAL
 				    p_description = (dr["description"] == System.DBNull.Value) ? (Convert.ToString(null)) : (Convert.ToString(dr["description"]));				
 				    p_startDate = (dr["startDate"] == System.DBNull.Value) ? (Convert.ToDateTime(null)) : (Convert.ToDateTime(dr["startDate"]));				
 				    p_endDate = (dr["endDate"] == System.DBNull.Value) ? (Convert.ToDateTime(null)) : (Convert.ToDateTime(dr["endDate"]));				
-				    p_testDate = (dr["testDate"] == System.DBNull.Value) ? (Convert.ToDateTime(null)) : (Convert.ToDateTime(dr["testDate"]));				
+				    p_calculationDate = (dr["calculationDate"] == System.DBNull.Value) ? (Convert.ToDateTime(null)) : (Convert.ToDateTime(dr["calculationDate"]));				
                     return true;
                 } else {
                     return false;
@@ -285,8 +285,8 @@ namespace UnitTest.DAL
         public void Insert()
         {
             String sCommand = "INSERT INTO Result("
-		        + "stateID,testID,description,startDate,endDate,testDate) VALUES ("	       
-		        + "@stateID,@testID,@description,@startDate,@endDate,@testDate)"
+		        + "stateID,testID,description,startDate,endDate,calculationDate) VALUES ("	       
+		        + "@stateID,@testID,@description,@startDate,@endDate,@calculationDate)"
 		        + " SELECT "
 		        + "@resultID = resultID FROM Result WHERE "
 		        + "resultID = SCOPE_IDENTITY()";
@@ -304,8 +304,8 @@ namespace UnitTest.DAL
             sqlparams[4].Value = DBNull.Value.Equals(p_startDate) ? Convert.ToString(DBNull.Value) : p_startDate;
             sqlparams[5] = new SqlParameter("@endDate", SqlDbType.DateTime);	
             sqlparams[5].Value = DBNull.Value.Equals(p_endDate) ? Convert.ToString(DBNull.Value) : p_endDate;
-            sqlparams[6] = new SqlParameter("@testDate", SqlDbType.DateTime);	
-            sqlparams[6].Value = DBNull.Value.Equals(p_testDate) ? Convert.ToString(DBNull.Value) : p_testDate;
+            sqlparams[6] = new SqlParameter("@calculationDate", SqlDbType.DateTime);	
+            sqlparams[6].Value = DBNull.Value.Equals(p_calculationDate) ? Convert.ToString(DBNull.Value) : p_calculationDate;
     
             try {
                 SqlHelper.ExecuteNonQuery(_ccn, CommandType.Text, sCommand, sqlparams);
@@ -327,7 +327,7 @@ namespace UnitTest.DAL
         public void Update()
         { 
             String sCommand = "UPDATE Result SET "
-		        + "stateID=@stateID, testID=@testID, description=@description, startDate=@startDate, endDate=@endDate, testDate=@testDate WHERE "		  
+		        + "stateID=@stateID, testID=@testID, description=@description, startDate=@startDate, endDate=@endDate, calculationDate=@calculationDate WHERE "		  
 		        + "resultID = @resultID";		
 	
             SqlParameter[] sqlparams = new SqlParameter[7];
@@ -343,8 +343,8 @@ namespace UnitTest.DAL
             sqlparams[4].Value = DBNull.Value.Equals(p_startDate) ? Convert.ToDateTime(DBNull.Value) : p_startDate;
             sqlparams[5] = new SqlParameter("@endDate",SqlDbType.DateTime);
             sqlparams[5].Value = DBNull.Value.Equals(p_endDate) ? Convert.ToDateTime(DBNull.Value) : p_endDate;
-            sqlparams[6] = new SqlParameter("@testDate",SqlDbType.DateTime);
-            sqlparams[6].Value = DBNull.Value.Equals(p_testDate) ? Convert.ToDateTime(DBNull.Value) : p_testDate;
+            sqlparams[6] = new SqlParameter("@calculationDate",SqlDbType.DateTime);
+            sqlparams[6].Value = DBNull.Value.Equals(p_calculationDate) ? Convert.ToDateTime(DBNull.Value) : p_calculationDate;
     
             try {
                 SqlHelper.ExecuteNonQuery(_ccn, CommandType.Text, sCommand, sqlparams);

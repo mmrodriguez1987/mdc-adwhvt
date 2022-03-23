@@ -1,17 +1,23 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Threading.Tasks;
 using UnitTest.DAL;
+using UnitTest.Model.ValiationTest;
 
 namespace UnitTest.Model.ValidationTest
 {
 
     public class TestResult
     {
-        private string  _ccnValTest, _error, _description;
+        private string _ccnValTest, _error, _description;
         private Result result;
         private ResultDetail resultDetail;
-        private Int64  _testID;
+        private DB dataBase;
+        private Int64 _testID;
         private Int16 _stateID;
-        private DateTime _startDate, _endDate, _testDate;
+        private DateTime _startDate, _endDate, _calculationDate;
         
         public enum Entity
         {
@@ -45,7 +51,8 @@ namespace UnitTest.Model.ValidationTest
         public short StateID { get => _stateID; set => _stateID = value; }        
         public DateTime StartDate { get => _startDate; set => _startDate = value; }
         public DateTime EndDate { get => _endDate; set => _endDate = value; }
-        public DateTime TestDate { get => _testDate; set => _testDate = value; }
+        public DateTime CalcDate { get => _calculationDate; set => _calculationDate = value; }
+        public DB DB { get; private set; }
 
         public void recordUntitValidationTest(Int64 cdcCount, Int64 dtwhCount)
         {
@@ -57,7 +64,7 @@ namespace UnitTest.Model.ValidationTest
             result.Description = _description;
             result.StartDate = _startDate;
             result.EndDate = _endDate;
-            result.TestDate = _testDate;
+            result.CalculationDate = _calculationDate;
             result.Insert();
             _error = (!String.IsNullOrEmpty(result.Error)) ? result.Error : String.Empty;
 
@@ -89,7 +96,7 @@ namespace UnitTest.Model.ValidationTest
             result.Description = _description;
             result.StartDate = _startDate;
             result.EndDate = _endDate;
-            result.TestDate = _testDate;
+            result.CalculationDate = _calculationDate;
             result.Insert();
             _error = (!String.IsNullOrEmpty(result.Error)) ? result.Error : String.Empty;
 
@@ -114,7 +121,7 @@ namespace UnitTest.Model.ValidationTest
             result.Description = _description;
             result.StartDate = _startDate;
             result.EndDate = _endDate;
-            result.TestDate = _testDate;
+            result.CalculationDate = _calculationDate;
             result.Insert();
             _error = (!String.IsNullOrEmpty(result.Error)) ? result.Error : String.Empty;
 
@@ -142,7 +149,7 @@ namespace UnitTest.Model.ValidationTest
             result.Description = _description;
             result.StartDate = _startDate;
             result.EndDate = _endDate;
-            result.TestDate = _testDate;
+            result.CalculationDate = _calculationDate;
             result.Insert();
             _error = (!String.IsNullOrEmpty(result.Error)) ? result.Error : String.Empty;
 
@@ -909,14 +916,68 @@ namespace UnitTest.Model.ValidationTest
            }
             return msg;
         }
-    
         
-        public String createHTMLMailContent()
+       
+        
+        public Task<String> getTestResultJSONFormat(DateTime evalDate)
         {
-            String htmlContent = "";
-            return htmlContent;
+            return Task.Run(() =>
+            {
+                try
+                {
+                    DataSet dsTestResult = new DataSet();
+                    dataBase = new DB(_ccnValTest);
 
-        }
-    
+                    dsTestResult = dataBase.GetObjecFromViewtDS("vwTestResult", "CAST(calculationDate AS DATE) = '" + evalDate.Date + "'", "resultID Desc", "*");
+
+                    List<TransformedResult> resultCollection = new List<TransformedResult>();
+                    
+
+                    foreach (DataRow row in dsTestResult.Tables[0].Rows)
+                    {
+                        TransformedResult trsResult = new TransformedResult();
+
+                        trsResult.resultID = Convert.ToInt64(row["resultID"]);
+                        trsResult.Test = row["Test"].ToString();
+                        trsResult.Type = row["Type"].ToString();
+                        trsResult.Description = row["Description"].ToString();
+                        trsResult.StartDate = Convert.ToDateTime(row["Start Date"]);
+                        trsResult.EndDate = Convert.ToDateTime(row["End Date"]);
+                        trsResult.calculationDate = Convert.ToDateTime(row["calculationDate"]);
+                        trsResult.DWHCount = DBNull.Value.Equals(row["DWH Count"]) ? 0 : Convert.ToDouble(row["DWH Count"]);
+                        trsResult.CCBCount = DBNull.Value.Equals(row["CCB Count"]) ? 0 : Convert.ToDouble(row["CCB Count"]);
+                        trsResult.CCBAver = DBNull.Value.Equals(row["CCB Aver Count"]) ? 0 : Convert.ToDouble(row["CCB Aver Count"]);
+                        trsResult.CCBMax = DBNull.Value.Equals(row["CCB Max Hist Count"]) ? 0 : Convert.ToDouble(row["CCB Max Hist Count"]);
+                        resultCollection.Add(trsResult);      
+                    }
+              
+
+                    string json = JsonConvert.SerializeObject(resultCollection, Formatting.Indented, new JsonSerializerSettings()
+                    {
+                        ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+                    });
+
+                    Console.WriteLine(json);
+                    // {
+                    //   "Table1": [
+                    //     {
+                    //       "id": 0,
+                    //       "item": "item 0"
+                    //     },
+                    //     {
+                    //       "id": 1,
+                    //       "item": "item 1"
+                    //     }
+                    //   ]
+                    // }                  
+
+                    return json;
+                }
+                catch (Exception e)
+                {
+                    return e.ToString();
+                }
+            });
+        }    
     }
 }

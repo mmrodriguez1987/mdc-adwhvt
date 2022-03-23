@@ -99,24 +99,23 @@ namespace UnitTest.Model.DataWarehouse
                         results.StartDate = startDate;
                         results.EndDate = endDate;
                         results.StateID = (short)(stateTest ? 3 : 2);
-                        results.TestDate = DateTime.Now;
+                        results.CalcDate = DateTime.Now;
                         results.TestID = 9; // Compare Dsitinct PER
                         results.recordUntitValidationTest(cdcCountTotal, ccbCountTotal);
 
                         // if there re any error on recording db
                         if (!String.IsNullOrEmpty(results.Error))
                         {
-                            myResponse.Tables[0].Rows[0][3] = ("Error saving DistinctPerCount test results in Person");
-                            myResponse.Tables[0].Rows[0][11] = ("Error saving DistinctPerCount test results in Person");
+                            myResponse.Tables[0].Rows[0][3] = ("Error Saving PER Count Test Result: " + results.Error.Substring(0, 200));
+                            myResponse.Tables[0].Rows[0][11] = ("Error Saving PER Count Test Result: " + results.Error.Substring(0, 200));
                         }
                     }
-
                     return myResponse;
                 }
                 catch (Exception e)
                 {
-                    myResponse.Tables[0].Rows[0][3] = ("Error on DistinctPerCount process: " + e.ToString().Substring(0, 198));
-                    myResponse.Tables[0].Rows[0][11] = ("Error on DistinctPerCount process: " + e.ToString().Substring(0, 198));
+                    myResponse.Tables[0].Rows[0][3] = ("Error Reading PER Count from CCB: " + e.ToString().Substring(0, 198));
+                    myResponse.Tables[0].Rows[0][11] = ("Error Reading PER Count from CCB: " + e.ToString().Substring(0, 198));
                     return myResponse;
                 }
             });
@@ -202,23 +201,23 @@ namespace UnitTest.Model.DataWarehouse
                         results.StartDate = startDate;
                         results.EndDate = endDate;
                         results.StateID = (short)(stateTest ? 3 : 2);
-                        results.TestDate = DateTime.Now;
+                        results.CalcDate = DateTime.Now;
                         results.TestID = 10; // Compare Dsitinct PER
                         results.recordUntitValidationTest(cdcCountNew, ccbCountNew);
 
                         // if there re any error on recording db
                         if (!String.IsNullOrEmpty(results.Error))
                         {
-                            myResponse.Tables[0].Rows[0][3] = ("Error saving NewPersonCount test results in Person");
-                            myResponse.Tables[0].Rows[0][11] = ("Error saving NewPersonCount test results in Person");
+                            myResponse.Tables[0].Rows[0][3] = ("Error Saving New PER Count Test Result: " + results.Error.Substring(0, 200));
+                            myResponse.Tables[0].Rows[0][11] = ("Error Saving New PER Count Test Result: " + results.Error.Substring(0, 200));
                         }
                     }
                     return myResponse;
                 }
                 catch (Exception e)
                 {
-                    myResponse.Tables[0].Rows[0][3] = ("Error on NewPersonCount process: " + e.ToString().Substring(0, 570));
-                    myResponse.Tables[0].Rows[0][11] = ("Error on NewPersonCount process: " + e.ToString().Substring(0, 570));
+                    myResponse.Tables[0].Rows[0][3] = ("Error Reading New PER Count from CCB: " + e.ToString().Substring(0, 198));
+                    myResponse.Tables[0].Rows[0][11] = ("Error Reading New PER Count from CCB: " + e.ToString().Substring(0, 198));
                     return myResponse;
                 }
             });
@@ -298,24 +297,23 @@ namespace UnitTest.Model.DataWarehouse
                         results.StartDate = startDate;
                         results.EndDate = endDate;
                         results.StateID = (short)(stateTest ? 3 : 2);
-                        results.TestDate = DateTime.Now;
+                        results.CalcDate = DateTime.Now;
                         results.TestID = 11;
                         results.recordUntitValidationTest(cdcCountUpdated, ccbCountUpdated);
 
                         // if there re any error on recording db
                         if (!String.IsNullOrEmpty(results.Error))
                         {
-                            myResponse.Tables[0].Rows[0][3] = ("Error saving UpdatedPersonCount test results in Person");
-                            myResponse.Tables[0].Rows[0][11] = ("Error saving UpdatedPersonCount test results in Person");
+                            myResponse.Tables[0].Rows[0][3] = ("Error Saving Updated PER Count Test Result: " + results.Error.Substring(0, 200));
+                            myResponse.Tables[0].Rows[0][11] = ("Error Saving Updated PER Count Test Result: " + results.Error.Substring(0, 200));
                         }
                     }
-
                     return myResponse;
                 }
                 catch (Exception e)
                 {
-                    myResponse.Tables[0].Rows[0][3] = ("Error on UpdatedPersonCount process: " + e.ToString().Substring(0, 570));
-                    myResponse.Tables[0].Rows[0][11] = ("Error on UpdatedPersonCount process: " + e.ToString().Substring(0, 570));
+                    myResponse.Tables[0].Rows[0][3] = ("Error Reading Updated PER Count from CCB: " + e.ToString().Substring(0, 198));
+                    myResponse.Tables[0].Rows[0][11] = ("Error Reading Updated PER Count from CCB: " + e.ToString().Substring(0, 198));
                     return myResponse;
                 }
             });
@@ -377,24 +375,23 @@ namespace UnitTest.Model.DataWarehouse
                         results.StartDate = startDate;
                         results.EndDate = endDate;
                         results.StateID = (short)(stateTest ? 3 : 1);
-                        results.TestDate = endDate;
+                        results.CalcDate = endDate;
                         results.TestID = 12; // Compare Dsitinct PER Over the maximun
                         results.recordHistoricalValidationTest(dtwCount);
 
                         // if there re any error on recording db
                         if (!String.IsNullOrEmpty(results.Error))
                         {
-                            myResponse.Tables[0].Rows[0][3] = ("Error saving PerCountVsMaxHist test results in Per");
-                            myResponse.Tables[0].Rows[0][11] = ("Error saving PerCountVsMaxHist test results in Per");
+                            myResponse.Tables[0].Rows[0][3] = ("Error Saving Max Hist PER Count Test Result: " + results.Error.Substring(0, 200));
+                            myResponse.Tables[0].Rows[0][11] = ("Error Saving Max Hist PER Count Test Result: " + results.Error.Substring(0, 200));
                         }
                     }
-
                     return myResponse;
                 }
                 catch (Exception e)
                 {
-                    myResponse.Tables[0].Rows[0][3] = ("Error on PerCountVsMaxHist process: " + e.ToString());
-                    myResponse.Tables[0].Rows[0][11] = ("Error on PerCountVsMaxHist process: " + e.ToString());
+                    myResponse.Tables[0].Rows[0][3] = ("Error Reading Max Hist PER Count from CCB: " + e.ToString().Substring(0, 198));
+                    myResponse.Tables[0].Rows[0][11] = ("Error Reading Max Hist PER Count from CCB: " + e.ToString().Substring(0, 198));
                     return myResponse;
                 }
             });
@@ -494,23 +491,22 @@ namespace UnitTest.Model.DataWarehouse
                         results.StartDate = evalDate;
                         results.EndDate = evalDate;
                         results.StateID = (short)(stateTest ? 1 : 3);
-                        results.TestDate = DateTime.Now;
+                        results.CalcDate = DateTime.Now;
                         results.TestID = 13;
                         results.recordStatisticalValidationTest(averCountPer, evaluatedCount);
                         // if there re any error on recording db
                         if (!String.IsNullOrEmpty(results.Error))
                         {
-                            myResponse.Tables[0].Rows[0][3] = ("Error saving StatisticalPersonEvaluation test results in Person");
-                            myResponse.Tables[0].Rows[0][11] = ("Error saving StatisticalPersonEvaluation test results in Person");
+                            myResponse.Tables[0].Rows[0][3] = ("Error Saving Statistical PER Count Test Result: " + results.Error.Substring(0, 200));
+                            myResponse.Tables[0].Rows[0][11] = ("Error Saving Statistical PER Count Test Result: " + results.Error.Substring(0, 200));
                         }
                     }
-
                     return myResponse;
                 }
                 catch (Exception e)
                 {
-                    myResponse.Tables[0].Rows[0][3] = ("Error on StatisticalPersonEvaluation process: " + e.ToString().Substring(0, 570));
-                    myResponse.Tables[0].Rows[0][11] = ("Error on StatisticalPersonEvaluation process: " + e.ToString().Substring(0, 570));
+                    myResponse.Tables[0].Rows[0][3] = ("Error Reading Statistical PER Count from CCB: " + e.ToString().Substring(0, 198));
+                    myResponse.Tables[0].Rows[0][11] = ("Error Reading Statistical PER Count from CCB: " + e.ToString().Substring(0, 198));
                     return myResponse;
                 }
             });
