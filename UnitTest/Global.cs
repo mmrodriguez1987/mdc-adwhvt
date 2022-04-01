@@ -8,7 +8,7 @@ namespace UnitTest
         #region Private members
         private string[] _phoneArrayBITEAM;        
         private int _evaluatedDatesRangeOnOrdinaryTest, _evaluatedDatesRangeOnAverageTest, _startHour, _endHour;       
-        private string _dataWarehouseCCN, _valTestCCN, _ccbCCN, _cdcCCN, _azComServCCN, _fromSMS;        
+        private string _dataWarehouseCCN, _valTestCCN, _urlAzureTables, _ccbCCN, _cdcCCN, _azComServCCN, _fromSMS;        
         private Double _toleranceVariationNumber;
         #endregion
 
@@ -29,6 +29,7 @@ namespace UnitTest
         public int EvaluatedDateRangeOnOrdinaryTest { get => _evaluatedDatesRangeOnOrdinaryTest; set => _evaluatedDatesRangeOnOrdinaryTest = value; }
         public int StartHour { get => _startHour; set => _startHour = value; }
         public int EndHour { get => _endHour; set => _endHour = value; }
+        public string UrlAzureTables { get => _urlAzureTables; set => _urlAzureTables = value; }
         #endregion
 
         public Global(IConfiguration conf)
@@ -49,6 +50,7 @@ namespace UnitTest
             _evaluatedDatesRangeOnOrdinaryTest = conf.GetValue<int>("ValidationTest:EVAL_DATES_RANGE_ON_ORD_TEST");
             _startHour = conf.GetValue<int>("ValidationTest:START_HOUR");
             _endHour = conf.GetValue<int>("ValidationTest:END_HOUR");
+            _urlAzureTables = conf.GetConnectionString("ASTConnection");
         }        
     }
 }

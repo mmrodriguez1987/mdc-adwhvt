@@ -15,27 +15,27 @@ namespace UnitTest.Model.DataWarehouse
 {
     public class Premise
     {
-        private string _ccnDTW, _ccnCDC, queryCDC, queryDTW, appEnv;
-        private DataSet myResponse, evalDataDTW, evalDataCDC = new DataSet();
+        private string _ccnDWH, _ccnCCB, queryCCB, queryDWH, appEnv;
+        private DataSet myResponse, evalDataDWH, evalDataCCB;
         private CBDate tTime;
         private Historical historical;
         private TestResult results;
-
-
+        private int ccbCount, dwhCount;
 
         /// <summary>
         /// Initialize the Premise class with params required
         /// </summary>
-        /// <param name="cnnDTW">conexion to Datawarehouse</param>
-        /// <param name="ccnCDC">conexion to CDC Database</param> 
-        public Premise(string cnnDTW, string ccnCDC, string ccnValTest)
+        /// <param name="cnnDWH">conexion to Datawarehouse</param>
+        /// <param name="ccnCCB">conexion to CDC Database</param> 
+        public Premise(string cnnDWH, string ccnCCB, string ccnValTest)
         {
-            _ccnDTW = cnnDTW;
-            _ccnCDC = ccnCDC;
+            _ccnDWH = cnnDWH;
+            _ccnCCB = ccnCCB;
+             ccbCount = 0; dwhCount = 0;
             //Initializa Historical Indicators Computing
             historical = new Historical(ccnValTest);
             results = new TestResult(ccnValTest);
-            queryCDC = "cdc.sp_ci_prem_ct";
+            queryCCB = "cdc.sp_ci_prem_ct";
             tTime = new CBDate();
             appEnv = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT").Substring(0, 3).ToUpper(); // DEV or PRO
         }
@@ -44,12 +44,9 @@ namespace UnitTest.Model.DataWarehouse
         /// Task Dataset Executer for Get Distinct Premise of Premise on Tables PREM
         /// </summary>
         /// <param name="startDate">Start Evaluated Date</param>
-        /// <param name="endDate">End Evaluated Date</param>
-        /// <param name="saveResult">'True' to save test result on database, else 'false' to dont save its</param>
-        /// <returns>a Dataset with a structure ready to be converted in JSON with Details about the test result
-        ///  | State | Test Information | Entitites Envolved | Test Result Description | Start Date | End Date | Count CDC | Count DTW | query CDC | query DTW | Effect Date | SMS test |
-        /// </returns>
-        public Task<DataSet>PremiseCount(DateTime startDate, DateTime endDate, Boolean saveResult)
+        /// <param name="endDate">End Evaluated Date</param>        
+        /// <returns>a Dataset with a structure ready to be converted in JSON with Details about the test result</returns>
+        public Task<DataSet>PremiseCount(DateTime startDate, DateTime endDate)
         {
             myResponse = Extensions.getResponseStructure("PremiseCount");
             String testInterpretation;
@@ -57,7 +54,7 @@ namespace UnitTest.Model.DataWarehouse
             {
                 try
                 {
-                    queryDTW = "SELECT COUNT(SRC_PREM_ID) DTW_Count FROM dwadm2.CD_PREM WHERE DATA_LOAD_DTTM BETWEEN @startDate AND @endDate";
+                    queryDWH = "SELECT COUNT(SRC_PREM_ID) DTW_Count FROM dwadm2.CD_PREM WHERE DATA_LOAD_DTTM BETWEEN @startDate AND @endDate";
 
                     List<SqlParameter> cdcParameters = new List<SqlParameter>();
                     List<SqlParameter> dtwParameters = new List<SqlParameter>();
@@ -69,60 +66,35 @@ namespace UnitTest.Model.DataWarehouse
                     dtwParameters.Add(new SqlParameter("@startDate", endDate.ToString("yyyy-MM-dd HH:mm")));
                     dtwParameters.Add(new SqlParameter("@endDate", endDate.AddHours(5).ToString("yyyy-MM-dd HH:mm"))); //Take the variability on the DATA_LOAD_TIME on DTW
 
-                    evalDataDTW = SqlHelper.ExecuteDataset(_ccnDTW, CommandType.Text, queryDTW, dtwParameters.ToArray());
-                    evalDataCDC = SqlHelper.ExecuteDataset(_ccnCDC, CommandType.StoredProcedure, queryCDC, cdcParameters.ToArray());
+                    evalDataDWH = SqlHelper.ExecuteDataset(_ccnDWH, CommandType.Text, queryDWH, dtwParameters.ToArray());
+                    evalDataCCB = SqlHelper.ExecuteDataset(_ccnCCB, CommandType.StoredProcedure, queryCCB, cdcParameters.ToArray());
 
                     //int cdcCount = evalDataCDC.Tables[0].DefaultView.ToTable(true, "PREM_ID").Rows.Count;
-                    int cdcCount = evalDataCDC.Tables[0].AsEnumerable().Select(r => r.Field<string>("PREM_ID")).Distinct().Count();
-                    int dwhCount = Convert.ToInt32(evalDataDTW.Tables[0].Rows[0][0]);
+                    ccbCount = evalDataCCB.Tables[0].AsEnumerable().Select(r => r.Field<string>("PREM_ID")).Distinct().Count();
+                    dwhCount = Convert.ToInt32(evalDataDWH.Tables[0].Rows[0][0]);
 
-                    bool stateTest = (cdcCount >= 0 && dwhCount >= 0 && (cdcCount == dwhCount));
+                    bool stateTest = (ccbCount >= 0 && dwhCount >= 0 && (ccbCount == dwhCount));
 
-                    testInterpretation = results.createMessageNotification(TestResult.BusinessStar.BU, TestResult.Entity.DimPrem, TestResult.TestGenericName.Distinct, cdcCount, dwhCount, appEnv, !stateTest);
+                    testInterpretation = results.createMessageNotification(TestResult.BusinessStar.BU, TestResult.Entity.DimPrem, TestResult.TestGenericName.Distinct, ccbCount, dwhCount, appEnv, !stateTest);
 
-
-                    myResponse.Tables[0].Rows[0][0] = stateTest ? "OK!" : "Failed";
-                    myResponse.Tables[0].Rows[0][1] = "PREM Count";
-                    myResponse.Tables[0].Rows[0][2] = "dw-ttdp: dwadm2.CD_PREM | cdcProdcc: cdc.sp_ci_prem_ct";
-                    myResponse.Tables[0].Rows[0][3] = testInterpretation;
-                    myResponse.Tables[0].Rows[0][4] = startDate.ToString("yyyy-MM-dd HH:mm");
-                    myResponse.Tables[0].Rows[0][5] = endDate.ToString("yyyy-MM-dd HH:mm");
-                    myResponse.Tables[0].Rows[0][6] = cdcCount;
-                    myResponse.Tables[0].Rows[0][7] = dwhCount;
-                    myResponse.Tables[0].Rows[0][8] = "EXEC " + queryCDC + " @startDate='" + startDate.ToString("yyyy-MM-dd HH:mm") + "', @endDate= '" + endDate.ToString("yyyy-MM-dd HH:mm") + "'";
-                    myResponse.Tables[0].Rows[0][9] = queryDTW;
-                    myResponse.Tables[0].Rows[0][10] = endDate.ToString("yyyy-MM-dd HH:mm");
-                    myResponse.Tables[0].Rows[0][11] = testInterpretation;
-
-
-                    if (saveResult)
-                    {
-                        // 2 -SRC_PREM_ID, 1- Distinct
-                        historical.recordHistorical(96, 1, dwhCount, endDate);
-
-                        //recording on DB
-                        results.Description = testInterpretation;
-                        results.StartDate = startDate;
-                        results.EndDate = endDate;
-                        results.StateID = (short)(stateTest ? 3 : 2);
-                        results.CalcDate = DateTime.Now;
-                        results.TestID = 14; // Compare Dsitinct PREM
-                        results.recordUntitValidationTest(cdcCount, dwhCount);
-
-                        // if there re any error on recording db
-                        if (!String.IsNullOrEmpty(results.Error))
-                        {
-                            myResponse.Tables[0].Rows[0][3] = ("Error Saving PREM Count Test Result: " + results.Error.Substring(0, 200));
-                            myResponse.Tables[0].Rows[0][11] = ("Error Saving PREM Count Test Result: " + results.Error.Substring(0, 200));
-                        }
-                    }
+                    DataRow dr = myResponse.Tables[0].NewRow();
+                    dr["stateID"] = (stateTest ? 3 : 2);
+                    dr["testID"] = 14;
+                    dr["description"] = testInterpretation;
+                    dr["startDate"] = startDate.ToString("yyyy-MM-dd HH:mm");
+                    dr["endDate"] = endDate.ToString("yyyy-MM-dd HH:mm");
+                    dr["CCBCount"] = ccbCount;
+                    dr["DWHCount"] = dwhCount;
+                    dr["CCBAver"] = 0;
+                    dr["CCBMax"] = 0;
+                    dr["calcDate"] = DateTime.Now.ToString("yyyy-MM-dd HH:mm");
+                    myResponse.Tables[0].Rows.Add(dr);
+                   
                     return myResponse;
                 }
                 catch (Exception e)
                 {
-                    myResponse.Tables[0].Rows[0][3] = ("Error Reading PREM Count from CCB: " + e.ToString().Substring(0, 198));
-                    myResponse.Tables[0].Rows[0][11] = ("Error Reading PREM Count from CCB: " + e.ToString().Substring(0, 198));
-                    return myResponse;
+                    return Extensions.getResponseWithErrorMsg("Error Reading PREM Count from CCB: " + e.ToString().Substring(0, 198));
                 }
             });
         }
@@ -132,11 +104,8 @@ namespace UnitTest.Model.DataWarehouse
         /// </summary>
         /// <param name="startDate">Start Evaluated Date</param>
         /// <param name="endDate">End Evaluated Date</param>
-        /// <param name="saveResult">'True' to save test result on database, else 'false' to dont save its</param>
-        /// <returns>a Dataset with a structure ready to be converted in JSON with Details about the test result
-        ///  | State | Test Information | Entitites Envolved | Test Result Description | Start Date | End Date | Count CDC | Count DTW | query CDC | query DTW | Effect Date | SMS test |
-        /// </returns>
-        public Task<DataSet> NewPremiseCount(DateTime startDate, DateTime endDate, Boolean saveResult)
+        /// <returns>a Dataset with a structure ready to be converted in JSON with Details about the test result</returns>
+        public Task<DataSet> NewPremiseCount(DateTime startDate, DateTime endDate)
         {
             myResponse = Extensions.getResponseStructure("NewPremiseCount");
             String testInterpretation;
@@ -145,7 +114,7 @@ namespace UnitTest.Model.DataWarehouse
                 try
                 {
                     //This query reflect the "Universe" all the SRC_PREM_ID for the evaluated date                                      
-                    queryDTW = ";WITH "
+                    queryDWH = ";WITH "
                              + "Universe AS (SELECT * FROM dwadm2.CD_PREM), "
                              + "AffecPREM AS ( "
                              + "SELECT DISTINCT SRC_PREM_ID "
@@ -171,62 +140,39 @@ namespace UnitTest.Model.DataWarehouse
                     dtwParameters.Add(new SqlParameter("@endDate", endDate.AddHours(5).ToString("yyyy-MM-dd HH:mm"))); //Take the variability on the DATA_LOAD_TIME on DTW
 
 
-                    evalDataDTW = SqlHelper.ExecuteDataset(_ccnDTW, CommandType.Text, queryDTW, dtwParameters.ToArray());
-                    evalDataCDC = SqlHelper.ExecuteDataset(_ccnCDC, CommandType.StoredProcedure, queryCDC, cdcParameters.ToArray());
+                    evalDataDWH = SqlHelper.ExecuteDataset(_ccnDWH, CommandType.Text, queryDWH, dtwParameters.ToArray());
+                    evalDataCCB = SqlHelper.ExecuteDataset(_ccnCCB, CommandType.StoredProcedure, queryCCB, cdcParameters.ToArray());
 
 
-                    var cdcFilteredRows = from row in evalDataCDC.Tables[0].AsEnumerable()
+                    var cdcFilteredRows = from row in evalDataCCB.Tables[0].AsEnumerable()
                                           where row.Field<Int32>("toInsert") == 1 && (row.Field<Int32>("__$operation") == 2 || row.Field<Int32>("__$operation") == 4)
                                           select row;
 
-                    int cdcCount = cdcFilteredRows.Count();
-                    int dwhCount = evalDataDTW.Tables[0].Rows.Count;
+                    ccbCount = cdcFilteredRows.Count();
+                    dwhCount = evalDataDWH.Tables[0].Rows.Count;
 
-                    bool stateTest = (cdcCount >= 0 && dwhCount >= 0 && (cdcCount == dwhCount));
+                    bool stateTest = (ccbCount >= 0 && dwhCount >= 0 && (ccbCount == dwhCount));
 
-                    testInterpretation = results.createMessageNotification(TestResult.BusinessStar.BU, TestResult.Entity.DimPrem, TestResult.TestGenericName.New, cdcCount, dwhCount, appEnv, !stateTest);
+                    testInterpretation = results.createMessageNotification(TestResult.BusinessStar.BU, TestResult.Entity.DimPrem, TestResult.TestGenericName.New, ccbCount, dwhCount, appEnv, !stateTest);
 
-
-
-                    myResponse.Tables[0].Rows[0][0] = stateTest ? "OK!" : "Failed";
-                    myResponse.Tables[0].Rows[0][1] = "New PREM";
-                    myResponse.Tables[0].Rows[0][2] = "dw-ttdp: dwadm2.CD_PREM | cdcProdcc: cdc.sp_ci_prem_ct";
-                    myResponse.Tables[0].Rows[0][3] = testInterpretation;
-                    myResponse.Tables[0].Rows[0][4] = startDate.ToString("yyyy-MM-dd HH:mm");
-                    myResponse.Tables[0].Rows[0][5] = endDate.ToString("yyyy-MM-dd HH:mm");
-                    myResponse.Tables[0].Rows[0][6] = cdcCount;
-                    myResponse.Tables[0].Rows[0][7] = dwhCount;
-                    myResponse.Tables[0].Rows[0][8] = "EXEC " + queryCDC + " @startDate='" + startDate.ToString("yyyy-MM-dd HH:mm") + "', @endDate= '" + endDate.ToString("yyyy-MM-dd HH:mm") + "'";
-                    myResponse.Tables[0].Rows[0][9] = queryDTW;
-                    myResponse.Tables[0].Rows[0][10] = endDate.ToString("yyyy-MM-dd HH:mm");
-                    myResponse.Tables[0].Rows[0][11] = testInterpretation;
-
-                    if (saveResult)
-                    {
-                        historical.recordHistorical(96, 2, dwhCount, endDate);
-                        //recording on DB 
-                        results.Description = testInterpretation;
-                        results.StartDate = startDate;
-                        results.EndDate = endDate;
-                        results.StateID = (short)(stateTest ? 3 : 2);
-                        results.CalcDate = DateTime.Now;
-                        results.TestID = 15; // Compare Dsitinct PREM
-                        results.recordUntitValidationTest(cdcCount, dwhCount);
-
-                        // if there re any error on recording db
-                        if (!String.IsNullOrEmpty(results.Error))
-                        {
-                            myResponse.Tables[0].Rows[0][3] = ("Error Saving New PREM Count Test Result: " + results.Error.Substring(0, 200));
-                            myResponse.Tables[0].Rows[0][11] = ("Error Saving New PREM Count Test Result: " + results.Error.Substring(0, 200));
-                        }
-                    }
+                    DataRow dr = myResponse.Tables[0].NewRow();
+                    dr["stateID"] = (stateTest ? 3 : 2);
+                    dr["testID"] = 15;
+                    dr["description"] = testInterpretation;
+                    dr["startDate"] = startDate.ToString("yyyy-MM-dd HH:mm");
+                    dr["endDate"] = endDate.ToString("yyyy-MM-dd HH:mm");
+                    dr["CCBCount"] = ccbCount;
+                    dr["DWHCount"] = dwhCount;
+                    dr["CCBAver"] = 0;
+                    dr["CCBMax"] = 0;
+                    dr["calcDate"] = DateTime.Now.ToString("yyyy-MM-dd HH:mm");
+                    myResponse.Tables[0].Rows.Add(dr);
+                    
                     return myResponse;
                 }
                 catch (Exception e)
                 {
-                    myResponse.Tables[0].Rows[0][3] = ("Error Reading New PREM Count from CCB: " + e.ToString().Substring(0, 198));
-                    myResponse.Tables[0].Rows[0][11] = ("Error Reading New PREM Count from CCB: " + e.ToString().Substring(0, 198));
-                    return myResponse;
+                    return Extensions.getResponseWithErrorMsg("Error Reading New PREM Count from CCB: " + e.ToString().Substring(0, 198));
                 }
             });
         }
@@ -235,12 +181,9 @@ namespace UnitTest.Model.DataWarehouse
         /// Compare the updated Record Count between datawarehouse and CDC
         /// </summary>
         /// <param name="startDate">Start Evaluated Date</param>
-        /// <param name="endDate">End Evaluated Date</param>
-        /// <param name="saveResult">'True' to save test result on database, else 'false' to dont save its</param>
-        /// <returns>a Dataset with a structure ready to be converted in JSON with Details about the test result
-        ///  | State | Test Information | Entitites Envolved | Test Result Description | Start Date | End Date | Count CDC | Count DTW | query CDC | query DTW | Effect Date | SMS test |
-        /// </returns>
-        public Task<DataSet> UpdatedPremiseCount(DateTime startDate, DateTime endDate, Boolean saveResult)
+        /// <param name="endDate">End Evaluated Date</param>        
+        /// <returns>a Dataset with a structure ready to be converted in JSON with Details about the test result</returns>
+        public Task<DataSet> UpdatedPremiseCount(DateTime startDate, DateTime endDate)
         {
             myResponse = Extensions.getResponseStructure("UpdatedPremiseCount");
             String testInterpretation;
@@ -248,7 +191,7 @@ namespace UnitTest.Model.DataWarehouse
             {
                 try
                 {
-                    queryDTW = ";WITH "
+                    queryDWH = ";WITH "
                              + "Universe AS(SELECT * FROM dwadm2.CD_PREM), "
                              + "AffecPREM AS( SELECT DISTINCT SRC_PREM_ID FROM dwadm2.CD_PREM WHERE DATA_LOAD_DTTM BETWEEN @endDate AND DATEADD(HOUR, 5, @endDate)) "
                              + "SELECT "
@@ -269,60 +212,39 @@ namespace UnitTest.Model.DataWarehouse
                     dtwParameters.Add(new SqlParameter("@startDate", endDate.ToString("yyyy-MM-dd HH:mm")));
                     dtwParameters.Add(new SqlParameter("@endDate", endDate.ToString("yyyy-MM-dd HH:mm"))); //Take the variability on the DATA_LOAD_TIME on DTW
 
-                    evalDataDTW = SqlHelper.ExecuteDataset(_ccnDTW, CommandType.Text, queryDTW, dtwParameters.ToArray());
-                    evalDataCDC = SqlHelper.ExecuteDataset(_ccnCDC, CommandType.StoredProcedure, queryCDC, cdcParameters.ToArray());
+                    evalDataDWH = SqlHelper.ExecuteDataset(_ccnDWH, CommandType.Text, queryDWH, dtwParameters.ToArray());
+                    evalDataCCB = SqlHelper.ExecuteDataset(_ccnCCB, CommandType.StoredProcedure, queryCCB, cdcParameters.ToArray());
 
                     //LINQ query for Updated PREM on CDC
-                    var UpdatedPremisesOnCDC = from row in evalDataCDC.Tables[0].AsEnumerable()
+                    var UpdatedPremisesOnCDC = from row in evalDataCCB.Tables[0].AsEnumerable()
                                                where row.Field<Int32>("toInsert") == 0 && row.Field<Int32>("__$operation") == 4
                                                select row;
 
-                    int cdcCount = UpdatedPremisesOnCDC.Count();
-                    int dwhCount = evalDataDTW.Tables[0].Rows.Count;
+                    ccbCount = UpdatedPremisesOnCDC.Count();
+                    dwhCount = evalDataDWH.Tables[0].Rows.Count;
 
-                    bool stateTest = (cdcCount >= 0 && dwhCount >= 0 && (cdcCount == dwhCount));
+                    bool stateTest = (ccbCount >= 0 && dwhCount >= 0 && (ccbCount == dwhCount));
 
-                    testInterpretation = results.createMessageNotification(TestResult.BusinessStar.BU, TestResult.Entity.DimPrem, TestResult.TestGenericName.Updated, cdcCount, dwhCount, appEnv, !stateTest);
+                    testInterpretation = results.createMessageNotification(TestResult.BusinessStar.BU, TestResult.Entity.DimPrem, TestResult.TestGenericName.Updated, ccbCount, dwhCount, appEnv, !stateTest);
 
-                    myResponse.Tables[0].Rows[0][0] = stateTest ? "OK!" : "Failed";
-                    myResponse.Tables[0].Rows[0][1] = "Updated PREM";
-                    myResponse.Tables[0].Rows[0][2] = "dw-ttdp: dwadm2.CD_PREM | cdcProdcc: cdc.sp_ci_prem_ct";
-                    myResponse.Tables[0].Rows[0][3] = testInterpretation;
-                    myResponse.Tables[0].Rows[0][4] = startDate.ToString("yyyy-MM-dd HH:mm");
-                    myResponse.Tables[0].Rows[0][5] = endDate.ToString("yyyy-MM-dd HH:mm");
-                    myResponse.Tables[0].Rows[0][6] = cdcCount;
-                    myResponse.Tables[0].Rows[0][7] = dwhCount;
-                    myResponse.Tables[0].Rows[0][8] = "EXEC " + queryCDC + " @startDate='" + startDate.ToString("yyyy-MM-dd HH:mm") + "', @endDate= '" + endDate.ToString("yyyy-MM-dd HH:mm") + "'";
-                    myResponse.Tables[0].Rows[0][9] = queryDTW;
-                    myResponse.Tables[0].Rows[0][10] = endDate.ToString("yyyy-MM-dd HH:mm");
-                    myResponse.Tables[0].Rows[0][11] = testInterpretation;
+                    DataRow dr = myResponse.Tables[0].NewRow();
+                    dr["stateID"] = (stateTest ? 3 : 2);
+                    dr["testID"] = 16;
+                    dr["description"] = testInterpretation;
+                    dr["startDate"] = startDate.ToString("yyyy-MM-dd HH:mm");
+                    dr["endDate"] = endDate.ToString("yyyy-MM-dd HH:mm");
+                    dr["CCBCount"] = ccbCount;
+                    dr["DWHCount"] = dwhCount;
+                    dr["CCBAver"] = 0;
+                    dr["CCBMax"] = 0;
+                    dr["calcDate"] = DateTime.Now.ToString("yyyy-MM-dd HH:mm");
+                    myResponse.Tables[0].Rows.Add(dr);
 
-                    if (saveResult)
-                    {
-                        // 96 -SRC_prem_ID, 3-Updated
-                        historical.recordHistorical(96, 3, dwhCount, endDate);
-
-                        results.Description = testInterpretation;
-                        results.StartDate = startDate;
-                        results.EndDate = endDate;
-                        results.StateID = (short)(stateTest ? 3 : 2);
-                        results.CalcDate = DateTime.Now;
-                        results.TestID = 16;
-                        results.recordUntitValidationTest(cdcCount, dwhCount);
-
-                        // if there re any error on recording db
-                        if (!String.IsNullOrEmpty(results.Error))
-                        {
-                            myResponse.Tables[0].Rows[0][3] = ("Error Saving Updated PREM Count Test Result: " + results.Error.Substring(0, 200));
-                            myResponse.Tables[0].Rows[0][11] = ("Error Saving Updated PREM Count Test Result: " + results.Error.Substring(0, 200));
-                        }
-                    }
                     return myResponse;
                 }
                 catch (Exception e)
                 {
-                    myResponse.Tables[0].Rows[0][3] = ("Error Reading Updated PREM Count from CCB: " + e.ToString().Substring(0, 198));
-                    myResponse.Tables[0].Rows[0][11] = ("Error Reading Updated PREM Count from CCB: " + e.ToString().Substring(0, 198));
+                    myResponse.Tables[0].Rows[0][2] = ("Error Reading Updated PREM Count from CCB: " + e.ToString().Substring(0, 198));                    
                     return myResponse;
                 }
             });
@@ -332,15 +254,11 @@ namespace UnitTest.Model.DataWarehouse
         /// Comparing the Daily PREM_ID Distinct Count with the Historical PREM_ID Distinct Count.
         /// </summary>
         /// <param name="startDate">Initial Evaluated Data</param>
-        /// <param name="endDate">Final Evaluated Date</param>       
-        /// <param name="saveResult">'True' to save test result on database, else 'false' to dont save its</param>
-        /// <returns>a Dataset with a structure ready to be converted in JSON with Details about the test result
-        ///  | State | Test Information | Entitites Envolved | Test Result Description | Start Date | End Date | Count CDC | Count DTW | query CDC | query DTW | Effect Date | SMS test |
-        /// </returns>
-        /// <returns></returns>
-        public Task<DataSet> PremCountVsMaxHist(DateTime startDate, DateTime endDate, Boolean saveResult)
+        /// <param name="endDate">Final Evaluated Date</param>  
+        /// <returns>a Dataset with a structure ready to be converted in JSON with Details about the test result </returns>       
+        public Task<DataSet> PremCountVsMaxHist(DateTime startDate, DateTime endDate)
         {
-            Int64 maxHistoricalCountPremID = historical.GetMaximunHistorical(96, 1);
+            Int64 maxHistoricalCountPremID = 1000;
 
             myResponse = Extensions.getResponseStructure("TotalPremCountVsMaxHist");
             int dwhCount;
@@ -357,52 +275,31 @@ namespace UnitTest.Model.DataWarehouse
                     dtwParameters.Add(new SqlParameter("@startDate", startDate.ToString("yyyy-MM-dd HH:mm")));
                     dtwParameters.Add(new SqlParameter("@endDate", endDate.AddHours(5).ToString("yyyy-MM-dd HH:mm"))); //Take the variability on the DATA_LOAD_TIME on DTW
 
-                    evalDataDTW = SqlHelper.ExecuteDataset(_ccnDTW, CommandType.Text, query, dtwParameters.ToArray());
+                    evalDataDWH = SqlHelper.ExecuteDataset(_ccnDWH, CommandType.Text, query, dtwParameters.ToArray());
 
-                    dwhCount = (evalDataDTW.Tables[0].Rows.Count > 0) ? Convert.ToInt32(evalDataDTW.Tables[0].Rows[0][0]) : 0;
+                    dwhCount = (evalDataDWH.Tables[0].Rows.Count > 0) ? Convert.ToInt32(evalDataDWH.Tables[0].Rows[0][0]) : 0;
 
                     bool stateTest = (dwhCount <= maxHistoricalCountPremID) && (dwhCount > 0) && (maxHistoricalCountPremID > 0);
 
                     testInterpretation = results.createMessageNotification(TestResult.BusinessStar.BU, TestResult.Entity.DimPrem, TestResult.TestGenericName.DistinctVsHistoric, maxHistoricalCountPremID, dwhCount, appEnv, !stateTest);
 
-                    myResponse.Tables[0].Rows[0][0] = stateTest ? "OK!" : "Warning";
-                    myResponse.Tables[0].Rows[0][1] = "PREM Count vs Max Historic Count";
-                    myResponse.Tables[0].Rows[0][2] = "SRC_PREM_ID";
-                    myResponse.Tables[0].Rows[0][3] = testInterpretation;
-                    myResponse.Tables[0].Rows[0][4] = startDate.ToString("yyyy-MM-dd HH:mm");
-                    myResponse.Tables[0].Rows[0][5] = endDate.ToString("yyyy-MM-dd HH:mm");
-                    myResponse.Tables[0].Rows[0][6] = maxHistoricalCountPremID;
-                    myResponse.Tables[0].Rows[0][7] = dwhCount;
-                    myResponse.Tables[0].Rows[0][8] = "";
-                    myResponse.Tables[0].Rows[0][9] = query;
-                    myResponse.Tables[0].Rows[0][10] = endDate.ToString("yyyy-MM-dd HH:mm");
-                    myResponse.Tables[0].Rows[0][11] = testInterpretation;
-
-                    if (saveResult)
-                    {
-                        //recording on DB                                     
-                        results.Description = testInterpretation;
-                        results.StartDate = startDate;
-                        results.EndDate = endDate;
-                        results.StateID = (short)(stateTest ? 3 : 1);
-                        results.CalcDate = endDate;
-                        results.TestID = 17; // Compare Dsitinct PREM Over the maximun
-                        results.recordHistoricalValidationTest(dwhCount);
-
-                        // if there re any error on recording db
-                        if (!String.IsNullOrEmpty(results.Error))
-                        {
-                            myResponse.Tables[0].Rows[0][3] = ("Error Saving Max Hist PREM Count Test Result: " + results.Error.Substring(0, 200));
-                            myResponse.Tables[0].Rows[0][11] = ("Error Saving Max Hist PREM Count Test Result: " + results.Error.Substring(0, 200));
-                        }
-                    }
+                    DataRow dr = myResponse.Tables[0].NewRow();
+                    dr["stateID"] = (stateTest ? 3 : 1);
+                    dr["testID"] = 17;
+                    dr["description"] = testInterpretation;
+                    dr["startDate"] = startDate.ToString("yyyy-MM-dd HH:mm");
+                    dr["endDate"] = endDate.ToString("yyyy-MM-dd HH:mm");
+                    dr["CCBCount"] = 0;
+                    dr["DWHCount"] = dwhCount;
+                    dr["CCBAver"] = 0;
+                    dr["CCBMax"] = maxHistoricalCountPremID;
+                    dr["calcDate"] = DateTime.Now.ToString("yyyy-MM-dd HH:mm");
+                    myResponse.Tables[0].Rows.Add(dr);
                     return myResponse;
                 }
                 catch (Exception e)
                 {
-                    myResponse.Tables[0].Rows[0][3] = ("Error Reading Max Hist PREM Count from CCB: " + e.ToString().Substring(0, 198));
-                    myResponse.Tables[0].Rows[0][11] = ("Error Reading Max Hist PREM Count from CCB: " + e.ToString().Substring(0, 198));
-                    return myResponse;
+                    return Extensions.getResponseWithErrorMsg("Error Reading Max Hist PREM Count from CCB: " + e.ToString().Substring(0, 198));
                 }
             });
         }
@@ -413,11 +310,8 @@ namespace UnitTest.Model.DataWarehouse
         /// </summary>
         /// <param name="DAY_RANGE_TO_BE_EVALUATED">Quantity of Days to be evaluated in the Sample Average(days are counted to the past)</param>
         /// <param name="evalDate">Evaluated Date</param>        
-        /// <param name="saveResult">'True' to save test result on database, else 'false' to dont save its</param>
-        /// <returns>a Dataset with a structure ready to be converted in JSON with Details about the test result
-        ///  | State | Test Information | Entitites Envolved | Test Result Description | Start Date | End Date | Count CDC | Count DTW | query CDC | query DTW | Effect Date | SMS test |
-        /// </returns>
-        public Task<DataSet> StatisticalPremiseEvaluation(DateTime evalDate, Int32 DAY_RANGE_TO_BE_EVALUATED, Double TOLERANCE_PERCENTAGE_IN_AVERAGE_VARIATION, Boolean saveResult)
+        /// <returns>a Dataset with a structure ready to be converted in JSON with Details about the test result </returns>
+        public Task<DataSet> StatisticalPremiseEvaluation(DateTime evalDate, Int32 DAY_RANGE_TO_BE_EVALUATED, Double TOLERANCE_PERCENTAGE_IN_AVERAGE_VARIATION)
         {
             myResponse = Extensions.getResponseStructure("StatisticalComparison");
             string testInterpretation;
@@ -448,9 +342,9 @@ namespace UnitTest.Model.DataWarehouse
                         cdcParameters.Add(new SqlParameter("@endDate", statisticalEvaluation.EndDate.ToString("yyyy-MM-dd HH:mm")));
 
                         //Distinct Acount Count
-                        evalDataCDC = SqlHelper.ExecuteDataset(_ccnCDC, CommandType.StoredProcedure, queryCDC, cdcParameters.ToArray());
+                        evalDataCCB = SqlHelper.ExecuteDataset(_ccnCCB, CommandType.StoredProcedure, queryCCB, cdcParameters.ToArray());
 
-                        statisticalEvaluation.CountValue = evalDataCDC.Tables[0].AsEnumerable().Select(r => r.Field<string>("PREM_ID")).Distinct().Count();
+                        statisticalEvaluation.CountValue = evalDataCCB.Tables[0].AsEnumerable().Select(r => r.Field<string>("PREM_ID")).Distinct().Count();
 
                         PremiseEvaluation.Add(statisticalEvaluation);
                         Thread.Sleep(1000);
@@ -459,66 +353,40 @@ namespace UnitTest.Model.DataWarehouse
                     //Computing the average of the Days
                     double averCountPremise = PremiseEvaluation.Average(item => item.CountValue);
 
-
                     //Distinct Acount Count
                     cdcParameters = new List<SqlParameter>();
                     cdcParameters.Add(new SqlParameter("@startDate", evalDate.Date.AddDays(-1).AddHours(10).AddMinutes(00).ToString("yyyy-MM-dd HH:mm")));
                     cdcParameters.Add(new SqlParameter("@endDate", evalDate.Date.AddHours(15).AddMinutes(00).ToString("yyyy-MM-dd HH:mm")));
 
-                    evalDataCDC = SqlHelper.ExecuteDataset(_ccnCDC, CommandType.StoredProcedure, queryCDC, cdcParameters.ToArray());
+                    evalDataCCB = SqlHelper.ExecuteDataset(_ccnCCB, CommandType.StoredProcedure, queryCCB, cdcParameters.ToArray());
 
                     //Premise count of Evaluated Day
-                    int evaluatedCount = evalDataCDC.Tables[0].AsEnumerable().Select(r => r.Field<string>("PREM_ID")).Distinct().Count();
+                     ccbCount = evalDataCCB.Tables[0].AsEnumerable().Select(r => r.Field<string>("PREM_ID")).Distinct().Count();
 
                     //Incremental
-                    double incremIndicator = ((evaluatedCount - averCountPremise) / averCountPremise) * 100;
-
+                    double incremIndicator = ((ccbCount - averCountPremise) / averCountPremise) * 100;
 
                     bool stateTest = (Math.Abs(incremIndicator) > (TOLERANCE_PERCENTAGE_IN_AVERAGE_VARIATION * 100));
 
-                    testInterpretation = results.createMessageNotification(TestResult.BusinessStar.BU, TestResult.Entity.DimPrem, TestResult.TestGenericName.Statistical, evaluatedCount, Convert.ToInt64(Math.Round(averCountPremise)), appEnv, stateTest);
+                    testInterpretation = results.createMessageNotification(TestResult.BusinessStar.BU, TestResult.Entity.DimPrem, TestResult.TestGenericName.Statistical, ccbCount, Convert.ToInt64(Math.Round(averCountPremise)), appEnv, stateTest);
 
-
-                    myResponse.Tables[0].Rows[0][0] = stateTest ? "Warning" : "OK!";
-                    myResponse.Tables[0].Rows[0][1] = "Stat Aver PREM Count";
-                    myResponse.Tables[0].Rows[0][2] = "cdcProdcc: cdc.sp_ci_prem_ct";
-                    myResponse.Tables[0].Rows[0][3] = testInterpretation;
-                    myResponse.Tables[0].Rows[0][4] = evalDate.ToString("yyyy-MM-dd HH:mm");
-                    myResponse.Tables[0].Rows[0][5] = evalDate.ToString("yyyy-MM-dd HH:mm");
-                    myResponse.Tables[0].Rows[0][6] = averCountPremise;
-                    myResponse.Tables[0].Rows[0][7] = evaluatedCount;
-                    myResponse.Tables[0].Rows[0][8] = "";
-                    myResponse.Tables[0].Rows[0][9] = queryCDC;
-                    myResponse.Tables[0].Rows[0][10] = evalDate.ToString("yyyy-MM-dd HH:mm");
-                    myResponse.Tables[0].Rows[0][11] = testInterpretation;
-
-                    if (saveResult)
-                    {
-                        //columnID: 3-SRC_PREM_ID, indicatorType: 6-Average Weekly
-                        historical.recordHistorical(96, 6, averCountPremise, evalDate);
-
-                        //recording on DB                  
-                        results.Description = testInterpretation;
-                        results.StartDate = evalDate;
-                        results.EndDate = evalDate;
-                        results.StateID = (short)(stateTest ? 1 : 3);
-                        results.CalcDate = DateTime.Now;
-                        results.TestID = 18;
-                        results.recordStatisticalValidationTest(averCountPremise, evaluatedCount);
-                        // if there re any error on recording db
-                        if (!String.IsNullOrEmpty(results.Error))
-                        {
-                            myResponse.Tables[0].Rows[0][3] = ("Error Saving Statistical PREM Count Test Result: " + results.Error.Substring(0, 200));
-                            myResponse.Tables[0].Rows[0][11] = ("Error Saving Statistical PREM Count Test Result: " + results.Error.Substring(0, 200));
-                        }
-                    }
+                    DataRow dr = myResponse.Tables[0].NewRow();
+                    dr["stateID"] = (stateTest ? 1 : 3);
+                    dr["testID"] = 18;
+                    dr["description"] = testInterpretation;
+                    dr["startDate"] = evalDate.ToString("yyyy-MM-dd HH:mm");
+                    dr["endDate"] = evalDate.ToString("yyyy-MM-dd HH:mm");
+                    dr["CCBCount"] = ccbCount;
+                    dr["DWHCount"] = 0;
+                    dr["CCBAver"] = averCountPremise;
+                    dr["CCBMax"] = 0;
+                    dr["calcDate"] = DateTime.Now.ToString("yyyy-MM-dd HH:mm");
+                    myResponse.Tables[0].Rows.Add(dr);                    
                     return myResponse;
                 }
                 catch (Exception e)
                 {
-                    myResponse.Tables[0].Rows[0][3] = ("Error Reading Statistical PREM Count from CCB: " + e.ToString().Substring(0, 198));
-                    myResponse.Tables[0].Rows[0][11] = ("Error Reading Statistical PREM Count from CCB: " + e.ToString().Substring(0, 198));
-                    return myResponse;
+                    return Extensions.getResponseWithErrorMsg("Error Reading Statistical PREM Count from CCB: " + e.ToString().Substring(0, 198));
                 }
             });
         }

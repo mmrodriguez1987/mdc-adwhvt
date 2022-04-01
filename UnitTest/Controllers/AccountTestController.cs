@@ -7,6 +7,7 @@ using Tools.DataConversion;
 using Tools.Documentation;
 using Tools.Communication;
 using UnitTest.Model.DataWarehouse;
+using UnitTest.Model.ValidationTest;
 
 namespace UnitTest.Controllers
 {
@@ -19,12 +20,15 @@ namespace UnitTest.Controllers
        
         private SMS mySMS;
         private Global gbl;
+        private TestResult ts;
 
         public AccountTestController(IConfiguration conf)
         {
             gbl = new Global(conf); 
             finalResultDS = new DataSet();
-            dsResult = new DataSet();           
+            dsResult = new DataSet();       
+            ts = new TestResult();
+            ts.CcnAzureTables = gbl.UrlAzureTables;
         }
              
         
@@ -42,86 +46,99 @@ namespace UnitTest.Controllers
             #endregion
 
             #region Validation: Accounts Count
-            dsResult = await acct.AccountCount(startDate, endDate, saveResult);
+            dsResult = await acct.AccountCount(startDate, endDate);
             finalResultDS.Tables[0].ImportRow(dsResult.Tables[0].Rows[0]);
 
-            if (dsResult.Tables[0].Rows[0][11].ToString().StartsWith("Error"))
+            if (dsResult.Tables[0].Rows[0][2].ToString().StartsWith("Error"))
             {
-                mySMS.SendSMS(gbl.FromPhNumbAlert, gbl.BiTeamPhoneNumbers[0], dsResult.Tables[0].Rows[0][11].ToString());
-                return base.BadRequest(dsResult.Tables[0].Rows[0][11].ToString());
+                mySMS.SendSMS(gbl.FromPhNumbAlert, gbl.BiTeamPhoneNumbers[0], dsResult.Tables[0].Rows[0][2].ToString());
+                return base.BadRequest(dsResult.Tables[0].Rows[0][2].ToString());
             }
             else
             {
-                if ((dsResult.Tables[0].Rows[0][0].ToString() == "Warning" || dsResult.Tables[0].Rows[0][0].ToString() == "Failed") && sendSMSNotify)
-                    mySMS.SendSMS(gbl.FromPhNumbAlert, gbl.BiTeamPhoneNumbers, dsResult.Tables[0].Rows[0][11].ToString());
+                if ((Convert.ToInt32(dsResult.Tables[0].Rows[0][0]) == 1 || Convert.ToInt32(dsResult.Tables[0].Rows[0][0]) == 2) && sendSMSNotify)
+                    mySMS.SendSMS(gbl.FromPhNumbAlert, gbl.BiTeamPhoneNumbers, dsResult.Tables[0].Rows[0][2].ToString());
             }
             #endregion
-
+            /*
             #region Validation: Account Count vs Historic
-            dsResult = await acct.TotalAcctCountVsMaxHist(startDate, endDate, saveResult);
+            dsResult = await acct.TotalAcctCountVsMaxHist(startDate, endDate);
             finalResultDS.Tables[0].ImportRow(dsResult.Tables[0].Rows[0]);
 
-            if (dsResult.Tables[0].Rows[0][11].ToString().StartsWith("Error"))
+           if (dsResult.Tables[0].Rows[0][2].ToString().StartsWith("Error"))
             {
-                mySMS.SendSMS(gbl.FromPhNumbAlert, gbl.BiTeamPhoneNumbers[0], dsResult.Tables[0].Rows[0][11].ToString());
-                return base.BadRequest(dsResult.Tables[0].Rows[0][11].ToString());
+                mySMS.SendSMS(gbl.FromPhNumbAlert, gbl.BiTeamPhoneNumbers[0], dsResult.Tables[0].Rows[0][2].ToString());
+                return base.BadRequest(dsResult.Tables[0].Rows[0][2].ToString());
             }
             else
             {
-                if ((dsResult.Tables[0].Rows[0][0].ToString() == "Warning" || dsResult.Tables[0].Rows[0][0].ToString() == "Failed") && false)
-                    mySMS.SendSMS(gbl.FromPhNumbAlert, gbl.BiTeamPhoneNumbers, dsResult.Tables[0].Rows[0][11].ToString());
+                if ((Convert.ToInt32(dsResult.Tables[0].Rows[0][0]) == 1 || Convert.ToInt32(dsResult.Tables[0].Rows[0][0]) == 2) && false)
+                    mySMS.SendSMS(gbl.FromPhNumbAlert, gbl.BiTeamPhoneNumbers, dsResult.Tables[0].Rows[0][2].ToString());
             }
             #endregion
-
+            */
             #region Validation: New Records
-            dsResult = await acct.NewAccountCount(startDate, endDate, saveResult);
+            dsResult = await acct.NewAccountCount(startDate, endDate);
             finalResultDS.Tables[0].ImportRow(dsResult.Tables[0].Rows[0]);
 
-            if (dsResult.Tables[0].Rows[0][11].ToString().StartsWith("Error"))
+           if (dsResult.Tables[0].Rows[0][2].ToString().StartsWith("Error"))
             {
-                mySMS.SendSMS(gbl.FromPhNumbAlert, gbl.BiTeamPhoneNumbers[0], dsResult.Tables[0].Rows[0][11].ToString());
-                return base.BadRequest(dsResult.Tables[0].Rows[0][11].ToString());
+                mySMS.SendSMS(gbl.FromPhNumbAlert, gbl.BiTeamPhoneNumbers[0], dsResult.Tables[0].Rows[0][2].ToString());
+                return base.BadRequest(dsResult.Tables[0].Rows[0][2].ToString());
             }
             else
             {
-                if ((dsResult.Tables[0].Rows[0][0].ToString() == "Warning" || dsResult.Tables[0].Rows[0][0].ToString() == "Failed") && sendSMSNotify)
-                    mySMS.SendSMS(gbl.FromPhNumbAlert, gbl.BiTeamPhoneNumbers, dsResult.Tables[0].Rows[0][11].ToString());
+                if ((Convert.ToInt32(dsResult.Tables[0].Rows[0][0]) == 1 || Convert.ToInt32(dsResult.Tables[0].Rows[0][0]) == 2) && sendSMSNotify)
+                    mySMS.SendSMS(gbl.FromPhNumbAlert, gbl.BiTeamPhoneNumbers, dsResult.Tables[0].Rows[0][2].ToString());
             }
             #endregion
-
-            #region Validation: Updated account
-            dsResult = await acct.UpdatedAccountCounts(startDate, endDate, saveResult);
-            finalResultDS.Tables[0].ImportRow(dsResult.Tables[0].Rows[0]);
             
-            if (dsResult.Tables[0].Rows[0][11].ToString().StartsWith("Error"))
-            {
-                mySMS.SendSMS(gbl.FromPhNumbAlert, gbl.BiTeamPhoneNumbers[0], dsResult.Tables[0].Rows[0][11].ToString());
-                return base.BadRequest(dsResult.Tables[0].Rows[0][11].ToString());
-            }
-            else
-            {
-                if ((dsResult.Tables[0].Rows[0][0].ToString() == "Warning" || dsResult.Tables[0].Rows[0][0].ToString() == "Failed") && sendSMSNotify)
-                    mySMS.SendSMS(gbl.FromPhNumbAlert, gbl.BiTeamPhoneNumbers, dsResult.Tables[0].Rows[0][11].ToString());
-            }
-            #endregion
+             #region Validation: Updated account
+             dsResult = await acct.UpdatedAccountCounts(startDate, endDate);
+             finalResultDS.Tables[0].ImportRow(dsResult.Tables[0].Rows[0]);
 
-            #region Validation: Statistical Comparision
-            dsResult = await acct.StatisticalAcountEvaluation(endDate, gbl.EvaluatedDatesRangeOnAverageTest, gbl.ToleranceVariatonNumber, saveResult);
-            finalResultDS.Tables[0].ImportRow(dsResult.Tables[0].Rows[0]);
+            if (dsResult.Tables[0].Rows[0][2].ToString().StartsWith("Error"))
+             {
+                 mySMS.SendSMS(gbl.FromPhNumbAlert, gbl.BiTeamPhoneNumbers[0], dsResult.Tables[0].Rows[0][2].ToString());
+                 return base.BadRequest(dsResult.Tables[0].Rows[0][2].ToString());
+             }
+             else
+             {
+                 if ((Convert.ToInt32(dsResult.Tables[0].Rows[0][0]) == 1 || Convert.ToInt32(dsResult.Tables[0].Rows[0][0]) == 2) && sendSMSNotify)
+                     mySMS.SendSMS(gbl.FromPhNumbAlert, gbl.BiTeamPhoneNumbers, dsResult.Tables[0].Rows[0][2].ToString());
+             }
+             #endregion
+
+             #region Validation: Statistical Comparision
             
-            if (dsResult.Tables[0].Rows[0][11].ToString().StartsWith("Error"))
-            {
-                mySMS.SendSMS(gbl.FromPhNumbAlert, gbl.BiTeamPhoneNumbers[0], dsResult.Tables[0].Rows[0][11].ToString());
-                return base.BadRequest(dsResult.Tables[0].Rows[0][11].ToString());
-            }
-            else
-            {
-                if ((dsResult.Tables[0].Rows[0][0].ToString() == "Warning" || dsResult.Tables[0].Rows[0][0].ToString() == "Failed") && false)
-                    mySMS.SendSMS(gbl.FromPhNumbAlert, gbl.BiTeamPhoneNumbers, dsResult.Tables[0].Rows[0][11].ToString());
-            }
-            #endregion
+             dsResult = await acct.StatisticalAcountEvaluation(endDate, gbl.EvaluatedDatesRangeOnAverageTest, gbl.ToleranceVariatonNumber);
+             finalResultDS.Tables[0].ImportRow(dsResult.Tables[0].Rows[0]);
 
-            return base.Ok(Extensions.DataTableToJSONWithStringBuilder(finalResultDS.Tables[0]));
+            if (dsResult.Tables[0].Rows[0][2].ToString().StartsWith("Error"))
+             {
+                 mySMS.SendSMS(gbl.FromPhNumbAlert, gbl.BiTeamPhoneNumbers[0], dsResult.Tables[0].Rows[0][2].ToString());
+                 return base.BadRequest(dsResult.Tables[0].Rows[0][2].ToString());
+             }
+             else
+             {
+                 if ((Convert.ToInt32(dsResult.Tables[0].Rows[0][0]) == 1 || Convert.ToInt32(dsResult.Tables[0].Rows[0][0]) == 2) && false)
+                     mySMS.SendSMS(gbl.FromPhNumbAlert, gbl.BiTeamPhoneNumbers, dsResult.Tables[0].Rows[0][2].ToString());
+             }
+            #endregion
+            string jsonRes = ts.getTestResultJSONFormat(finalResultDS);
+
+            if (saveResult)
+            {                
+                string response = await ts.recordValidationOnAzureStorage(jsonRes);
+
+                if (response != "OK")
+                    return base.BadRequest(response);
+                else
+                    return base.Ok(jsonRes);
+            }
+            else            
+                return base.Ok(jsonRes);
+ 
         }
     }
 }

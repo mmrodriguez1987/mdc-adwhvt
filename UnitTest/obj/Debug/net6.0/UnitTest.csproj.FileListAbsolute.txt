@@ -77,7 +77,7 @@ C:\BIProjectUT\UnitTest\obj\Debug\net6.0\staticwebassets.development.json
 C:\BIProjectUT\UnitTest\obj\Debug\net6.0\scopedcss\bundle\UnitTest.styles.css
 C:\BIProjectUT\UnitTest\obj\Debug\net6.0\UnitTest.csproj.CopyComplete
 C:\BIProjectUT\UnitTest\obj\Debug\net6.0\UnitTest.dll
-C:\BIProjectUT\UnitTest\obj\Debug\net6.0\ref\UnitTest.dll
+C:\BIProjectUT\UnitTest\obj\Debug\net6.0\refint\UnitTest.dll
 C:\BIProjectUT\UnitTest\obj\Debug\net6.0\UnitTest.pdb
 C:\BIProjectUT\UnitTest\obj\Debug\net6.0\UnitTest.genruntimeconfig.cache
-C:\BIProjectUT\UnitTest\obj\Debug\net6.0\refint\UnitTest.dll
+C:\BIProjectUT\UnitTest\obj\Debug\net6.0\ref\UnitTest.dll

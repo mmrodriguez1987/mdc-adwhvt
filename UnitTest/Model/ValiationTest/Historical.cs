@@ -7,7 +7,7 @@ namespace UnitTest.Model.ValidationTest
     public class Historical
     {
         private string _ccnCDC, _ccnValTest, _error;
-        private ResultStat _historicalIndicator;
+        //private ResultStat _historicalIndicator;
       
         public string Error { get => _error; set => _error = value; }
         public string CcnValTest { get => _ccnValTest; set => _ccnValTest = value; }
@@ -25,7 +25,7 @@ namespace UnitTest.Model.ValidationTest
             _ccnValTest = ccnValTest;
             _error = String.Empty;
         }
-
+        /*
         /// <summary>
         /// Record a Historical Indicator
         /// </summary>
@@ -51,6 +51,6 @@ namespace UnitTest.Model.ValidationTest
             result =_historicalIndicator.GetObjectDS("columnID = " + columnID + " AND indicatorTypeID = " + inditatorTypeID, "[count]", "MAX([count]) AS [count]");
 
             return Convert.ToInt64(!String.IsNullOrEmpty(result.Tables[0].Rows[0][0].ToString()) ? result.Tables[0].Rows[0][0] : 0);
-        }
+        }*/
     }
 }

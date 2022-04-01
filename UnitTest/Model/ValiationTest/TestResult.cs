@@ -2,19 +2,21 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Text;
 using System.Threading.Tasks;
 using UnitTest.DAL;
-using UnitTest.Model.ValiationTest;
 
 namespace UnitTest.Model.ValidationTest
 {
 
     public class TestResult
     {
-        private string _ccnValTest, _error, _description;
+        private string _ccnValTest, _error, _description, _urlAzureTables;
         private Result result;
         private ResultDetail resultDetail;
-        private DB dataBase;
+        //private DB dataBase;
         private Int64 _testID;
         private Int16 _stateID;
         private DateTime _startDate, _endDate, _calculationDate;
@@ -42,6 +44,10 @@ namespace UnitTest.Model.ValidationTest
             _ccnValTest = _ccn;
           
         }
+        public TestResult()
+        {
+         
+        }
 
         public string CcnValTest { get => _ccnValTest; set => _ccnValTest = value; }
         public string Error { get => _error; set => _error = value; }
@@ -53,6 +59,7 @@ namespace UnitTest.Model.ValidationTest
         public DateTime EndDate { get => _endDate; set => _endDate = value; }
         public DateTime CalcDate { get => _calculationDate; set => _calculationDate = value; }
         public DB DB { get; private set; }
+        public string CcnAzureTables { get => _urlAzureTables; set => _urlAzureTables = value; }
 
         public void recordUntitValidationTest(Int64 cdcCount, Int64 dtwhCount)
         {
@@ -917,67 +924,70 @@ namespace UnitTest.Model.ValidationTest
             return msg;
         }
         
-       
+        public async Task recordDataValidationAzureStorageAsync(string JSONResult)
+        {          
+
+            var json = JsonConvert.SerializeObject(JSONResult);
+            var data = new StringContent(json, Encoding.UTF8, "application/json");
+            var url = "https://prod-63.eastus2.logic.azure.com:443/workflows/041784ca92844421b84a0d170fce42a0/triggers/manual/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=Bt5NXXiZSZ5Eof9Mm1X_3KQddA-0_AgXjaWI8q9Uvao";
+            using var client = new HttpClient();
+            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            var response = await client.PostAsync(url, data);
+            var result = await response.Content.ReadAsStringAsync();
+            Console.WriteLine(result);
+  
+        }
         
-        public Task<String> getTestResultJSONFormat(DateTime evalDate)
+        public string getTestResultJSONFormat(DataSet ds)
+        {
+            TransformedResult result;
+            List<TransformedResult> listResult = new List<TransformedResult>();
+
+            foreach(DataRow dr in ds.Tables[0].Rows)
+            {
+                result = new TransformedResult();
+                result.testID = Convert.ToInt64(dr["testID"]);
+                result.stateID = Convert.ToInt64(dr["stateID"]);
+                result.Description = dr["description"].ToString();
+                result.StartDate = Convert.ToDateTime(dr["startDate"]);
+                result.EndDate = Convert.ToDateTime(dr["endDate"]);
+                result.CCBCount = Convert.ToDouble(dr["CCBCount"]);
+                result.DWHCount = Convert.ToDouble(dr["DWHCount"]);
+                result.CCBAver = Convert.ToDouble(dr["CCBAver"]);
+                result.CCBMax = Convert.ToDouble(dr["CCBMax"]);
+                result.calculationDate = Convert.ToDateTime(dr["calcDate"]);
+                listResult.Add(result);
+            }
+            return JsonConvert.SerializeObject(listResult);
+        }
+
+        public Task<String> recordValidationOnAzureStorage(string JSONResult)       
         {
             return Task.Run(() =>
             {
                 try
                 {
-                    DataSet dsTestResult = new DataSet();
-                    dataBase = new DB(_ccnValTest);
-
-                    dsTestResult = dataBase.GetObjecFromViewtDS("vwTestResult", "CAST(calculationDate AS DATE) = '" + evalDate.Date + "'", "resultID Desc", "*");
-
-                    List<TransformedResult> resultCollection = new List<TransformedResult>();
+                    var json = JsonConvert.SerializeObject(JSONResult);
+                    var data = new StringContent(json, Encoding.UTF8, "application/json");
+                    data.Headers.ContentType.CharSet = null;
+                                      
+                    using var client = new HttpClient();
                     
-
-                    foreach (DataRow row in dsTestResult.Tables[0].Rows)
-                    {
-                        TransformedResult trsResult = new TransformedResult();
-
-                        trsResult.resultID = Convert.ToInt64(row["resultID"]);
-                        trsResult.Test = row["Test"].ToString();
-                        trsResult.Type = row["Type"].ToString();
-                        trsResult.Description = row["Description"].ToString();
-                        trsResult.StartDate = Convert.ToDateTime(row["Start Date"]);
-                        trsResult.EndDate = Convert.ToDateTime(row["End Date"]);
-                        trsResult.calculationDate = Convert.ToDateTime(row["calculationDate"]);
-                        trsResult.DWHCount = DBNull.Value.Equals(row["DWH Count"]) ? 0 : Convert.ToDouble(row["DWH Count"]);
-                        trsResult.CCBCount = DBNull.Value.Equals(row["CCB Count"]) ? 0 : Convert.ToDouble(row["CCB Count"]);
-                        trsResult.CCBAver = DBNull.Value.Equals(row["CCB Aver Count"]) ? 0 : Convert.ToDouble(row["CCB Aver Count"]);
-                        trsResult.CCBMax = DBNull.Value.Equals(row["CCB Max Hist Count"]) ? 0 : Convert.ToDouble(row["CCB Max Hist Count"]);
-                        resultCollection.Add(trsResult);      
-                    }
-              
-
-                    string json = JsonConvert.SerializeObject(resultCollection, Formatting.Indented, new JsonSerializerSettings()
-                    {
-                        ReferenceLoopHandling = ReferenceLoopHandling.Ignore
-                    });
-
-                    Console.WriteLine(json);
-                    // {
-                    //   "Table1": [
-                    //     {
-                    //       "id": 0,
-                    //       "item": "item 0"
-                    //     },
-                    //     {
-                    //       "id": 1,
-                    //       "item": "item 1"
-                    //     }
-                    //   ]
-                    // }                  
-
-                    return json;
+                    var response = client.PostAsync(_urlAzureTables, data);
+                    
+                    if (response.Result.IsSuccessStatusCode)
+                    
+                        return "OK";
+                    else 
+                        return response.Result.RequestMessage.ToString();      
                 }
-                catch (Exception e)
+                catch (Exception ex)
                 {
-                    return e.ToString();
+                    return ex.Message.ToString();
                 }
             });
-        }    
+                   
+        }
+    
     }
 }

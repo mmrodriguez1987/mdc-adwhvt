@@ -3,7 +3,6 @@ C:\BIProjectUT\APIEXE\bin\Debug\net6.0-windows\RunValidationTest.dll.config
 C:\BIProjectUT\APIEXE\bin\Debug\net6.0-windows\RunValidationTest.deps.json
 C:\BIProjectUT\APIEXE\bin\Debug\net6.0-windows\RunValidationTest.runtimeconfig.json
 C:\BIProjectUT\APIEXE\bin\Debug\net6.0-windows\RunValidationTest.dll
-C:\BIProjectUT\APIEXE\bin\Debug\net6.0-windows\ref\RunValidationTest.dll
 C:\BIProjectUT\APIEXE\bin\Debug\net6.0-windows\RunValidationTest.pdb
 C:\BIProjectUT\APIEXE\bin\Debug\net6.0-windows\System.Net.Http.Formatting.dll
 C:\BIProjectUT\APIEXE\bin\Debug\net6.0-windows\Microsoft.Win32.SystemEvents.dll
@@ -29,3 +28,4 @@ C:\BIProjectUT\APIEXE\obj\Debug\net6.0-windows\ref\RunValidationTest.dll
 C:\BIProjectUT\APIEXE\obj\Debug\net6.0-windows\RunValidationTest.pdb
 C:\BIProjectUT\APIEXE\obj\Debug\net6.0-windows\RunValidationTest.genruntimeconfig.cache
 C:\BIProjectUT\APIEXE\obj\Debug\net6.0-windows\RunValidationTest.csproj.AssemblyReference.cache
+C:\BIProjectUT\APIEXE\obj\Debug\net6.0-windows\refint\RunValidationTest.dll

@@ -94,8 +94,7 @@ namespace Tools.DataConversion
             
 
             for (int i = 0; i < rows.Length; i++)                            
-                args[i] = rows[i][ID].ToString();
-            
+                args[i] = rows[i][ID].ToString();          
 
             return String.Join(delimiter, args);
         }
@@ -112,19 +111,16 @@ namespace Tools.DataConversion
             DataSet dsResult = new DataSet("dsResults");
             DataTable TestResult = new DataTable(dataTableName);
 
-            TestResult.Columns.Add("State");
-            TestResult.Columns.Add("Test Information");
-            TestResult.Columns.Add("Entities Involved");
-            TestResult.Columns.Add("Test Result Description");
-            TestResult.Columns.Add("Initial Evaluated Date");
-            TestResult.Columns.Add("End Evaluated Date");
-            TestResult.Columns.Add("count_CDC");
-            TestResult.Columns.Add("count_DTW");
-            TestResult.Columns.Add("query_CDC");
-            TestResult.Columns.Add("query_DTW");
-            TestResult.Columns.Add("Effectuated Date");
-            TestResult.Columns.Add("SMS Text");
-            TestResult.Rows.Add(0, 0, "", "", "", "", 0, 0,"","","","");
+            TestResult.Columns.Add("stateID");
+            TestResult.Columns.Add("testID");            
+            TestResult.Columns.Add("description");
+            TestResult.Columns.Add("startDate");
+            TestResult.Columns.Add("endDate");
+            TestResult.Columns.Add("CCBCount");
+            TestResult.Columns.Add("DWHCount");
+            TestResult.Columns.Add("CCBAver");
+            TestResult.Columns.Add("CCBMax");
+            TestResult.Columns.Add("calcDate");
 
             dsResult.Tables.Add(TestResult);
             return dsResult;
@@ -142,5 +138,27 @@ namespace Tools.DataConversion
             dsResult.Tables.Add(rs);
             return dsResult;
         }
+
+        public static DataSet getResponseWithErrorMsg(String error)
+        {
+            DataSet ds = new DataSet();
+            ds = getResponseStructure("error");          
+
+            DataRow dr = ds.Tables[0].NewRow();
+            dr["stateID"] = 0;
+            dr["testID"] = 0;
+            dr["description"] = error;
+            dr["startDate"] = DateTime.Now.ToString("yyyy-MM-dd HH:mm");
+            dr["endDate"] = DateTime.Now.ToString("yyyy-MM-dd HH:mm");
+            dr["CCBCount"] = 0;
+            dr["DWHCount"] = 0;
+            dr["CCBAver"] = 0;
+            dr["CCBMax"] = 0;
+            dr["calcDate"] = DateTime.Now.ToString("yyyy-MM-dd HH:mm");
+            ds.Tables[0].Rows.Add(dr);          
+            return ds;
+        }
+
+
     }
 }
